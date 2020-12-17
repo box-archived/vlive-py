@@ -2,9 +2,9 @@
 AppId = "8c6cc7b45d2568fb668be6e05b6e5a3b"
 
 # API: Post Info API
-# APIPost % "POST-ID"
-# APIPostReferer
-APIPost = "https://www.vlive.tv/globalv-web/vam-web/post/v1.0/post-%s?" \
+# APIPostUrl % "POST-ID"
+# APIPostReferer(post): dict
+APIPostUrl = "https://www.vlive.tv/globalv-web/vam-web/post/v1.0/post-%s?" \
           "appId=%s&fields=title,attachments,officialVideo&gcc=KR&locale=ko_KR" % ("%s", AppId)
 
 

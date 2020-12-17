@@ -9,7 +9,7 @@ def postIdToVideoSeq(post):
     headers.update(gv.APIPostReferer(post))
     headers.update(gv.HeaderAcceptLang)
     headers.update(gv.HeaderUserAgent)
-    res = requests.get(gv.APIPost % post, headers=headers)
+    res = requests.get(gv.APIPostUrl % post, headers=headers)
     result = res.json()
     if 'officialVideo' not in result:
         raise PostParseError("post(%s) is not live video" % post)
