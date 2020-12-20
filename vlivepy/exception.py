@@ -16,3 +16,7 @@ class APINetworkError(APIError):
 
 class APIJSONParesError(APIError):
     """ Failed to parse target """
+
+
+class APISignInFailedError(APIError):
+    """ Failed to Sign in """
