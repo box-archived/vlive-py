@@ -4,12 +4,14 @@ AppId = "8c6cc7b45d2568fb668be6e05b6e5a3b"
 # locale parameter(url postfix)
 LocaleParam = "&gcc=KR&locale=ko_KR"
 
+
 # API: Post Info API
-# APIPostUrl % "POST-ID"
+# APIPostUrl("POST-ID"): str
 # APIPostReferer(post): dict
-APIPostUrl = "https://www.vlive.tv/globalv-web/vam-web/post/v1.0/post-%s?" \
-             "appId=%s&fields=title,attachments,officialVideo%s" \
-             % ("%s", AppId, LocaleParam)
+def APIPostUrl(post):
+    return "https://www.vlive.tv/globalv-web/vam-web/post/v1.0/post-%s?"\
+           "appId=%s&fields=title,attachments,officialVideo%s" \
+           % (post, AppId, LocaleParam)
 
 
 def APIPostReferer(post):
