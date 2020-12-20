@@ -67,31 +67,24 @@ def postIdToVideoSeq(post, silent=False):
     :rtype: str
     """
 
-    # Make request
-    headers = {**gv.APIPostReferer(post), **gv.HeaderAcceptLang, **gv.HeaderUserAgent}
-    sr = reqWrapper.get(gv.APIPostUrl(post), headers=headers, wait=0.5)
+    postInfo = getPostInfo(post, silent=silent)
 
-    if sr.success:
-        # Parse response json
-        json_result = sr.response.json()
-
+    if postInfo is not None:
         # Case <LIVE, VOD>
-        if 'officialVideo' in json_result:
-            return json_result['officialVideo']['videoSeq']
+        if 'officialVideo' in postInfo:
+            return postInfo['officialVideo']['videoSeq']
 
         # Case <Fanship Live, VOD, Post>
-        elif 'data' in json_result:
+        elif 'data' in postInfo:
             # Case <Fanship Live, VOD>
-            if 'officialVideo' in json_result['data']:
-                return json_result['data']['officialVideo']['videoSeq']
+            if 'officialVideo' in postInfo['data']:
+                return postInfo['data']['officialVideo']['videoSeq']
             # Case <Post (Exception)>
             else:
                 return auto_raise(APIJSONParesError("post-%s is not video" % post), silent)
+
         # Case <Connection failed (Exception)>
         else:
             auto_raise(APIJSONParesError("Cannot find any video: %s " % post), silent)
-    else:
-        if not silent:
-            auto_raise(APINetworkError, silent)
 
     return None
