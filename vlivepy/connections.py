@@ -37,6 +37,27 @@ def getUserSession(email, pwd, silent=False):
         auto_raise(APINetworkError, silent)
 
 
+def getPostInfo(post, session=None, silent=False):
+    r""" get post info
+
+    :param post: postId from VLIVE (like #-########)
+    :param session: use specific session
+    :type session: reqWrapper.requests.Session
+    :param silent: Return `None` instead of Exception
+    :return: videoInfo
+    :rtype: dict
+    """
+
+    # Make request
+    headers = {**gv.APIPostReferer(post), **gv.HeaderAcceptLang, **gv.HeaderUserAgent}
+    sr = reqWrapper.get(gv.APIPostUrl(post), headers=headers, wait=0.5, session=session)
+
+    if sr.success:
+        return sr.response.json()
+    else:
+        auto_raise(APINetworkError, silent)
+
+
 def postIdToVideoSeq(post, silent=False):
     r""" postId to videoSeq
 

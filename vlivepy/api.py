@@ -2,4 +2,6 @@
 
 # empty module to bind functions
 
-from .connections import getUserSession
+from .connections import (
+    getUserSession, getPostInfo
+)
