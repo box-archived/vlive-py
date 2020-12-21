@@ -21,7 +21,7 @@ def getUserSession(email, pwd, silent=False):
     # Make request
     data = {'email': email, 'pwd': pwd}
     headers = {**gv.HeaderCommon, **gv.APISignInReferer}
-    sr = reqWrapper.post(gv.APISignInUrl, data=data, headers=headers, wait=0.5)
+    sr = reqWrapper.post(gv.APISignInUrl, data=data, headers=headers, wait=0.5, status=[200])
 
     if sr.success:
         # Case <Sign-in Failed (Exception)>
@@ -50,7 +50,7 @@ def getPostInfo(post, session=None, silent=False):
 
     # Make request
     headers = {**gv.APIPostReferer(post), **gv.HeaderAcceptLang, **gv.HeaderUserAgent}
-    sr = reqWrapper.get(gv.APIPostUrl(post), headers=headers, wait=0.5, session=session)
+    sr = reqWrapper.get(gv.APIPostUrl(post), headers=headers, wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
         return sr.response.json()
