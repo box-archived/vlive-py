@@ -4,8 +4,9 @@ import reqWrapper
 
 from . import variables as gv
 from .exception import (
-    auto_raise, APIJSONParesError, APINetworkError, APISignInFailedError
+    auto_raise, APINetworkError, APISignInFailedError
 )
+from .parser import parseVideoSeqFromPostInfo
 
 
 def getUserSession(email, pwd, silent=False):
@@ -69,22 +70,4 @@ def postIdToVideoSeq(post, silent=False):
 
     postInfo = getPostInfo(post, silent=silent)
 
-    if postInfo is not None:
-        # Case <LIVE, VOD>
-        if 'officialVideo' in postInfo:
-            return postInfo['officialVideo']['videoSeq']
-
-        # Case <Fanship Live, VOD, Post>
-        elif 'data' in postInfo:
-            # Case <Fanship Live, VOD>
-            if 'officialVideo' in postInfo['data']:
-                return postInfo['data']['officialVideo']['videoSeq']
-            # Case <Post (Exception)>
-            else:
-                return auto_raise(APIJSONParesError("post-%s is not video" % post), silent)
-
-        # Case <Connection failed (Exception)>
-        else:
-            auto_raise(APIJSONParesError("Cannot find any video: %s " % post), silent)
-
-    return None
+    return parseVideoSeqFromPostInfo(postInfo, silent=silent)
