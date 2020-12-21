@@ -71,7 +71,7 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
 
     headers = {**gv.APIofficialVideoPostReferer(videoSeq), **gv.HeaderCommon}
     sr = reqWrapper.get(gv.APIofficialVideoPostUrl(videoSeq), headers=headers,
-                        session=session, wait=0.5, status=[200])
+                        session=session, wait=0.5, status=[200, 403])
 
     if sr.success:
         return sr.response.json()
