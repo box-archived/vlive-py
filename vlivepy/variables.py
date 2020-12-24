@@ -28,8 +28,8 @@ APISignInReferer = {'Referer': 'https://www.vlive.tv/auth/email/login'}
 
 
 def APIInkeyUrl(videoSeq):
-    return ("https://www.vlive.tv/globalv-web/vam-web/video/v1.0/vod/%s/inkey?appId=%s%s" %
-            (videoSeq, AppId, LocaleParam))
+    return ("https://www.vlive.tv/globalv-web/vam-web/video/v1.0/vod/%s/inkey?appId=%s%s%s" %
+            (videoSeq, AppId, LocaleParam, PlatformPCParam))
 
 
 # API: officialVideoPost
