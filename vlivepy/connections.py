@@ -47,6 +47,7 @@ def getInkeyData(videoSeq, session=None, silent=False):
     :type session: reqWrapper.requests.Session
     :param silent: Return `None` instead of Exception
     :return: Inkey data
+    :rtype: dict
     """
 
     # Make request
