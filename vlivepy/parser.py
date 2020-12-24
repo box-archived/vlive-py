@@ -30,3 +30,17 @@ def parseVideoSeqFromPostInfo(info, silent=False):
         auto_raise(APIJSONParesError("Cannot find any video"), silent)
 
     return None
+
+
+def sessionUserCheck(session):
+    r"""
+
+    :param session: session to evaluate
+    :type session: reqWrapper.requests.Session
+    :return: bool `isUser`
+    :rtype: bool
+    """
+    if 'NEO_SES' in session.cookies.keys():
+        return True
+    else:
+        return False

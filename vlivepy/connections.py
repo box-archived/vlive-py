@@ -6,21 +6,7 @@ from . import variables as gv
 from .exception import (
     auto_raise, APINetworkError, APISignInFailedError
 )
-from .parser import parseVideoSeqFromPostInfo
-
-
-def sessionUserCheck(session):
-    r"""
-
-    :param session: session to evaluate
-    :type session: reqWrapper.requests.Session
-    :return: bool `isUser`
-    :rtype: bool
-    """
-    if 'NEO_SES' in session.cookies.keys():
-        return True
-    else:
-        return False
+from .parser import parseVideoSeqFromPostInfo, sessionUserCheck
 
 
 def getUserSession(email, pwd, silent=False):
@@ -68,7 +54,7 @@ def getInkeyData(videoSeq, session=None, silent=False):
 
     # Make request
     headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
-    sr = reqWrapper.get(gv.APIInkeyUrl(videoSeq), headers=headers, wait=0.5, session=session, status=[200])
+    sr = reqWrapper.get(gv.APIInkeyUrl(videoSeq), headers=headers, wait=0.5, session=session)
 
     if sr.success:
         return sr.response.json()
