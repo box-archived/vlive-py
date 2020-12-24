@@ -54,7 +54,7 @@ def getInkeyData(videoSeq, session=None, silent=False):
 
     # Make request
     headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
-    sr = reqWrapper.get(gv.APIInkeyUrl(videoSeq), headers=headers, wait=0.5, session=session)
+    sr = reqWrapper.get(gv.APIInkeyUrl(videoSeq), headers=headers, wait=0.5, session=session, status=[200])
 
     if sr.success:
         return sr.response.json()
