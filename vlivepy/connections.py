@@ -51,6 +51,8 @@ def getUserSession(email, pwd, silent=False):
     else:
         auto_raise(APINetworkError, silent)
 
+    return None
+
 
 def getInkeyData(videoSeq, session=None, silent=False):
     r""" get Inkey Data
@@ -73,6 +75,8 @@ def getInkeyData(videoSeq, session=None, silent=False):
     else:
         auto_raise(APINetworkError, silent)
 
+    return None
+
 
 def getPostInfo(post, session=None, silent=False):
     r""" get post info
@@ -93,6 +97,8 @@ def getPostInfo(post, session=None, silent=False):
         return sr.response.json()
     else:
         auto_raise(APINetworkError, silent)
+
+    return None
 
 
 def getOfficialVideoPost(videoSeq, session=None, silent=False):
