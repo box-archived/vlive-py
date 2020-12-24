@@ -71,7 +71,7 @@ def getPostInfo(post, session=None, silent=False):
     """
 
     # Make request
-    headers = {**gv.APIPostReferer(post), **gv.HeaderAcceptLang, **gv.HeaderUserAgent}
+    headers = {**gv.HeaderCommon, **gv.APIPostReferer(post)}
     sr = reqWrapper.get(gv.APIPostUrl(post), headers=headers, wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
@@ -90,7 +90,7 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
     :rtype: dict
     """
 
-    headers = {**gv.APIofficialVideoPostReferer(videoSeq), **gv.HeaderCommon}
+    headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
     sr = reqWrapper.get(gv.APIofficialVideoPostUrl(videoSeq), headers=headers,
                         session=session, wait=0.5, status=[200, 403])
 
