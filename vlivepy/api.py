@@ -3,5 +3,5 @@
 # empty module to bind functions
 
 from .connections import (
-    getUserSession, getPostInfo, getOfficialVideoPost
+    getUserSession, getPostInfo, getOfficialVideoPost, getInkeyData
 )

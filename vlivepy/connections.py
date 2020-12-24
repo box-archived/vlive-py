@@ -38,6 +38,27 @@ def getUserSession(email, pwd, silent=False):
         auto_raise(APINetworkError, silent)
 
 
+def getInkeyData(videoSeq, session=None, silent=False):
+    r""" get Inkey Data
+    With valid session, API also returns vpdid2
+
+    :param videoSeq: postId from VLIVE (like ######)(Numbers)
+    :param session: use specific session
+    :type session: reqWrapper.requests.Session
+    :param silent: Return `None` instead of Exception
+    :return: Inkey data
+    """
+
+    # Make request
+    headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
+    sr = reqWrapper.get(gv.APIInkeyUrl(videoSeq), headers=headers, wait=0.5, session=session, status=[200])
+
+    if sr.success:
+        return sr.response.json()
+    else:
+        auto_raise(APINetworkError, silent)
+
+
 def getPostInfo(post, session=None, silent=False):
     r""" get post info
 
