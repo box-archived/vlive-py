@@ -9,6 +9,20 @@ from .exception import (
 from .parser import parseVideoSeqFromPostInfo
 
 
+def sessionUserCheck(session):
+    r"""
+
+    :param session: session to evaluate
+    :type session: reqWrapper.requests.Session
+    :return: bool `isUser`
+    :rtype: bool
+    """
+    if 'NEO_SES' in session.cookies.keys():
+        return True
+    else:
+        return False
+
+
 def getUserSession(email, pwd, silent=False):
     r""" Get user session
 
@@ -94,6 +108,40 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
     headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
     sr = reqWrapper.get(gv.APIofficialVideoPostUrl(videoSeq), headers=headers,
                         session=session, wait=0.5, status=[200, 403])
+
+    if sr.success:
+        return sr.response.json()
+    else:
+        auto_raise(APINetworkError, silent)
+
+    return None
+
+
+def getLivePlayInfoV3(videoSeq, session=None, vpdid2=None, silent=False):
+    r"""
+
+    :param videoSeq: postId from VLIVE (like ######)(Numbers)
+    :param session: use specific session
+    :type session: reqWrapper.requests.Session
+    :param vpdid2: vpdid2 from api.getInkeyData()
+    :param silent: Return `None` instead of Exception
+    :return: `LivePlayInfoV3` Data
+    :rtype: dict
+    """
+
+    # Get vpdid2, if session is valid
+    if session is not None and vpdid2 is None:
+        if sessionUserCheck(session):
+            vpdid2 = getInkeyData(videoSeq, session=session, silent=silent)['vpdid2']
+
+    # Add vpdid2 param, if vpdid2 is valid
+    url = gv.APILiveV3PlayInfoUrl(videoSeq)
+    if vpdid2 is not None:
+        url += "&vpdid2=%s" % vpdid2
+
+    # Make request
+    headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
+    sr = reqWrapper.get(url, headers=headers, session=session, status=[200, 403])
 
     if sr.success:
         return sr.response.json()

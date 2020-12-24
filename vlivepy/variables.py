@@ -4,6 +4,8 @@ AppId = "8c6cc7b45d2568fb668be6e05b6e5a3b"
 # locale parameter(url postfix)
 LocaleParam = "&gcc=KR&locale=ko_KR"
 
+PlatformPCParam = "&platformType=PC"
+
 
 # API: Post Info API
 # APIPostUrl("POST-ID"): str
@@ -46,6 +48,12 @@ def APIofficialVideoPostUrl(videoSeq):
 
 def APIofficialVideoPostReferer(videoSeq):
     return {"referer": "https://www.vlive.tv/video/%s" % videoSeq}
+
+
+def APILiveV3PlayInfoUrl(videoSeq):
+    # Optional: vpdid2
+    return ("https://www.vlive.tv/globalv-web/vam-web/old/v3/live/229488/playInfo?appId=%s%s%s" %
+            (AppId, PlatformPCParam, LocaleParam))
 
 
 # User-Agent header for requests module
