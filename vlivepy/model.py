@@ -30,7 +30,7 @@ class Video(object):
         self.refresh_rate = refresh_rate
         self.__cachedTime = 0
         self.__cached_post = {}
-        self.__is_fanship = None
+        self.__is_paid = None
         self.__is_VOD = False
 
         # init variables
@@ -58,15 +58,15 @@ class Video(object):
             data = api.getOfficialVideoPost(self.videoSeq)
             if data is not None:
                 # Set Fanship info, when it is None
-                if self.__is_fanship is None:
+                if self.__is_paid is None:
                     if 'data' in data:
-                        self.__is_fanship = True
+                        self.__is_paid = True
                     else:
-                        self.__is_fanship = False
+                        self.__is_paid = False
 
                 # Set data
                 self.__cachedTime = int(time())
-                if self.__is_fanship:
+                if self.__is_paid:
                     self.__cached_post = data['data']
                 else:
                     self.__cached_post = data
