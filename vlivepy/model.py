@@ -55,6 +55,18 @@ class Video(object):
     def vod_id(self) -> str:
         return self.__vodId
 
+    @property
+    def title(self) -> str:
+        return self.__cached_post['officialVideo']['title']
+
+    @property
+    def channelCode(self) -> str:
+        return self.__cached_post['author']['channelCode']
+
+    @property
+    def channelName(self) -> str:
+        return self.__cached_post['author']['nickname']
+
     def refresh(self, force=False):
         # Cached time distance
         distance = int(time()) - self.__cachedTime
