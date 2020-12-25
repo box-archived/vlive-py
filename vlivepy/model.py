@@ -31,7 +31,7 @@ class Video(object):
         self.__cachedTime = 0
         self.__cached_post = {}
         self.__is_fanship = None
-        self.__is_Live = False
+        self.__is_VOD = False
 
         # init variables
         while self.__cachedTime == 0:
@@ -45,6 +45,15 @@ class Video(object):
     def postInfo(self):
         self.refresh()
         return self.__cached_post.copy()
+
+    @property
+    def is_vod(self):
+        r"""
+
+        :return: is vod?
+        :rtype: bool
+        """
+        return self.__is_VOD
 
     def refresh(self, force=False):
         # Cached time distance
@@ -66,3 +75,6 @@ class Video(object):
                     self.__cached_post = data['data']
                 else:
                     self.__cached_post = data
+
+                if 'vodId' in self.__cached_post['officialVideo']:
+                    self.__is_VOD = True
