@@ -20,3 +20,11 @@ class APIJSONParesError(APIError):
 
 class APISignInFailedError(APIError):
     """ Failed to Sign in """
+
+
+class ModelError(Exception):
+    """ Common Model Error """
+
+
+class ModelInitError(Exception):
+    """ Model Initialize Error """
