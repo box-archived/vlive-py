@@ -110,7 +110,7 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
 
 
 def getLivePlayInfoV3(videoSeq, session=None, vpdid2=None, silent=False):
-    r"""
+    r""" Get live play info (player's init data)
 
     :param videoSeq: postId from VLIVE (like ######)(Numbers)
     :param session: use specific session
