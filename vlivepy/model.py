@@ -32,6 +32,7 @@ class Video(object):
         self.__cached_post = {}
         self.__is_paid = None
         self.__is_VOD = False
+        self.__vodId = None
 
         # init variables
         while self.__cachedTime == 0:
@@ -49,6 +50,10 @@ class Video(object):
     @property
     def is_vod(self) -> bool:
         return self.__is_VOD
+
+    @property
+    def vod_id(self) -> str:
+        return self.__vodId
 
     def refresh(self, force=False):
         # Cached time distance
@@ -73,3 +78,4 @@ class Video(object):
 
                 if 'vodId' in self.__cached_post['officialVideo']:
                     self.__is_VOD = True
+                    self.__vodId = self.__cached_post['officialVideo']['vodId']
