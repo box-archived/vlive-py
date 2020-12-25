@@ -109,7 +109,7 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
     return None
 
 
-def getLivePlayInfoV3(videoSeq, session=None, vpdid2=None, silent=False):
+def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
     r""" Get live play info (player's init data)
 
     :param videoSeq: postId from VLIVE (like ######)(Numbers)
@@ -143,7 +143,7 @@ def getLivePlayInfoV3(videoSeq, session=None, vpdid2=None, silent=False):
     return None
 
 
-def getLiveStatusV2(videoSeq, silent=False):
+def getLiveStatus(videoSeq, silent=False):
     r""" Get live status (player's interval check)
 
     :param videoSeq: postId from VLIVE (like ######)(Numbers)

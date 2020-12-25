@@ -4,5 +4,5 @@
 
 from .connections import (
     getUserSession, getPostInfo, getOfficialVideoPost, getInkeyData,
-    getLivePlayInfoV3, getLiveStatusV2
+    getLivePlayInfo, getLiveStatus
 )
