@@ -56,6 +56,11 @@ def APILiveV3PlayInfoUrl(videoSeq):
             (AppId, PlatformPCParam, LocaleParam))
 
 
+def APILiveV2StatusUrl(videoSeq):
+    return ("https://www.vlive.tv/globalv-web/vam-web/old/v2/live/%s/status?appId=%s%s" %
+            (videoSeq, AppId, LocaleParam))
+
+
 # User-Agent header for requests module
 HeaderUserAgent = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                                  "AppleWebKit/537.36 (KHTML, like Gecko) "

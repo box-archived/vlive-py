@@ -143,6 +143,27 @@ def getLivePlayInfoV3(videoSeq, session=None, vpdid2=None, silent=False):
     return None
 
 
+def getLiveStatusV2(videoSeq, silent=False):
+    r""" Get live status (player's interval check)
+
+    :param videoSeq: postId from VLIVE (like ######)(Numbers)
+    :param silent: Return `None` instead of Exception
+    :return: `LiveStatus` Data
+    :rtype: dict
+    """
+
+    # Make request
+    headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
+    sr = reqWrapper.get(gv.APILiveV2StatusUrl(videoSeq), headers=headers, wait=0.2, status=[200])
+
+    if sr.success:
+        return sr.response.json()
+    else:
+        auto_raise(APINetworkError, silent)
+
+    return None
+
+
 def postIdToVideoSeq(post, silent=False):
     r""" postId to videoSeq
 
