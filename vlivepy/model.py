@@ -38,21 +38,16 @@ class Video(object):
             self.refresh(force=True)
 
     @property
-    def videoSeq(self):
+    def videoSeq(self) -> str:
         return self.__VideoSeq
 
     @property
-    def postInfo(self):
+    def postInfo(self) -> dict:
         self.refresh()
         return self.__cached_post.copy()
 
     @property
-    def is_vod(self):
-        r"""
-
-        :return: is vod?
-        :rtype: bool
-        """
+    def is_vod(self) -> bool:
         return self.__is_VOD
 
     def refresh(self, force=False):
