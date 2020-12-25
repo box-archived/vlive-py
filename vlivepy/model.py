@@ -3,6 +3,7 @@
 from . import api
 from . import utils
 from time import time
+from . import controllers
 
 
 class Video(object):
@@ -91,3 +92,27 @@ class Video(object):
                 if 'vodId' in self.__cached_post['officialVideo']:
                     self.__is_VOD = True
                     self.__vodId = self.__cached_post['officialVideo']['vodId']
+
+    def getOfficialVideoPost(self, silent=False):
+        return api.getOfficialVideoPost(self.videoSeq, session=self.userSession, silent=silent)
+
+    def getLivePlayInfo(self, silent=False):
+        return api.getLivePlayInfo(self.videoSeq, session=self.userSession, silent=silent)
+
+    def getInkeyData(self, silent=False):
+        return api.getInkeyData(self.videoSeq, session=self.userSession, silent=silent)
+
+    def getLiveStatus(self, silent=False):
+        return api.getLiveStatus(self.videoSeq, silent=silent)
+
+    def getUserSession(self, email, pwd, silent):
+        self.userSession = api.getUserSession(email, pwd, silent)
+
+    def loadSession(self, fp):
+        r"""
+
+        :param fp:
+        :type fp:_io.BufferedReader
+        :return: Nothing
+        """
+        self.userSession = controllers.loadSession(fp)
