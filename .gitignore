@@ -129,11 +129,8 @@ dmypy.json
 .pyre/
 
 # IDE
-<<<<<<< HEAD:.gitignore
 .idea
 
 # Devs
 testlab.py
-=======
-.idea
->>>>>>> 4c2f856 (Update .gitignore):.gitignore/.gitignore
+*.session
