@@ -4,6 +4,7 @@ from . import api
 from . import utils
 from time import time
 from . import controllers
+from . import parser
 
 
 class Video(object):
@@ -91,7 +92,7 @@ class Video(object):
 
                 if 'vodId' in self.__cached_post['officialVideo']:
                     self.__is_VOD = True
-                    self.__vodId = self.__cached_post['officialVideo']['vodId']
+                    self.__vodId = parser.parseVodIdFromOffcialVideoPost(self.__cached_post, silent=True)
 
     def getOfficialVideoPost(self, silent=False):
         return api.getOfficialVideoPost(self.videoSeq, session=self.userSession, silent=silent)
