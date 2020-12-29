@@ -107,6 +107,7 @@ class Video(object):
 
     def getUserSession(self, email, pwd, silent):
         self.userSession = api.getUserSession(email, pwd, silent)
+        self.refresh(force=True)
 
     def loadSession(self, fp):
         r"""
@@ -116,3 +117,4 @@ class Video(object):
         :return: Nothing
         """
         self.userSession = controllers.loadSession(fp)
+        self.refresh(force=True)
