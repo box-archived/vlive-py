@@ -6,7 +6,7 @@ from . import variables as gv
 from .exception import (
     auto_raise, APINetworkError, APISignInFailedError, APIJSONParesError
 )
-from .parser import parseVideoSeqFromPostInfo, sessionUserCheck
+from .parser import parseVideoSeqFromPostInfo, sessionUserCheck, parseVodIdFromOffcialVideoPost
 
 
 def getUserSession(email, pwd, silent=False):
@@ -182,6 +182,39 @@ def getLiveStatus(videoSeq, silent=False):
         auto_raise(APINetworkError, silent)
 
     return None
+
+
+def getVodId(videoSeq, silent=False):
+    data = getOfficialVideoPost(videoSeq, silent=silent)
+    if data is not None:
+        return parseVodIdFromOffcialVideoPost(data, silent=silent)
+
+    return None
+
+
+def getVodPlayInfo(videoSeq, vodId=None, session=None, silent=False):
+    r""" Get VOD Data
+
+    :param videoSeq: postId from VLIVE (like ######)(Numbers)
+    :param vodId: VOD ID to parse (Hex string)
+    :param session: use specific session
+    :param silent: Return `None` instead of Exception
+    :return:
+    """
+
+    inkey = getInkeyData(videoSeq, session=session, silent=silent)['inkey']
+    if vodId is None:
+        vodId = getVodId(videoSeq)
+
+    # make request
+    url = gv.APIVodPlayInfoUrl(vodId, inkey)
+    headers = {**gv.HeaderCommon, **gv.APIVodPlayInfoReferer}
+    sr = reqWrapper.get(url, headers=headers, session=session, wait=0.3, status=[200, 403])
+
+    if sr.success:
+        return sr.response.json()
+    else:
+        auto_raise(APINetworkError, silent=silent)
 
 
 def postIdToVideoSeq(post, silent=False):

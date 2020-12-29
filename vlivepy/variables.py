@@ -50,6 +50,7 @@ def APIofficialVideoPostReferer(videoSeq):
     return {"referer": "https://www.vlive.tv/video/%s" % videoSeq}
 
 
+# TODO: fix videoSeq data on next commit
 def APILiveV3PlayInfoUrl(videoSeq):
     # Optional: vpdid2
     return ("https://www.vlive.tv/globalv-web/vam-web/old/v3/live/229488/playInfo?appId=%s%s%s" %
@@ -59,6 +60,13 @@ def APILiveV3PlayInfoUrl(videoSeq):
 def APILiveV2StatusUrl(videoSeq):
     return ("https://www.vlive.tv/globalv-web/vam-web/old/v2/live/%s/status?appId=%s%s" %
             (videoSeq, AppId, LocaleParam))
+
+
+def APIVodPlayInfoUrl(vodId, inkey):
+    return "https://apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/%s?key=%s&videoId=%s" % (vodId, inkey, vodId)
+
+
+APIVodPlayInfoReferer = {"referer": "https://www.vlive.tv/"}
 
 
 # User-Agent header for requests module
