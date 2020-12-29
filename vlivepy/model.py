@@ -113,7 +113,6 @@ class Video(object):
         r"""
 
         :param fp:
-        :type fp:_io.BufferedReader
         :return: Nothing
         """
         self.userSession = controllers.loadSession(fp)
