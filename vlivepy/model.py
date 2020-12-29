@@ -118,3 +118,9 @@ class Video(object):
         """
         self.userSession = controllers.loadSession(fp)
         self.refresh(force=True)
+
+    def getVodPlayInfo(self, silent=False):
+        if self.is_vod:
+            return api.getVodPlayInfo(self.videoSeq, self.vod_id, session=self.userSession, silent=silent)
+        else:
+            return None
