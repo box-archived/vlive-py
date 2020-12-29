@@ -50,11 +50,10 @@ def APIofficialVideoPostReferer(videoSeq):
     return {"referer": "https://www.vlive.tv/video/%s" % videoSeq}
 
 
-# TODO: fix videoSeq data on next commit
 def APILiveV3PlayInfoUrl(videoSeq):
     # Optional: vpdid2
-    return ("https://www.vlive.tv/globalv-web/vam-web/old/v3/live/229488/playInfo?appId=%s%s%s" %
-            (AppId, PlatformPCParam, LocaleParam))
+    return ("https://www.vlive.tv/globalv-web/vam-web/old/v3/live/%s/playInfo?appId=%s%s%s" %
+            (videoSeq, AppId, PlatformPCParam, LocaleParam))
 
 
 def APILiveV2StatusUrl(videoSeq):
