@@ -4,7 +4,7 @@ import reqWrapper
 
 from . import variables as gv
 from .exception import (
-    auto_raise, APINetworkError, APISignInFailedError
+    auto_raise, APINetworkError, APISignInFailedError, APIJSONParesError
 )
 from .parser import parseVideoSeqFromPostInfo, sessionUserCheck
 
@@ -62,6 +62,26 @@ def getInkeyData(videoSeq, session=None, silent=False):
         auto_raise(APINetworkError, silent)
 
     return None
+
+
+def getVpdid2(session, silent=False):
+    r""" get vpdid2 value
+    request to video "142851"
+
+    :param session: use specific session
+    :type session: reqWrapper.requests.Session
+    :param silent: Return `None` instead of Exception
+    :return: vpdid2 data
+    :rtype: str
+    """
+
+    inkey = getInkeyData("142851", session=session, silent=silent)
+    if inkey is None:
+        return None
+    else:
+        if 'vpdid2' not in inkey:
+            auto_raise(APIJSONParesError("Server didn't return vpdid2"), silent=silent)
+        return inkey['vpdid2']
 
 
 def getPostInfo(post, session=None, silent=False):

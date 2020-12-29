@@ -2,5 +2,5 @@
 
 # empty module to bind functions
 
-from .connections import postIdToVideoSeq
+from .connections import postIdToVideoSeq, getVpdid2
 from .controllers import dumpSession, loadSession
