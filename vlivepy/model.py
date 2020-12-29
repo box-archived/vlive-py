@@ -40,6 +40,12 @@ class Video(object):
         while self.__cachedTime == 0:
             self.refresh(force=True)
 
+    def __repr__(self):
+        if self.is_vod:
+            return "<VLIVE Video(VOD) [%s]>" % self.videoSeq
+        else:
+            return "<VLIVE Video(LIVE) [%s]>" % self.videoSeq
+
     @property
     def videoSeq(self) -> str:
         return self.__VideoSeq
