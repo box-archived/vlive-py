@@ -44,3 +44,30 @@ def sessionUserCheck(session):
         return True
     else:
         return False
+
+
+def parseVodIdFromOffcialVideoPost(post, silent=False):
+    r"""
+
+    :param post: OfficialVideoPost data from api.getOfficialVideoPost
+    :type post: dict
+    :param silent: Return `None` instead of Exception
+    :return: VOD id of post
+    :rtype: str0
+    """
+
+    # Normalize paid content data
+    if 'data' in post:
+        data = post['data']
+    else:
+        data = post
+
+    if 'officialVideo' in data:
+        if 'vodId' in data['officialVideo']:
+            return data['officialVideo']['vodId']
+        else:
+            auto_raise(APIJSONParesError("Given data is live data"), silent=silent)
+    else:
+        auto_raise(APIJSONParesError("Given data is post data"), silent=silent)
+
+    return None
