@@ -144,7 +144,7 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
     # Get vpdid2, if session is valid
     if session is not None and vpdid2 is None:
         if sessionUserCheck(session):
-            vpdid2 = getInkeyData(videoSeq, session=session, silent=silent)['vpdid2']
+            vpdid2 = getVpdid2(session, silent=silent)
 
     # Add vpdid2 param, if vpdid2 is valid
     url = gv.APILiveV3PlayInfoUrl(videoSeq)
