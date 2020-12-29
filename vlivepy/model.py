@@ -2,9 +2,9 @@
 
 from . import api
 from . import utils
-from time import time
 from . import controllers
 from . import parser
+from time import time
 
 
 class Video(object):
