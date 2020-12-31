@@ -7,10 +7,10 @@ Video 객체를 사용하여 VOD와 라이브를 로드할 수 있습니다. pos
 ```python
 import vlivepy
 
-# load with postId
+# load post url `https://www.vlive.tv/post/0-18396482`
 video = vlivepy.Video("0-18396482")
 
-# load with videoSeq
+# load video url `https://www.vlive.tv/video/142851`
 video = vlivepy.Video("142851")
 
 ```
