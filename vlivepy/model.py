@@ -4,6 +4,7 @@ from . import api
 from . import utils
 from . import controllers
 from . import parser
+from . exception import ModelInitError
 from time import time
 
 
@@ -130,3 +131,20 @@ class Video(object):
             return api.getVodPlayInfo(self.videoSeq, self.vod_id, session=self.userSession, silent=silent)
         else:
             return None
+
+    def create_live_object(self):
+        if not self.is_vod:
+            return Live(self.videoSeq)
+        else:
+            raise ModelInitError("Video #%s is not live" % self.videoSeq)
+
+
+class Live(object):
+    def __init__(self, videoSeq):
+        self.__videoSeq = videoSeq
+
+        # Variables
+        self.__cached_status = {}
+        self.__cached_status_time = 0
+        self.__cached_playInfo = {}
+        self.__cached_playInfo_time = 0
