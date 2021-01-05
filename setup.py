@@ -9,7 +9,6 @@ setup(
     author='box-archived',
     author_email='box.cassette@gmail.com',
     description='vlivepy is reverse-engineered Python-based API of VLIVE(vlive.tv)',
-    long_description=open('README.md', encoding="utf8").read(),
     install_requires=[
         'requests>=2.*',
         'reqWrapper>=0.2.*'
