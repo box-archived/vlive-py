@@ -5,4 +5,4 @@ from . import model
 from . import utils
 from . import variables as gv
 from .api import *
-from .model import Video, Live
+from .model import Video
