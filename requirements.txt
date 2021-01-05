@@ -1,2 +1,3 @@
 requests>=2.*
 reqWrapper>=0.2.*
+beautifulsoup4>=4.*
