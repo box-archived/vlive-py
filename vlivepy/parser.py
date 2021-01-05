@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from .exception import auto_raise, APIJSONParesError
+from bs4 import BeautifulSoup
+from collections import namedtuple
 
 
 def parseVideoSeqFromPostInfo(info, silent=False):
@@ -30,6 +32,22 @@ def parseVideoSeqFromPostInfo(info, silent=False):
         auto_raise(APIJSONParesError("Cannot find any video"), silent)
 
     return None
+
+
+def parseUpcomingFromPage(html):
+    upcoming = []
+    upcomingVideo = namedtuple("upcomingVideo", "seq cseq name type")
+
+    soup = BeautifulSoup(html, 'html.parser')
+    for item in soup.find_all("a", {"class": "_title"}):
+        ga_name = item.get("data-ga-name")
+        ga_type = item.get("data-ga-type")
+        ga_seq = item.get("data-ga-seq")
+        ga_cseq = item.get("data-ga-cseq")
+
+        upcoming.append(upcomingVideo(seq=ga_seq, cseq=ga_cseq, name=ga_name, type=ga_type))
+
+    return upcoming
 
 
 def sessionUserCheck(session):

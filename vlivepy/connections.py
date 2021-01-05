@@ -6,7 +6,7 @@ from . import variables as gv
 from .exception import (
     auto_raise, APINetworkError, APISignInFailedError, APIJSONParesError
 )
-from .parser import parseVideoSeqFromPostInfo, sessionUserCheck, parseVodIdFromOffcialVideoPost
+from .parser import parseVideoSeqFromPostInfo, sessionUserCheck, parseVodIdFromOffcialVideoPost, parseUpcomingFromPage
 
 
 def getUserSession(email, pwd, silent=False):
@@ -215,6 +215,31 @@ def getVodPlayInfo(videoSeq, vodId=None, session=None, silent=False):
         return sr.response.json()
     else:
         auto_raise(APINetworkError, silent=silent)
+
+
+def loadUpcoming(day=None, silent=False):
+    params = dict()
+    if day is not None:
+        params.update({"d": day})
+
+    # make request
+    url = "https://www.vlive.tv/upcoming"
+    headers = gv.HeaderCommon
+    sr = reqWrapper.get(url, params=params, headers=headers)
+    if sr.success:
+        return sr.response.text
+    else:
+        auto_raise(APINetworkError, silent=silent)
+
+    return None
+
+
+def getUpcoming(day=None, silent=False):
+    html = loadUpcoming(day=day, silent=silent)
+    if html is None:
+        return None
+    else:
+        return parseUpcomingFromPage(html)
 
 
 def postIdToVideoSeq(post, silent=False):
