@@ -5,6 +5,9 @@ from . import utils
 from . import controllers
 from . import parser
 from time import time
+from collections import namedtuple
+
+upcomingVideo = namedtuple("upcomingVideo", "seq cseq name type")
 
 
 class Video(object):
@@ -161,5 +164,10 @@ class Upcoming(object):
 
     @property
     def upcoming(self):
+        r""" get upcoming list, auto refresh
+
+        :return: Upcoming list
+        :rtype: list[upcomingVideo]
+        """
         self.refresh()
         return self.__cached_data

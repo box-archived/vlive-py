@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from .exception import auto_raise, APIJSONParesError
+from .model import upcomingVideo
 from bs4 import BeautifulSoup
-from collections import namedtuple
 
 
 def parseVideoSeqFromPostInfo(info, silent=False):
@@ -36,7 +36,6 @@ def parseVideoSeqFromPostInfo(info, silent=False):
 
 def parseUpcomingFromPage(html):
     upcoming = []
-    upcomingVideo = namedtuple("upcomingVideo", "seq cseq name type")
 
     soup = BeautifulSoup(html, 'html.parser')
     for item in soup.find_all("a", {"class": "_title"}):
