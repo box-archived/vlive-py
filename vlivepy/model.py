@@ -149,7 +149,6 @@ class Upcoming(object):
         if distance >= self.refresh_rate or force:
             new_data = self.load(silent=True)
             if new_data is not None:
-                print("refreshed")
                 self.__cached_data = new_data
                 self.__cached_time = int(time())
                 return True
