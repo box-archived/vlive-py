@@ -77,7 +77,7 @@ class Video(object):
 
     def refresh(self, force=False):
         # Cached time distance
-        distance = int(time()) - self.__cachedTime
+        distance = time() - self.__cachedTime
         if distance >= self.refresh_rate or force:
             # Get data
             data = api.getOfficialVideoPost(self.videoSeq)
@@ -130,3 +130,37 @@ class Video(object):
             return api.getVodPlayInfo(self.videoSeq, self.vod_id, session=self.userSession, silent=silent)
         else:
             return None
+
+
+class Upcoming(object):
+    def __init__(self, refresh_rate=5, list_vod=True, list_upcoming=True, list_live=True):
+        self.refresh_rate = refresh_rate
+        self.__cached_data = []
+        self.__cached_time = 0
+        self.list_live = list_live
+        self.list_vod = list_vod
+        self.list_upcoming = list_upcoming
+
+        # refresh data
+        self.refresh(True)
+
+    def refresh(self, force=False):
+        distance = time() - self.__cached_time
+        if distance >= self.refresh_rate or force:
+            new_data = self.load(silent=True)
+            if new_data is not None:
+                print("refreshed")
+                self.__cached_data = new_data
+                self.__cached_time = int(time())
+                return True
+        return False
+
+    def load(self, date=None, silent=False):
+        upcomings = utils.getUpcomingList(date=date, silent=silent)
+        if upcomings is not None:
+            return upcomings
+
+    @property
+    def upcoming(self):
+        self.refresh()
+        return self.__cached_data
