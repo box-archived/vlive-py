@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from .exception import auto_raise, APIJSONParesError
-from .model import upcomingVideo
+from collections import namedtuple
 from bs4 import BeautifulSoup
+
+upcomingVideo = namedtuple("upcomingVideo", "seq cseq name type")
 
 
 def parseVideoSeqFromPostInfo(info, silent=False):
