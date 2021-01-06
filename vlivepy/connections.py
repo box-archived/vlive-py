@@ -234,8 +234,8 @@ def loadUpcoming(day=None, silent=False):
     return None
 
 
-def getUpcoming(day=None, silent=False):
-    html = loadUpcoming(day=day, silent=silent)
+def getUpcomingList(date=None, silent=False):
+    html = loadUpcoming(day=date, silent=silent)
     if html is None:
         return None
     else:
