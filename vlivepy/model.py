@@ -133,13 +133,13 @@ class Video(object):
 
 
 class Upcoming(object):
-    def __init__(self, refresh_rate=5, list_vod=True, list_upcoming=True, list_live=True):
+    def __init__(self, refresh_rate=5, show_vod=True, show_upcoming=True, show_live=True):
         self.refresh_rate = refresh_rate
         self.__cached_data = []
         self.__cached_time = 0
-        self.list_live = list_live
-        self.list_vod = list_vod
-        self.list_upcoming = list_upcoming
+        self.show_live = show_live
+        self.show_vod = show_vod
+        self.show_upcoming = show_upcoming
 
         # refresh data
         self.refresh(True)
@@ -159,12 +159,28 @@ class Upcoming(object):
         if upcomings is not None:
             return upcomings
 
-    @property
-    def upcoming(self):
+    def upcoming(self, show_live=None, show_vod=None, show_upcoming=None):
         r""" get upcoming list, auto refresh
 
         :return: Upcoming list
         :rtype: list[parser.upcomingVideo]
         """
         self.refresh()
-        return self.__cached_data
+        if show_live is None:
+            show_live = self.show_live
+        if show_vod is None:
+            show_vod = self.show_vod
+        if show_upcoming is None:
+            show_upcoming = self.show_upcoming
+
+        data_list = []
+        for item in self.__cached_data:
+            item: parser.upcomingVideo
+            if item.type == "VOD" and show_vod:
+                data_list.append(item)
+            elif item.type == "LIVE" and show_live:
+                data_list.append(item)
+            elif item.type == "UPCOMING" and show_upcoming:
+                data_list.append(item)
+
+        return data_list
