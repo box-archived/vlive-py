@@ -3,7 +3,7 @@ from .exception import auto_raise, APIJSONParesError
 from collections import namedtuple
 from bs4 import BeautifulSoup
 
-UpcomingVideo = namedtuple("UpcomingVideo", "seq cseq name type")
+UpcomingVideo = namedtuple("UpcomingVideo", "seq cseq cname ctype name type product")
 
 
 def parseVideoSeqFromPostInfo(info, silent=False):
@@ -45,8 +45,12 @@ def parseUpcomingFromPage(html):
         ga_type = item.get("data-ga-type")
         ga_seq = item.get("data-ga-seq")
         ga_cseq = item.get("data-ga-cseq")
+        ga_cname = item.get("data-ga-cname")
+        ga_ctype = item.get("data-ga-ctype")
+        ga_product = item.get("data-ga-product")
 
-        upcoming.append(UpcomingVideo(seq=ga_seq, cseq=ga_cseq, name=ga_name, type=ga_type))
+        upcoming.append(UpcomingVideo(seq=ga_seq, cseq=ga_cseq, cname=ga_cname,
+                                      ctype=ga_ctype, name=ga_name, product=ga_product, type=ga_type))
 
     return upcoming
 
