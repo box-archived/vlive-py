@@ -4,6 +4,7 @@ from . import api
 from . import utils
 from . import controllers
 from . import parser
+from .parser import UpcomingVideo
 from time import time
 
 
@@ -175,7 +176,7 @@ class Upcoming(object):
 
         data_list = []
         for item in self.__cached_data:
-            item: parser.upcomingVideo
+            item: parser.UpcomingVideo
             if item.type == "VOD" and show_vod:
                 data_list.append(item)
             elif item.type == "LIVE" and show_live:
