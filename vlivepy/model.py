@@ -149,7 +149,9 @@ class Upcoming(object):
     def refresh(self, force=False):
         distance = time() - self.__cached_time
         if distance >= self.refresh_rate or force:
-            new_data = self.load(date=None, silent=True)
+            new_data = self.load(date=None, silent=True,
+                                 show_vod=True, show_upcoming_vod=True,
+                                 show_live=True, show_upcoming_live=True)
             if new_data is not None:
                 self.__cached_data = new_data
                 self.__cached_time = int(time())
