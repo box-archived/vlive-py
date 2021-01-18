@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='vlivepy',
-    version='0.0.6',
+    version='0.0.7',
     packages=['vlivepy'],
     url='https://github.com/box-archived/vlive-py',
     license='MIT License',
