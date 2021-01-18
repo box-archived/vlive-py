@@ -3,7 +3,7 @@ from .exception import auto_raise, APIJSONParesError
 from collections import namedtuple
 from bs4 import BeautifulSoup
 
-UpcomingVideo = namedtuple("UpcomingVideo", "seq cseq cname ctype name type product")
+UpcomingVideo = namedtuple("UpcomingVideo", "seq time cseq cname ctype name type product")
 
 
 def parseVideoSeqFromPostInfo(info, silent=False):
@@ -40,16 +40,38 @@ def parseUpcomingFromPage(html):
     upcoming = []
 
     soup = BeautifulSoup(html, 'html.parser')
-    for item in soup.find_all("a", {"class": "_title"}):
-        ga_name = item.get("data-ga-name")
-        ga_type = item.get("data-ga-type")
-        ga_seq = item.get("data-ga-seq")
-        ga_cseq = item.get("data-ga-cseq")
-        ga_cname = item.get("data-ga-cname")
-        ga_ctype = item.get("data-ga-ctype")
-        ga_product = item.get("data-ga-product")
+    soup_upcoming_list = soup.find("ul", {"class": "upcoming_list"})
+    for item in soup_upcoming_list.find_all("li"):
+        item_type_vod = False
 
-        upcoming.append(UpcomingVideo(seq=ga_seq, cseq=ga_cseq, cname=ga_cname,
+        # find replay class in <li> tag
+        soup_item_class_tag = item.get("class")
+        if soup_item_class_tag is not None:
+            if soup_item_class_tag[0] == "replay":
+                item_type_vod = True
+
+        soup_time = item.find("span", {"class": "time"})
+        release_time = soup_time.get_text()
+
+        # get title <a> tag
+        soup_info_tag = item.find("a", {"class": "_title"})
+
+        # parse upcoming data
+        ga_name = soup_info_tag.get("data-ga-name")
+        ga_type = soup_info_tag.get("data-ga-type")
+        ga_seq = soup_info_tag.get("data-ga-seq")
+        ga_cseq = soup_info_tag.get("data-ga-cseq")
+        ga_cname = soup_info_tag.get("data-ga-cname")
+        ga_ctype = soup_info_tag.get("data-ga-ctype")
+        ga_product = soup_info_tag.get("data-ga-product")
+        if ga_type == "UPCOMING":
+            if item_type_vod:
+                ga_type += "_VOD"
+            else:
+                ga_type += "_LIVE"
+
+        # create item and append
+        upcoming.append(UpcomingVideo(seq=ga_seq, time=release_time, cseq=ga_cseq, cname=ga_cname,
                                       ctype=ga_ctype, name=ga_name, product=ga_product, type=ga_type))
 
     return upcoming
