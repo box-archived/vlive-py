@@ -10,6 +10,7 @@ vlivepy는 파이썬 기반의 vlive.tv 비공식 API입니다.
 $ python -m pip install vlivepy
 ```
 
+---
 # Documentation
 - [API](#api)
   - [getUserSession()](#getusersession)
@@ -62,22 +63,17 @@ print (getUpcomingList(date=None,  # Optional
 UpcomingVideo는 일정표의 개별 일정에 대응되는 `namedtuple` 객체입니다.
 
 UpcomingVideo은 다음의 필드를 가집니다:
-- `seq`: videoSeq 값
-- `time`: VOD공개/방송시작 시간
-- `cseq`: 방송하는 채널의 channelSeq 값
-- `cname`: 방송하는 채널의 이름
-- `ctype`: 방송하는 채널의 타입. 리턴 항목은 아래와 같습니다.
-    - `PREMIUM`: 멤버십 채널 방송
-    - `BASIC`: 일반 채널 방송
-- `name`: 방송 제목
-- `type`: 방송 타입. 리턴 항목은 아래와 같습니다.
-    - `VOD`: 공개된 VOD 입니다.
-    - `UPCOMING_VOD`: 시간이 예약된 VOD 입니다.
-    - `UPCOMING_LIVE`: 시간이 예약된 LIVE 입니다.
-    - `LIVE`: 지금 방송중인 LIVE 입니다.
-- `product`: 판매상품 여부. 리턴 항목은 아래와 같습니다.
-    - `PAID`: V LIVE+ 등 유료 상품
-    - `NONE`: (멤버십 라이브 포함) 일반 라이브 
+
+| 필드 | 설명 | 값 |
+|:---:|:---:|:---|
+| `seq` | videoSeq 값 | Any |
+| `time` | VOD공개/방송시작 시간 | Any |
+| `cseq` | 방송(업로드)하는 채널의 channelSeq 값 | Any |
+| `cname` | 방송(업로드)하는 채널의 이름 | Any |
+| `ctype` | 방송(업로드)하는 채널의 타입 | `PREMIUM`: 멤버십 채널 방송 <br> `BASIC`: 일반 채널 방송 |
+| `name` | 방송(VOD) 제목 | Any |
+| `type` | 스케쥴 타입 | `VOD`: 공개된 VOD 입니다. <br> `UPCOMING_VOD`: 시간이 예약된 VOD 입니다. <br> `UPCOMING_LIVE`: 시간이 예약된 LIVE 입니다. <br> `LIVE`: 지금 방송중인 LIVE 입니다. |
+| `product` | 판매상품 여부 | `PAID`: V LIVE+ 등 유료 상품 <br> `NONE`: (멤버십 라이브 포함) 일반 라이브  |
 
 ## Upcoming
 `Upcoming` 객체는 [getUpcomingList](#utilsgetupcominglist) 결과를 캐싱하고 목록 표시 옵션에 따라 목록을 재구성합니다.
