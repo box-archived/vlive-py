@@ -54,6 +54,10 @@ print (getUpcomingList(date=None,  # Optional
                        silent=False))  # Optional
 # [UpcomingVideo(...), ...]
 ```
+`getUpcomingList()`함수는 다음의 변수를 갖습니다:
+- `date`: 로드 할 날짜를 입력합니다. 포맷은 `%Y%m%d` 입니다. None 일 경우 오늘 일정표를 로드합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
 #### UpcomingVideo
 UpcomingVideo는 일정표의 개별 일정에 대응되는 `namedtuple` 객체입니다.
 
