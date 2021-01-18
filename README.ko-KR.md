@@ -43,6 +43,10 @@ getUserSession(email="user@email.id",
                pwd="userPassword!",
                silent=False)  # Optional
 ```
+`getUserSession()`함수는 다음의 변수를 갖습니다:
+- `email`: 로그인 할 계정의 이메일 아이디입니다.
+- `pwd`: 로그인 할 계정의 비밀번호 입니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### getPostInfo()
 ### getOfficialVideoPost()
