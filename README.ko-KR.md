@@ -76,7 +76,7 @@ UpcomingVideo은 다음의 필드를 가집니다:
     - `NONE`: (멤버십 라이브 포함) 일반 라이브 
 
 ## Upcoming
-`Upcoming` 객체는 [VLIVE 일정표](https://www.vlive.tv/upcoming) 캐싱하고 영상 타입에 따라 목록을 구성합니다.
+`Upcoming` 객체는 [getUpcomingList](#utilsgetupcominglist) 결과를 캐싱하고 목록 표시 옵션에 따라 목록을 재구성합니다.
 
 일정표는 API가 아닌 웹 파싱으로 읽어오는 방식으로 작동하기 때문에 임시 캐싱을 사용합니다. `refresh_rate` 변수를 0으로 설정하면 캐시된 정보를 사용하지 않습니다.
 
