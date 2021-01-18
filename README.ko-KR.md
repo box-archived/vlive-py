@@ -12,19 +12,18 @@ vlivepy는 파이썬 기반의 vlive.tv 비공식 API입니다.
 ```python
 from vlivepy import Upcoming
 
-upc = Upcoming(refresh_rate=5, show_vod=True, show_upcoming=True, show_live=True)
-
-print(upc.upcoming())
-# [UpcomingVideo(
-#   seq='232395', time='오전 12:00', cseq='447', cname='CHUNG HA', ctype='BASIC', 
-#   name="CHUNG HA 청하 'X (걸어온 길에 꽃밭 따윈 없었죠)' MV Teaser 2", 
-#   type='VOD', product='NONE'), ...]
+upc = Upcoming(refresh_rate=5, 
+               show_vod=True,
+               show_upcoming_vod=True,
+               show_upcoming_live=True,
+               show_live=True)
 ```
 
 `Upcoming`객체는 새로고침 캐시 수명과 표시 속성에 대한 변수를 받습니다 (Optional)
 - `refresh_rate`: 캐시 수명입니다. 초 단위이며 해당시간이 초과했을 경우 일정표를 다시 로드합니다. (기본값: 5)
 - `show_vod`: 목록에 VOD를 포함합니다. (기본값: True)
-- `show_upcoming`: 목록에 예약된 일정을 포함합니다. 공개시간이 되지 않은 VOD와 LIVE가 모두 포함됩니다. (기본값: True)
+- `show_upcoming_vod`: 목록에 예약된 VOD를 포함합니다. (기본값: True)
+- `show_upcoming_live`: 목록에 예약된 LIVE를 포함합니다. (기본값: True)
 - `show_live`: 목록에 진행중인 LIVE를 포함합니다. (기본값: True)
 
 Upcoming 객체에서 사용할 수 있는 메소드입니다.
@@ -33,26 +32,72 @@ Upcoming 객체에서 사용할 수 있는 메소드입니다.
 - [`load`](#upcomingload)
 
 ### Upcoming.upcoming()
-오늘의 일정표를 파싱하여 list(of UpcomingVideo) 타입으로 리턴합니다. 캐시 수명이 만료되지 않았다면 캐시에서 데이터를 제공합니다.
+오늘의 일정표를 파싱하여 list(of [UpcomingVideo](#upcomingvideo)) 타입으로 리턴합니다. 캐시 수명이 만료되지 않았다면 캐시에서 데이터를 제공합니다.
 ```python
 from vlivepy import Upcoming
 
 upc = Upcoming()
 
 print(upc.upcoming())
-# [UpcomingVideo(
-#   seq='232395', time='오전 12:00', cseq='447', cname='CHUNG HA', ctype='BASIC', 
-#   name="CHUNG HA 청하 'X (걸어온 길에 꽃밭 따윈 없었죠)' MV Teaser 2", 
-#   type='VOD', product='NONE'), ...]
+# [UpcomingVideo(seq='232395', time='오전 12:00', cseq='447', cname='CHUNG HA', ctype='BASIC', name="CHUNG HA 청하 'X (걸어온 길에 꽃밭 따윈 없었죠)' MV Teaser 2", type='VOD', product='NONE'), ...]
+```
+
+변수를 통해서 캐시와 목록 포함 옵션을 오버라이드 할 수 있습니다.
+```python
+from vlivepy import Upcoming
+
+upc = Upcoming()
+
+# 캐시 수명을 무시하고 강제로 새 데이터 로드
+upc.upcoming(force=True)
+
+# 객체 속성을 일시적으로 오버라이드 
+upc.upcoming(show_vod=False, show_upcoming_vod=False)
 ```
 
 ### Upcoming.refresh()
+캐시의 수명을 확인하여 캐시가 만료됐다면 데이터를 새로 로드합니다. `force`변수를 통해 캐시 수명을 무시하고 데이터를 로드할 수 있습니다.
 
 ### Upcoming.load()
+특정 날짜의 일정표를 로드합니다. 로드된 일정표는 캐시되지 않으며 바로 리턴됩니다.
 
+리턴되는 목록은 객체의 목록 포함 옵션을 따르며, `show_*` 변수를 통한 오버라이드를 사용할 수 있습니다.
+```python
+from vlivepy import Upcoming
+from datetime import date, timedelta
 
+upc = Upcoming()
+tomorrow = date.today() + timedelta(days=1)  # 내일 날짜를 구한다
 
-### 영상 로드하기
+print(upc.load(tomorrow.strftime("%Y%m%d")))
+# [UpcomingVideo(seq='232552', time='오전 10:00', cseq='967', cname='Arirang Radio │아리랑라디오', ctype='BASIC',name='Arirang Radio [#daily K]', type='UPCOMING_LIVE', product='NONE'), ...]
+```
+- `date`: 로드 할 날짜를 입력합니다. 포맷은 `%Y%m%d` 입니다.
+- `show_vod`, `show_upcoming_vod`, `show_upcoming_live`, `show_live`: 목록 포함 옵션 오버라이드
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
+### UpcomingVideo
+UpcomingVideo는 일정표의 항목을 나타내는 `namedtuple` 타입 데이터입니다.
+
+UpcomingVideo은 다음의 필드를 가집니다:
+- `seq`: videoSeq 값
+- `time`: VOD공개/방송시작 시간
+- `cseq`: 방송하는 채널의 channelSeq 값
+- `cname`: 방송하는 채널의 이름
+- `ctype`: 방송하는 채널의 타입. 리턴 항목은 아래와 같습니다.
+    - `PREMIUM`: 멤버십 채널 방송
+    - `BASIC`: 일반 채널 방송
+- `name`: 방송 제목
+- `type`: 방송 타입. 리턴 항목은 아래와 같습니다.
+    - `VOD`: 공개된 VOD 입니다.
+    - `UPCOMING_VOD`: 시간이 예약된 VOD 입니다.
+    - `UPCOMING_LIVE`: 시간이 예약된 LIVE 입니다.
+    - `LIVE`: 지금 방송중인 LIVE 입니다.
+- `product`: 판매상품 여부. 리턴 항목은 아래와 같습니다.
+    - `PAID`: V LIVE+ 등 유료 상품
+    - `NONE`: (멤버십 라이브 포함) 일반 라이브 
+
+## Video
 Video 객체를 사용하여 VOD와 라이브를 로드할 수 있습니다. post링크의 id와 video링크의 id를 모두 지원합니다
 ```python
 import vlivepy
