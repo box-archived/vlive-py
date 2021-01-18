@@ -26,15 +26,24 @@ $ python -m pip install vlivepy
   - [utils.getVodId()](#utilsgetvodid)
   - [utils.getUpcomingList()](#utilsgetupcominglist)
     - [UpcomingVideo](#upcomingvideo)
+- [Video](#video)
 - [Upcoming](#upcoming)
   - [Upcoming.upcoming()](#upcomingupcoming)
   - [Upcoming.refresh()](#upcomingrefresh)
   - [Upcoming.load()](#upcomingload)
-- [Video](#video)
 
 
 ## API
 ### getUserSession()
+VLIVE 웹사이트에 로그인하여 [requests.Session](https://requests.readthedocs.io/en/master/user/advanced/) 객체를 반환합니다. 로그인에는 [이메일 로그인](https://www.vlive.tv/auth/email/login) 방식을 사용합니다
+```python
+from vlivepy import getUserSession
+
+getUserSession(email="user@email.id",
+               pwd="userPassword!",
+               silent=False)  # Optional
+```
+
 ### getPostInfo()
 ### getOfficialVideoPost()
 ### getInkeyData()
@@ -74,6 +83,18 @@ UpcomingVideo은 다음의 필드를 가집니다:
 | `name` | 방송(VOD) 제목 | Any |
 | `type` | 스케쥴 타입 | `VOD`: 공개된 VOD 입니다. <br> `UPCOMING_VOD`: 시간이 예약된 VOD 입니다. <br> `UPCOMING_LIVE`: 시간이 예약된 LIVE 입니다. <br> `LIVE`: 지금 방송중인 LIVE 입니다. |
 | `product` | 판매상품 여부 | `PAID`: V LIVE+ 등 유료 상품 <br> `NONE`: (멤버십 라이브 포함) 일반 라이브  |
+
+## Video
+Video 객체를 사용하여 VOD와 라이브를 로드할 수 있습니다. post링크의 id와 video링크의 id를 모두 지원합니다
+```python
+import vlivepy
+
+# load post url `https://www.vlive.tv/post/0-18396482`
+vlivepy.Video("0-18396482")
+
+# load video url `https://www.vlive.tv/video/142851`
+vlivepy.Video("142851")
+``` 
 
 ## Upcoming
 `Upcoming` 객체는 [getUpcomingList](#utilsgetupcominglist) 결과를 캐싱하고 목록 표시 옵션에 따라 목록을 재구성합니다.
@@ -150,15 +171,3 @@ print(upc.load(date=tomorrow.strftime("%Y%m%d"),
 - `date`: 로드 할 날짜를 입력합니다. 포맷은 `%Y%m%d` 입니다.
 - `show_vod`, `show_upcoming_vod`, `show_upcoming_live`, `show_live`: 목록 포함 옵션 오버라이드
 - `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
-
-## Video
-Video 객체를 사용하여 VOD와 라이브를 로드할 수 있습니다. post링크의 id와 video링크의 id를 모두 지원합니다
-```python
-import vlivepy
-
-# load post url `https://www.vlive.tv/post/0-18396482`
-vlivepy.Video("0-18396482")
-
-# load video url `https://www.vlive.tv/video/142851`
-vlivepy.Video("142851")
-``` 
