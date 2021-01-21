@@ -12,26 +12,50 @@ $ python -m pip install vlivepy
 
 ---
 # Documentation
+- [들어가기에 앞서](#들어가기에-앞서)
+    - [용어](#용어)
+    - [표현](#표현)
 - [API](#api)
-  - [getUserSession()](#getusersession)
-  - [getPostInfo()](#getpostinfo)
-  - [getOfficialVideoPost()](#getofficialvideopost)
-  - [getInkeyData()](#getinkeydata)
-  - [getLivePlayInfo()](#getliveplayinfo)
-  - [getLiveStatus()](#getlivestatus)
-  - [getVodPlayInfo()](#getvodplayinfo)
+    - [getUserSession()](#getusersession)
+    - [getPostInfo()](#getpostinfo)
+    - [getOfficialVideoPost()](#getofficialvideopost)
+    - [getInkeyData()](#getinkeydata)
+    - [getLivePlayInfo()](#getliveplayinfo)
+    - [getLiveStatus()](#getlivestatus)
+    - [getVodPlayInfo()](#getvodplayinfo)
 - [Utils](#utils)
-  - [utils.postIdToVideoSeq()](#utilspostidtovideoseq)
-  - [utils.getVpdid2()](#utilsgetvpdid2)
-  - [utils.getVodId()](#utilsgetvodid)
-  - [utils.getUpcomingList()](#utilsgetupcominglist)
+    - [utils.postIdToVideoSeq()](#utilspostidtovideoseq)
+    - [utils.getVpdid2()](#utilsgetvpdid2)
+    - [utils.getVodId()](#utilsgetvodid)
+    - [utils.getUpcomingList()](#utilsgetupcominglist)
     - [UpcomingVideo](#upcomingvideo)
 - [Video](#video)
 - [Upcoming](#upcoming)
-  - [Upcoming.upcoming()](#upcomingupcoming)
-  - [Upcoming.refresh()](#upcomingrefresh)
-  - [Upcoming.load()](#upcomingload)
+    - [Upcoming.upcoming()](#upcomingupcoming)
+    - [Upcoming.refresh()](#upcomingrefresh)
+    - [Upcoming.load()](#upcomingload)
 
+
+## 들어가기에 앞서
+이 문서에서 사용되는 용어와 표현법에 대해 알아봅니다.
+
+### 용어
+- `videoSeq`: url의 `~/video/` 뒤에 오는 6자리 숫자 코드입니다. VLIVE 상에서 officialVideo를 가리킵니다.
+- `postId`: url 의 `~/post/` 뒤에 오는 `0-12345678`형태의 코드입니다. VLIVE 상에서 게시물을 가리칩니다.
+
+### 표현
+함수나 객체의 매개변수에 대한 설명은 코드블럭으로 작성됩니다. 인수는 함수 내에서 선언한 순서대로 작성되며 예시 값이 제공됩니다. 선택적 인수는 `# Optional` 주석이 붙고 기본값을 예시로 제공합니다.
+
+함수와 매개변수에 대한 코드블럭 예시는 아래와 같습니다.
+```python
+from vlivepy import getPostInfo
+
+# 아래 라인은 함수 예시와 필수적 인수의 설명에 대한 예시입니다.
+getPostInfo(post="0-12345678",
+# 아래 라인은 선택적 인수의 설먕에 대한 예시입니다.
+            session=None,  # Optional
+            silent=False)  # Optional
+```
 
 ## API
 ### getUserSession()
