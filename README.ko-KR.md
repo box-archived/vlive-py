@@ -49,6 +49,19 @@ getUserSession(email="user@email.id",
 - `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### getPostInfo()
+VLIVE Post의 정보를 로드하여 dict 객체를 반환합니다.
+```python
+from vlivepy import getPostInfo
+
+getPostInfo(post="0-12345678", 
+            session=None,  # Optional
+            silent=False)  # Optional
+```
+`getPostInfo()`합수는 다음의 변수를 갖습니다:
+- `post`: postId를 입력합니다.
+- `session`: 회원인증이 필요한 포스트인 경우 UserSession이 필요합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
 ### getOfficialVideoPost()
 ### getInkeyData()
 ### getLivePlayInfo()
@@ -60,7 +73,7 @@ getUserSession(email="user@email.id",
 ### utils.getVpdid2()
 ### utils.getVodId()
 ### utils.getUpcomingList()
-[VLIVE 일정표](https://www.vlive.tv/upcoming) 를 파싱하고 리스트를 리턴합니다.
+[VLIVE 일정표](https://www.vlive.tv/upcoming) 를 파싱하고 List(of [UpcomingVideo](#upcomingvideo)) 리턴합니다.
 ```python
 from vlivepy.utils import getUpcomingList
 
