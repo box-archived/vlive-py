@@ -28,7 +28,9 @@ $ python -m pip install vlivepy
     - [utils.getVpdid2()](#utilsgetvpdid2)
     - [utils.getVodId()](#utilsgetvodid)
     - [utils.getUpcomingList()](#utilsgetupcominglist)
-    - [UpcomingVideo](#upcomingvideo)
+        - [UpcomingVideo](#upcomingvideo)
+    - [utils.dumpSession()](#utilsdumpsession)
+    - [utils.loadSession()](#utilsloadsession)
 - [Video](#video)
 - [Upcoming](#upcoming)
     - [Upcoming.upcoming()](#upcomingupcoming)
@@ -73,7 +75,7 @@ getUserSession(email="user@email.id",
 - `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### getPostInfo()
-VLIVE Post의 정보를 로드하여 dict 객체를 반환합니다.
+postId를 통해 VLIVE Post의 정보를 로드하여 dict 객체를 리턴합니다.
 ```python
 from vlivepy import getPostInfo
 
@@ -87,15 +89,80 @@ getPostInfo(post="0-12345678",
 - `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### getOfficialVideoPost()
+videoSeq를 통해 VLIVE Video의 정보를 로드하여 dict 객체를 리턴합니다
+```python
+from vlivepy import getOfficialVideoPost
+
+getOfficialVideoPost(videoSeq="123456",
+                     session=None,  # Optional
+                     silent=False)  # Optional
+```
+
 ### getInkeyData()
+```python
+from vlivepy import getInkeyData
+
+getInkeyData(videoSeq="123456",
+             session=None,  # Optional
+             silent=False)  # Optional
+```
+
 ### getLivePlayInfo()
+```python
+from vlivepy import getLivePlayInfo
+
+getLivePlayInfo(videoSeq="123456",
+                session=None,  # Optional
+                vpdid2=None,  # Optional
+                silent=False)  # Optional
+```
+
 ### getLiveStatus()
+```python
+from vlivepy import getLiveStatus
+
+getLiveStatus(videoSeq="123456",
+              silent=False)  # Optional
+```
+
 ### getVodPlayInfo()
+```python
+from vlivepy import getVodPlayInfo
+
+getVodPlayInfo(videoSeq="123456",
+               vodId=None,  # Optional
+               session=None,  # Optional
+               silent=False)  # Optional
+```
 
 ## Utils
 ### utils.postIdToVideoSeq()
+```python
+from vlivepy.utils import postIdToVideoSeq
+
+postIdToVideoSeq(post="0-12345678",
+                 silent=False)  # Optional
+```
+
 ### utils.getVpdid2()
+```python
+from vlivepy import getUserSession
+from vlivepy.utils import getVpdid2
+
+user = getUserSession(email="user@email.id", pwd="userPassword!")
+
+getVpdid2(session=user,
+          silent=False)  # Optional
+```
+
 ### utils.getVodId()
+```python
+from vlivepy.utils import getVodId
+
+getVodId(videoSeq="123456",
+         silent=False)   # Optional
+```
+
 ### utils.getUpcomingList()
 [VLIVE 일정표](https://www.vlive.tv/upcoming) 를 파싱하고 List(of [UpcomingVideo](#upcomingvideo)) 리턴합니다.
 ```python
@@ -124,6 +191,27 @@ UpcomingVideo은 다음의 필드를 가집니다:
 | `name` | 방송(VOD) 제목 | Any |
 | `type` | 스케쥴 타입 | `VOD`: 공개된 VOD 입니다. <br> `UPCOMING_VOD`: 시간이 예약된 VOD 입니다. <br> `UPCOMING_LIVE`: 시간이 예약된 LIVE 입니다. <br> `LIVE`: 지금 방송중인 LIVE 입니다. |
 | `product` | 판매상품 여부 | `PAID`: V LIVE+ 등 유료 상품 <br> `NONE`: (멤버십 라이브 포함) 일반 라이브  |
+
+### utils.dumpSession()
+```python
+from vlivepy import getUserSession
+from vlivepy.utils import dumpSession
+
+user = getUserSession(email="user@email.id", pwd="userPassword!")
+
+with open("user.pkl", mode="wb") as f:
+    dumpSession(session=user,
+                fp=f)
+```
+
+### utils.loadSession()
+```python
+from vlivepy import getUserSession
+from vlivepy.utils import loadSession
+
+with open("user.pkl", mode="rb") as f:
+    user = loadSession(f)
+```
 
 ## Video
 Video 객체를 사용하여 VOD와 라이브를 로드할 수 있습니다. post링크의 id와 video링크의 id를 모두 지원합니다
