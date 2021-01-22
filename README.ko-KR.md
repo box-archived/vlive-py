@@ -247,16 +247,25 @@ with open("user.pkl", mode="rb") as f:
 ```
 
 ## Video
-Video 객체를 사용하여 VOD와 라이브를 로드할 수 있습니다. post링크의 id와 video링크의 id를 모두 지원합니다
+`Video` 객체는 [getPostInfo](#getpostinfo) 결과를 캐싱하고 사용 가능한 API를 메소드로 갖습니다.
+
+`Video` 객체의 PostInfo는 임시 캐싱을 사용합니다. `refresh_rate` 변수를 0으로 설정하면 캐시된 정보를 사용하지 않습니다.
 ```python
-import vlivepy
+from vlivepy import Video
 
-# load post url `https://www.vlive.tv/post/0-18396482`
-vlivepy.Video("0-18396482")
+# postId를 통한 초기화 `https://www.vlive.tv/post/0-18396482`
+Video("0-18396482")
 
-# load video url `https://www.vlive.tv/video/142851`
-vlivepy.Video("142851")
-``` 
+# videoSeq를 이용한 초기화 `https://www.vlive.tv/video/142851`
+Video("142851")
+
+video = Video(number="142851",
+              session=None,  # Optional
+              refresh_rate=10)  # Optional
+```
+- `number`: 로드할 영상의 videoSeq나 postId가 필요합니다.
+- `session`: 특정 UserSession을 이용해 로드합니다.
+- `refresh_rate`: 캐시 수명입니다. 초 단위이며 해당시간이 초과했을 경우 PostInfo를 다시 로드합니다.
 
 ## Upcoming
 `Upcoming` 객체는 [getUpcomingList](#utilsgetupcominglist) 결과를 캐싱하고 목록 표시 옵션에 따라 목록을 재구성합니다.
