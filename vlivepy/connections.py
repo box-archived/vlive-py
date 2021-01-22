@@ -58,8 +58,11 @@ def getInkeyData(videoSeq, session=None, silent=False):
 
     if sr.success:
         parsed_json = sr.response.json()
-        if "result" in parsed_json:
-            return parsed_json['result']
+        if "code" in parsed_json:
+            if "result" in parsed_json:
+                return parsed_json['result']
+            else:
+                return None
         else:
             return parsed_json
     else:
@@ -105,8 +108,11 @@ def getPostInfo(post, session=None, silent=False):
 
     if sr.success:
         parsed_json = sr.response.json()
-        if "result" in parsed_json:
-            return parsed_json['result']
+        if "code" in parsed_json:
+            if "result" in parsed_json:
+                return parsed_json['result']
+            else:
+                return None
         else:
             return parsed_json
     else:
@@ -131,8 +137,11 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
 
     if sr.success:
         parsed_json = sr.response.json()
-        if "result" in parsed_json:
-            return parsed_json['result']
+        if "code" in parsed_json:
+            if "result" in parsed_json:
+                return parsed_json['result']
+            else:
+                return None
         else:
             return parsed_json
     else:
@@ -169,8 +178,11 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
 
     if sr.success:
         parsed_json = sr.response.json()
-        if "result" in parsed_json:
-            return parsed_json['result']
+        if "code" in parsed_json:
+            if "result" in parsed_json:
+                return parsed_json['result']
+            else:
+                return None
         else:
             return parsed_json
     else:
@@ -194,8 +206,11 @@ def getLiveStatus(videoSeq, silent=False):
 
     if sr.success:
         parsed_json = sr.response.json()
-        if "result" in parsed_json:
-            return parsed_json['result']
+        if "code" in parsed_json:
+            if "result" in parsed_json:
+                return parsed_json['result']
+            else:
+                return None
         else:
             return parsed_json
     else:
@@ -233,8 +248,11 @@ def getVodPlayInfo(videoSeq, vodId=None, session=None, silent=False):
 
     if sr.success:
         parsed_json = sr.response.json()
-        if "result" in parsed_json:
-            return parsed_json['result']
+        if "code" in parsed_json:
+            if "result" in parsed_json:
+                return parsed_json['result']
+            else:
+                return None
         else:
             return parsed_json
     else:
