@@ -2,6 +2,9 @@
 > [English](README.md) Korean
 
 # vlivepy
+![GitHub](https://img.shields.io/github/license/box-archived/vlive-py)
+![PyPI](https://img.shields.io/pypi/v/vlivepy)
+
 vlivepy는 파이썬 기반의 vlive.tv 비공식 API입니다.
 
 ## 설치
