@@ -35,6 +35,15 @@ $ python -m pip install vlivepy
     - [utils.dumpSession()](#utilsdumpsession)
     - [utils.loadSession()](#utilsloadsession)
 - [Video](#video)
+    - [Properties](#videoproperties)
+    - [Video.refresh()](#videorefresh)
+    - [Video.getOfficialVideoPost()](#videogetofficialvideopost)
+    - [Video.getLivePlayInfo()](#videogetliveplayinfo)
+    - [Video.getInkeyData()](#videogetinkeydata)
+    - [Video.getLiveStatus()](#videogetlivestatus)
+    - [Video.getUserSession()](#videogetusersession)
+    - [Video.loadSession()](#videoloadsession)
+    - [Video.getVodPlayInfo()](#videogetvodplayinfo)
 - [Upcoming](#upcoming)
     - [Upcoming.upcoming()](#upcomingupcoming)
     - [Upcoming.refresh()](#upcomingrefresh)
@@ -60,7 +69,7 @@ from vlivepy import getPostInfo
 
 # 아래 라인은 함수 예시와 필수적 인수의 설명에 대한 예시입니다.
 getPostInfo(post="0-12345678",
-# 아래 라인은 선택적 인수의 설먕에 대한 예시입니다.
+            # 아래 라인은 선택적 인수의 설먕에 대한 예시입니다.
             session=None,  # Optional
             silent=False)  # Optional
 ```
@@ -84,7 +93,7 @@ postId를 통해 VLIVE Post의 정보를 로드하여 dict 객체를 리턴합�
 ```python
 from vlivepy import getPostInfo
 
-getPostInfo(post="0-12345678", 
+getPostInfo(post="0-12345678",
             session=None,  # Optional
             silent=False)  # Optional
 ```
@@ -227,6 +236,7 @@ UpcomingVideo은 다음의 필드를 가집니다:
 | `product` | 판매상품 여부 | `PAID`: V LIVE+ 등 유료 상품 <br> `NONE`: (멤버십 라이브 포함) 일반 라이브  |
 
 ### utils.dumpSession()
+잦은 로그인으로 인해 로그인이 일시적으로 제한되는 상황을 방지하기 위해 UserSession을 저장합니다.
 ```python
 from vlivepy import getUserSession
 from vlivepy.utils import dumpSession
@@ -239,6 +249,7 @@ with open("user.pkl", mode="wb") as f:
 ```
 
 ### utils.loadSession()
+저장한 UserSession을 로드합니다.
 ```python
 from vlivepy.utils import loadSession
 
@@ -266,6 +277,104 @@ video = Video(number="142851",
 - `number`: 로드할 영상의 videoSeq나 postId가 필요합니다.
 - `session`: 특정 UserSession을 이용해 로드합니다.
 - `refresh_rate`: 캐시 수명입니다. 초 단위이며 해당시간이 초과했을 경우 PostInfo를 다시 로드합니다.
+
+### Video.Properties
+Video 객체에서 제공하는 property는 아래와 같습니다.
+- `videoSeq`: Video 객체의 videoSeq값 리턴
+- `postInfo`: VLIVE Video의 postInfo 리턴
+- `is_vod`: VLIVE Video가 VOD일 경우 `True`
+- `vod_id`: VLIVE Video가 VOD인 경우 vodId 리턴
+- `title`: VLIVE Video의 제목
+- `channelCode` VLIVE Video가 작성된 채널의 ChannelCode 리턴
+- `channelName` VLIVE Video가 작성된 채널의 이름 리턴
+
+### Video.refresh()
+캐시의 수명을 확인하여 캐시가 만료됐다면 데이터를 새로 로드합니다. `force`변수를 통해 캐시 수명을 무시하고 데이터를 로드할 수 있습니다.
+
+### Video.getOfficialVideoPost()
+[getOfficialVideoPost](#getofficialvideopost) API를 호출합니다.
+```python
+from vlivepy import Video
+
+video = Video(142851)
+video.getOfficialVideoPost(
+    silent=False  # Optional
+)
+```
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
+### Video.getLivePlayInfo()
+[getLivePlayInfo](#getliveplayinfo) API를 호출합니다.
+```python
+from vlivepy import Video
+
+video = Video(142851)
+video.getLivePlayInfo(
+    silent=False  # Optional
+)
+```
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
+### Video.getInkeyData()
+[getInKeyData](#getinkeydata) API를 호출합니다.
+```python
+from vlivepy import Video
+
+video = Video(142851)
+video.getInkeyData(
+    silent=False  # Optional
+)
+```
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
+### Video.getLiveStatus()
+[getLiveStatus](#getlivestatus) API를 호출합니다.
+```python
+from vlivepy import Video
+
+video = Video(142851)
+video.getLiveStatus(
+    silent=False  # Optional
+)
+```
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
+### Video.getUserSession()
+```python
+from vlivepy import Video
+
+video = Video(142851)
+video.getUserSession(email="user@email.id",
+                     pwd="userPassword!",
+                     silent=False)  # Optional
+```
+- `email`: 로그인 할 계정의 이메일 아이디입니다.
+- `pwd`: 로그인 할 계정의 비밀번호 입니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
+### Video.loadSession()
+[loadSession](#utilsloadsession) 유틸을 호출합니다.
+```python
+from vlivepy import Video
+
+video = Video(142851)
+with open("user.pkl", mode="rb") as f:
+    video.loadSession(fp=f)
+```
+
+
+### Video.getVodPlayInfo()
+[getVodPlayInfo](#getvodplayinfo) API를 호출합니다.
+```python
+from vlivepy import Video
+
+video = Video(142851)
+video.getVodPlayInfo(
+    silent=False  # Optional
+)
+```
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
 
 ## Upcoming
 `Upcoming` 객체는 [getUpcomingList](#utilsgetupcominglist) 결과를 캐싱하고 목록 표시 옵션에 따라 목록을 재구성합니다.
