@@ -44,6 +44,9 @@ $ python -m pip install vlivepy
 ### 용어
 - `videoSeq`: url의 `~/video/` 뒤에 오는 6자리 숫자 코드입니다. VLIVE 상에서 officialVideo를 가리킵니다.
 - `postId`: url 의 `~/post/` 뒤에 오는 `0-12345678`형태의 코드입니다. VLIVE 상에서 게시물을 가리칩니다.
+- `vodId`: VLIVE 내부적으로 사용되는 36자리 Hex형태의 코드입니다.
+- `vpdid2`: 유저를 나타내는 64자리 Hex형태의 코드입니다.
+- `inKey`: VOD 정보 로드시 사용되는 값입니다.
 
 ### 표현
 함수나 객체의 매개변수에 대한 설명은 코드블럭으로 작성됩니다. 인수는 함수 내에서 선언한 순서대로 작성되며 예시 값이 제공됩니다. 선택적 인수는 `# Optional` 주석이 붙고 기본값을 예시로 제공합니다.
@@ -97,8 +100,12 @@ getOfficialVideoPost(videoSeq="123456",
                      session=None,  # Optional
                      silent=False)  # Optional
 ```
+- `videoSeq`: 영상의 videoSeq를 입력합니다.
+- `session`: 회원인증이 필요한 영상인 경우 UserSession이 필요합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### getInkeyData()
+VLIVE VOD와 계정 정보에 해당하는 inKey를 로드합니다.
 ```python
 from vlivepy import getInkeyData
 
@@ -106,8 +113,12 @@ getInkeyData(videoSeq="123456",
              session=None,  # Optional
              silent=False)  # Optional
 ```
+- `videoSeq`: 영상의 videoSeq를 입력합니다.
+- `session`: 회원인증이 필요한 영상인 경우 UserSession이 필요합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### getLivePlayInfo()
+VLIVE LIVE의 재생에 관련된 정보를 가져옵니다.
 ```python
 from vlivepy import getLivePlayInfo
 
@@ -116,16 +127,24 @@ getLivePlayInfo(videoSeq="123456",
                 vpdid2=None,  # Optional
                 silent=False)  # Optional
 ```
+- `videoSeq`: 영상의 videoSeq를 입력합니다.
+- `session`: 회원인증이 필요한 영상인 경우 UserSession이 필요합니다.
+- `vpdid2`: 미리 로드한 vpdid2 값이 있다면 이를 사용하여 데이터 사용량을 줄일 수 있습니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### getLiveStatus()
+VLIVE LIVE의 현재 상태 정보를 가져옵니다.
 ```python
 from vlivepy import getLiveStatus
 
 getLiveStatus(videoSeq="123456",
               silent=False)  # Optional
 ```
+- `videoSeq`: 영상의 videoSeq를 입력합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### getVodPlayInfo()
+VLIVE VOD의 재생에 관련된 정보를 가져옵니다.
 ```python
 from vlivepy import getVodPlayInfo
 
@@ -134,17 +153,25 @@ getVodPlayInfo(videoSeq="123456",
                session=None,  # Optional
                silent=False)  # Optional
 ```
+- `videoSeq`: 영상의 videoSeq를 입력합니다.
+- `vodId`: 미리 로드한 vodId 값이 있다면 이를 사용하여 데이터 사용량을 줄일 수 있습니다.
+- `session`: 회원인증이 필요한 영상인 경우 UserSession이 필요합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ## Utils
 ### utils.postIdToVideoSeq()
+VLIVE postId를 videoSeq로 변환합니다.
 ```python
 from vlivepy.utils import postIdToVideoSeq
 
 postIdToVideoSeq(post="0-12345678",
                  silent=False)  # Optional
 ```
+- `post`: postId를 입력합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### utils.getVpdid2()
+계정 정보로 부터 vpdid2 값을 구합니다.
 ```python
 from vlivepy import getUserSession
 from vlivepy.utils import getVpdid2
@@ -154,14 +181,19 @@ user = getUserSession(email="user@email.id", pwd="userPassword!")
 getVpdid2(session=user,
           silent=False)  # Optional
 ```
+- `session`: 회원 정보를 담은 UserSession이 필요합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### utils.getVodId()
+videoSeq에 해당하는 vodId를 구합니다.
 ```python
 from vlivepy.utils import getVodId
 
 getVodId(videoSeq="123456",
          silent=False)   # Optional
 ```
+- `videoSeq`: 영상의 videoSeq를 입력합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### utils.getUpcomingList()
 [VLIVE 일정표](https://www.vlive.tv/upcoming) 를 파싱하고 List(of [UpcomingVideo](#upcomingvideo)) 리턴합니다.
@@ -206,7 +238,6 @@ with open("user.pkl", mode="wb") as f:
 
 ### utils.loadSession()
 ```python
-from vlivepy import getUserSession
 from vlivepy.utils import loadSession
 
 with open("user.pkl", mode="rb") as f:
