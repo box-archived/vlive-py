@@ -10,7 +10,7 @@
 vlivepy is reverse-engineered Python-based API of VLIVE(vlive.tv)
 
 ## Install
-[PyPI](https://pypi.org/project/vlivepy/) Can be installed via.
+vlivepy can be installed via [PyPI](https://pypi.org/project/vlivepy/).
 ```console
 $ python -m pip install vlivepy
 ```
