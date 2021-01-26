@@ -116,3 +116,18 @@ def parseVodIdFromOffcialVideoPost(post, silent=False):
         auto_raise(APIJSONParesError("Given data is post data"), silent=silent)
 
     return None
+
+
+def response_json_stripper(parsed_json_dict: dict):
+    # if data has success code
+    if "code" in parsed_json_dict:
+        if "result" in parsed_json_dict:
+            parsed_json_dict = parsed_json_dict['result']
+        else:
+            parsed_json_dict = None
+
+    # if data has data field (Fanship)
+    if "data" in parsed_json_dict:
+        parsed_json_dict = parsed_json_dict["data"]
+
+    return parsed_json_dict

@@ -6,7 +6,8 @@ from . import variables as gv
 from .exception import (
     auto_raise, APINetworkError, APISignInFailedError, APIJSONParesError
 )
-from .parser import parseVideoSeqFromPostInfo, sessionUserCheck, parseVodIdFromOffcialVideoPost, parseUpcomingFromPage
+from .parser import (parseVideoSeqFromPostInfo, sessionUserCheck,
+                     parseVodIdFromOffcialVideoPost, parseUpcomingFromPage, response_json_stripper)
 
 
 def getUserSession(email, pwd, silent=False):
@@ -57,14 +58,7 @@ def getInkeyData(videoSeq, session=None, silent=False):
     sr = reqWrapper.get(gv.APIInkeyUrl(videoSeq), headers=headers, wait=0.5, session=session, status=[200])
 
     if sr.success:
-        parsed_json = sr.response.json()
-        if "code" in parsed_json:
-            if "result" in parsed_json:
-                return parsed_json['result']
-            else:
-                return None
-        else:
-            return parsed_json
+        return response_json_stripper(sr.response.json())
     else:
         auto_raise(APINetworkError, silent)
 
@@ -107,14 +101,7 @@ def getPostInfo(post, session=None, silent=False):
     sr = reqWrapper.get(gv.APIPostUrl(post), headers=headers, wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
-        parsed_json = sr.response.json()
-        if "code" in parsed_json:
-            if "result" in parsed_json:
-                return parsed_json['result']
-            else:
-                return None
-        else:
-            return parsed_json
+        return response_json_stripper(sr.response.json())
     else:
         auto_raise(APINetworkError, silent)
 
@@ -136,14 +123,7 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
                         session=session, wait=0.5, status=[200, 403])
 
     if sr.success:
-        parsed_json = sr.response.json()
-        if "code" in parsed_json:
-            if "result" in parsed_json:
-                return parsed_json['result']
-            else:
-                return None
-        else:
-            return parsed_json
+        return response_json_stripper(sr.response.json())
     else:
         auto_raise(APINetworkError, silent)
 
@@ -177,14 +157,7 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
     sr = reqWrapper.get(url, headers=headers, session=session, status=[200, 403])
 
     if sr.success:
-        parsed_json = sr.response.json()
-        if "code" in parsed_json:
-            if "result" in parsed_json:
-                return parsed_json['result']
-            else:
-                return None
-        else:
-            return parsed_json
+        return response_json_stripper(sr.response.json())
     else:
         auto_raise(APINetworkError, silent)
 
@@ -205,14 +178,7 @@ def getLiveStatus(videoSeq, silent=False):
     sr = reqWrapper.get(gv.APILiveV2StatusUrl(videoSeq), headers=headers, wait=0.2, status=[200])
 
     if sr.success:
-        parsed_json = sr.response.json()
-        if "code" in parsed_json:
-            if "result" in parsed_json:
-                return parsed_json['result']
-            else:
-                return None
-        else:
-            return parsed_json
+        return response_json_stripper(sr.response.json())
     else:
         auto_raise(APINetworkError, silent)
 
@@ -247,14 +213,7 @@ def getVodPlayInfo(videoSeq, vodId=None, session=None, silent=False):
     sr = reqWrapper.get(url, headers=headers, session=session, wait=0.3, status=[200, 403])
 
     if sr.success:
-        parsed_json = sr.response.json()
-        if "code" in parsed_json:
-            if "result" in parsed_json:
-                return parsed_json['result']
-            else:
-                return None
-        else:
-            return parsed_json
+        return response_json_stripper(sr.response.json())
     else:
         auto_raise(APINetworkError, silent=silent)
 
