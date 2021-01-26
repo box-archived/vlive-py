@@ -243,6 +243,28 @@ def getUpcomingList(date=None, silent=False):
         return parseUpcomingFromPage(html)
 
 
+def getPostData(post, session=None, silent=False):
+    r""" Get detailed post data
+
+    :param post: postId from VLIVE (like #-########)
+    :param session: use specific session
+    :param silent: Return `None` instead of Exception
+    :return: postData
+    :rtype: dict
+    """
+
+    # Make request
+    headers = {**gv.HeaderCommon, **gv.APIPostDataReferer(post)}
+    sr = reqWrapper.get(gv.APIPostDataUrl(post), headers=headers, wait=0.5, session=session, status=[200, 403])
+
+    if sr.success:
+        return response_json_stripper(sr.response.json())
+    else:
+        auto_raise(APINetworkError, silent)
+
+    return None
+
+
 def postIdToVideoSeq(post, silent=False):
     r""" postId to videoSeq
 

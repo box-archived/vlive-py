@@ -68,6 +68,21 @@ def APIVodPlayInfoUrl(vodId, inkey):
 APIVodPlayInfoReferer = {"referer": "https://www.vlive.tv/"}
 
 
+def APIPostDataUrl(post):
+    return ("https://www.vlive.tv/globalv-web/vam-web/post/v1.0/post-%s"
+            "?appId=%s&fields=attachments,author,authorId,availableActions,"
+            "board{boardId,title,boardType,readAllowedLabel,payRequired,includedCountries,excludedCountries},"
+            "boardId,body,channel{channelName,channelCode},channelCode,commentCount,contentType,createdAt,"
+            "emotionCount,excludedCountries,includedCountries,isViewerBookmarked,isCommentEnabled,isHiddenFromStar,"
+            "lastModifierMember,notice,officialVideo,originPost,plainBody,postId,postVersion,reservation,starReactions,"
+            "targetMember,targetMemberId,thumbnail,title,url,smartEditorAsHtml,viewerEmotionId,writtenIn,"
+            "playlist.limit(30)%s" % (post, AppId, LocaleParam))
+
+
+def APIPostDataReferer(post):
+    return {"referer": "https://www.vlive.tv/post/%s" % post}
+
+
 # User-Agent header for requests module
 HeaderUserAgent = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                                  "AppleWebKit/537.36 (KHTML, like Gecko) "
