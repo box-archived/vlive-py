@@ -255,3 +255,21 @@ def postIdToVideoSeq(post, silent=False):
     postInfo = getPostInfo(post, silent=silent)
 
     return parseVideoSeqFromPostInfo(postInfo, silent=silent)
+
+
+def postTypeDetector(post, silent=False):
+    r""" Check given postId is Post or Video
+
+    :param post: postId from VLIVE (like #-########)
+    :param silent: Return `None` instead of Exception
+    :return: str "Post" or "Video"
+    :rtype: str
+    """
+    data = getPostInfo(post, silent=silent)
+    if data is not None:
+        if "officialVideo" in data:
+            return "Video"
+        else:
+            return "Post"
+
+    return None
