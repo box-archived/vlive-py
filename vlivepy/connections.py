@@ -284,14 +284,11 @@ def postTypeDetector(post, silent=False):
 
     :param post: postId from VLIVE (like #-########)
     :param silent: Return `None` instead of Exception
-    :return: str "Post" or "Video"
+    :return: str "POST" or "VIDEO"
     :rtype: str
     """
     data = getPostInfo(post, silent=silent)
     if data is not None:
-        if "officialVideo" in data:
-            return "Video"
-        else:
-            return "Post"
+        return data['contentType']
 
     return None
