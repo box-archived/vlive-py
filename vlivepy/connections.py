@@ -306,13 +306,12 @@ def getPostCommentsIter(post, session=None):
 
     data = getPostComments(post, session=session)
     after = next_page_checker(data)
-    yield data
+    yield data['data']
 
     while after:
         data = getPostComments(post, session=session, after=after)
         after = next_page_checker(data)
-        yield data
-
+        yield data['data']
 
 
 def postIdToVideoSeq(post, silent=False):
