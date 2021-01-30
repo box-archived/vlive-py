@@ -452,7 +452,7 @@ print(upc.upcoming(force=False,  # Optional
                    show_upcoming_vod=None,  # Optional
                    show_upcoming_live=None,  # Optional
                    show_live=None))  # Optional
-# [UpcomingVideo(seq='232395', time='오전 12:00', cseq='447', cname='CHUNG HA', ctype='BASIC', name="CHUNG HA 청하 'X (걸어온 길에 꽃밭 따윈 없었죠)' MV Teaser 2", type='VOD', product='NONE'), ...]
+# [UpcomingVideo(seq='######', time='오전 12:00', cseq='###', cname='channel name ', ctype='BASIC', name="title", type='VOD', product='NONE'), ...]
 ```
 
 You can override the cache and list containing options via variables.
@@ -488,7 +488,7 @@ print(upc.load(date=tomorrow.strftime("%Y%m%d"),
                show_upcoming_live=None,  # Optional
                show_live=None,  # Optional
                silent=False))  # Optional
-# [UpcomingVideo(seq='232552', time='오전 10:00', cseq='967', cname='Arirang Radio │ Arirang Radio', ctype='BASIC',name='Arirang Radio [#daily K]', type='UPCOMING_LIVE', product='NONE'), ...]
+# [UpcomingVideo(seq='######', time='오전 12:00', cseq='###', cname='channel name ', ctype='BASIC', name="title", type='VOD', product='NONE'), ...]
 ```
 The `load()` method takes the following variables:
 - `date`: Enter the date to load. The format is `%Y%m%d`.

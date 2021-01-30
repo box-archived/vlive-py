@@ -454,7 +454,7 @@ print(upc.upcoming(force=False,  # Optional
                    show_upcoming_vod=None,  # Optional
                    show_upcoming_live=None,  # Optional
                    show_live=None))  # Optional
-# [UpcomingVideo(seq='232395', time='오전 12:00', cseq='447', cname='CHUNG HA', ctype='BASIC', name="CHUNG HA 청하 'X (걸어온 길에 꽃밭 따윈 없었죠)' MV Teaser 2", type='VOD', product='NONE'), ...]
+# [UpcomingVideo(seq='######', time='오전 12:00', cseq='###', cname='channel name ', ctype='BASIC', name="title", type='VOD', product='NONE'), ...]
 ```
 
 변수를 통해서 캐시와 목록 포함 옵션을 오버라이드 할 수 있습니다.
@@ -490,7 +490,7 @@ print(upc.load(date=tomorrow.strftime("%Y%m%d"),
                show_upcoming_live=None,  # Optional
                show_live=None,  # Optional
                silent=False))  # Optional
-# [UpcomingVideo(seq='232552', time='오전 10:00', cseq='967', cname='Arirang Radio │아리랑라디오', ctype='BASIC',name='Arirang Radio [#daily K]', type='UPCOMING_LIVE', product='NONE'), ...]
+# [UpcomingVideo(seq='######', time='오전 12:00', cseq='###', cname='channel name ', ctype='BASIC', name="title", type='VOD', product='NONE'), ...]
 ```
 `load()`메소드는 다음의 변수를 갖습니다:
 - `date`: 로드 할 날짜를 입력합니다. 포맷은 `%Y%m%d` 입니다.
