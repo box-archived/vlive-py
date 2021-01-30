@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf8") as fh:
 
 setup(
     name='vlivepy',
-    version='0.1.1',
+    version='0.2-dev1',
     packages=['vlivepy'],
     url='https://github.com/box-archived/vlive-py',
     license='MIT License',
