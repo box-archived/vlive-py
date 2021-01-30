@@ -29,6 +29,8 @@ $ python -m pip install vlivepy
     - [getLivePlayInfo()](#getliveplayinfo)
     - [getLiveStatus()](#getlivestatus)
     - [getVodPlayInfo()](#getvodplayinfo)
+    - [getPostComments()](#getpostcomments)
+    - [getPostCommentsIter()](#getpostcommentsiter)
 - [Utils](#utils)
     - [utils.postIdToVideoSeq()](#utilspostidtovideoseq)
     - [utils.getVpdid2()](#utilsgetvpdid2)
@@ -171,6 +173,41 @@ getVodPlayInfo(videoSeq="123456",
 - `vodId`: 미리 로드한 vodId 값이 있다면 이를 사용하여 데이터 사용량을 줄일 수 있습니다.
 - `session`: 회원인증이 필요한 영상인 경우 UserSession이 필요합니다.
 - `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
+### getPostComments()
+Post의 댓글을 가져옵니다.
+```python
+from vlivepy import getPostComments
+
+getPostComments(post="0-12345678",
+                session=None,  # Optional
+                after=None,  # Optional
+                silent=False)  # Optional
+```
+- `post`: 가져오려는 Post의 postId를 입력합니다
+- `session`: 회원인증이 필요한 영상인 경우 UserSession이 필요합니다.
+- `after`: 댓글이 20개 이상인 경우, `commentId,createdAt`(마지막 댓글의 정보) 형태의 load after 정보가 필요합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
+### getPostCommentsIter()
+Post의 댓글을 iterator 형태로 가져옵니다
+```python
+from vlivepy import getPostCommentsIter
+
+for item in getPostCommentsIter(post="0-12345678",
+                                session=None):  # Optional
+    print(item)
+
+# [comment, comment...]
+# [comment, comment...]
+# [comment, comment...]
+# ...
+```
+
+[`getPostComments()`](#getpostcomments) 와 다르게 결과 중 `data`필드만 리턴합니다.
+- `post`: 가져오려는 Post의 postId를 입력합니다
+- `session`: 회원인증이 필요한 영상인 경우 UserSession이 필요합니다.
+
 
 ## Utils
 ### utils.postIdToVideoSeq()

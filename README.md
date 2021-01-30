@@ -29,6 +29,8 @@ $ python -m pip install vlivepy
     - [getLivePlayInfo()](#getliveplayinfo)
     - [getLiveStatus()](#getlivestatus)
     - [getVodPlayInfo()](#getvodplayinfo)
+    - [getPostComments()](#getpostcomments)
+    - [getPostCommentsIter()](#getpostcommentsiter)
 - [Utils](#utils)
     - [utils.postIdToVideoSeq()](#utilspostidtovideoseq)
     - [utils.getVpdid2()](#utilsgetvpdid2)
@@ -171,6 +173,41 @@ getVodPlayInfo(videoSeq="123456",
 - `vodId`: If you have a preloaded vodId value, you can use it to reduce data usage.
 - `session`: UserSession is required for videos that require membership authentication.
 - `silent`: When a connection or parsing error occurs, it returns None instead of Exception.
+
+### getPostComments()
+Get comments from post
+```python
+from vlivepy import getPostComments
+
+getPostComments(post="0-12345678",
+                session=None,  # Optional
+                after=None,  # Optional
+                silent=False)  # Optional
+```
+- `post`: Enter the postId of the post to parse comment.
+- `session`: UserSession is required for videos that require membership authentication.
+- `after`: Required if post has over 20 comments, Format is like `commentId,createdAt` of last comment
+- `silent`: When a connection or parsing error occurs, it returns None instead of Exception.
+
+### getPostCommentsIter()
+Get comments from post as iterator
+```python
+from vlivepy import getPostCommentsIter
+
+for item in getPostCommentsIter(post="0-12345678",
+                                session=None):  # Optional
+    print(item)
+
+# [comment, comment...]
+# [comment, comment...]
+# [comment, comment...]
+# ...
+```
+
+Each item only returns `data` field compared to [`getPostComments()`](#getpostcomments)
+- `post`: Enter the postId of the post to parse comment.
+- `session`: UserSession is required for videos that require membership authentication.
+
 
 ## Utils
 ### utils.postIdToVideoSeq()
