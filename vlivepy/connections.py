@@ -8,6 +8,7 @@ from .exception import (
 )
 from .parser import (parseVideoSeqFromPostInfo, sessionUserCheck,
                      parseVodIdFromOffcialVideoPost, parseUpcomingFromPage, response_json_stripper)
+from typing import Generator
 
 
 def getUserSession(email, pwd, silent=False):
@@ -263,6 +264,55 @@ def getPostData(post, session=None, silent=False):
         auto_raise(APINetworkError, silent)
 
     return None
+
+
+def getPostComments(post, session=None, after=None, silent=False):
+    r""" Get post's comments
+
+    :param post: postId from VLIVE (like #-########)
+    :param after: load page after #comment-Id
+    :param session: use specific session
+    :param silent: Return `None` instead of Exception
+    :return: comments
+    :rtype: dict
+    """
+
+    # Make request
+    headers = {**gv.HeaderCommon, **gv.APIPostDataReferer(post)}
+    sr = reqWrapper.get(gv.APIPostCommentsUrl(post, after),
+                        headers=headers, wait=0.5, session=session, status=[200, 403])
+
+    if sr.success:
+        return response_json_stripper(sr.response.json())
+    else:
+        auto_raise(APINetworkError, silent)
+
+    return None
+
+
+def getPostCommentsIter(post, session=None):
+    r""" Get post's comments
+
+    :param post: postId from VLIVE (like #-########)
+    :param session: use specific session
+    :return: comments generator
+    :rtype: Generator[dict, None, None]
+    """
+    def next_page_checker(page):
+        if 'nextParams' in page['paging']:
+            return data['paging']['nextParams']['after']
+        else:
+            return None
+
+    data = getPostComments(post, session=session)
+    after = next_page_checker(data)
+    yield data
+
+    while after:
+        data = getPostComments(post, session=session, after=after)
+        after = next_page_checker(data)
+        yield data
+
 
 
 def postIdToVideoSeq(post, silent=False):

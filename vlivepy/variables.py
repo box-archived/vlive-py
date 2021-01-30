@@ -79,6 +79,19 @@ def APIPostDataUrl(post):
             "playlist.limit(30)%s" % (post, AppId, LocaleParam))
 
 
+def APIPostCommentsUrl(post, after=None):
+    if after is None:
+        after = ""
+    else:
+        after = "after=%s&" % after
+
+    return ("https://www.vlive.tv/globalv-web/vam-web/comment/v1.0/post-%s/"
+            "comments?%sappId=%s&fields=root,parent,commentId,body,emotionCount,commentCount,viewerEmotionId,"
+            "viewerAvailableActions,createdAt,writtenIn,sticker,author,latestComments,isRestricted,"
+            "lastModifierMember&startFrom=first"
+            "%s" % (post, after, AppId, LocaleParam))
+
+
 def APIPostDataReferer(post):
     return {"referer": "https://www.vlive.tv/post/%s" % post}
 
