@@ -175,6 +175,8 @@ getVodPlayInfo(videoSeq="123456",
 - `silent`: When a connection or parsing error occurs, it returns None instead of Exception.
 
 ### getPostComments()
+> Dev item (>=0.2.0)
+>
 Get comments from post
 ```python
 from vlivepy import getPostComments
@@ -190,6 +192,8 @@ getPostComments(post="0-12345678",
 - `silent`: When a connection or parsing error occurs, it returns None instead of Exception.
 
 ### getPostCommentsIter()
+> Dev item (>=0.2.0)
+>
 Get comments from post as iterator
 ```python
 from vlivepy import getPostCommentsIter
