@@ -195,7 +195,7 @@ getPostComments(post="0-12345678",
 ### getPostCommentsIter()
 > Dev item (>=0.2.0)
 >
-Get comments from post as iterator
+Get comments from post as iterable by page(20 comments)
 ```python
 from vlivepy import getPostCommentsIter
 

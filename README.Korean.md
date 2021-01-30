@@ -195,7 +195,7 @@ getPostComments(post="0-12345678",
 ### getPostCommentsIter()
 > Dev item (>=0.2.0)
 >
-Post의 댓글을 iterator 형태로 가져옵니다
+Post의 댓글을 iterable 형태로 가져옵니다
 ```python
 from vlivepy import getPostCommentsIter
 
