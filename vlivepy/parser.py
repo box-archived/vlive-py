@@ -127,7 +127,7 @@ def response_json_stripper(parsed_json_dict: dict):
             parsed_json_dict = None
 
     # if data has data field (Fanship)
-    if "data" in parsed_json_dict:
+    if "data" in parsed_json_dict and len(parsed_json_dict) == 1:
         parsed_json_dict = parsed_json_dict["data"]
 
     return parsed_json_dict
