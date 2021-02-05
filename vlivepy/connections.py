@@ -59,7 +59,7 @@ def getInkeyData(videoSeq, session=None, silent=False):
     sr = reqWrapper.get(gv.APIInkeyUrl(videoSeq), headers=headers, wait=0.5, session=session, status=[200])
 
     if sr.success:
-        return response_json_stripper(sr.response.json())
+        return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
@@ -102,7 +102,7 @@ def getPostInfo(post, session=None, silent=False):
     sr = reqWrapper.get(gv.APIPostUrl(post), headers=headers, wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
-        return response_json_stripper(sr.response.json())
+        return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
@@ -124,7 +124,7 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
                         session=session, wait=0.5, status=[200, 403])
 
     if sr.success:
-        return response_json_stripper(sr.response.json())
+        return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
@@ -158,7 +158,7 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
     sr = reqWrapper.get(url, headers=headers, session=session, status=[200, 403])
 
     if sr.success:
-        return response_json_stripper(sr.response.json())
+        return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
@@ -179,7 +179,7 @@ def getLiveStatus(videoSeq, silent=False):
     sr = reqWrapper.get(gv.APILiveV2StatusUrl(videoSeq), headers=headers, wait=0.2, status=[200])
 
     if sr.success:
-        return response_json_stripper(sr.response.json())
+        return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
@@ -214,7 +214,7 @@ def getVodPlayInfo(videoSeq, vodId=None, session=None, silent=False):
     sr = reqWrapper.get(url, headers=headers, session=session, wait=0.3, status=[200, 403])
 
     if sr.success:
-        return response_json_stripper(sr.response.json())
+        return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent=silent)
 
@@ -259,7 +259,7 @@ def getPostData(post, session=None, silent=False):
     sr = reqWrapper.get(gv.APIPostDataUrl(post), headers=headers, wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
-        return response_json_stripper(sr.response.json())
+        return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
@@ -283,7 +283,7 @@ def getPostComments(post, session=None, after=None, silent=False):
                         headers=headers, wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
-        return response_json_stripper(sr.response.json())
+        return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .exception import auto_raise, APIJSONParesError
+from .exception import auto_raise, auto_warn, APIJSONParesError, APIServerResponseWarning, APIServerResponseError
 from collections import namedtuple
 from bs4 import BeautifulSoup
 
@@ -118,13 +118,20 @@ def parseVodIdFromOffcialVideoPost(post, silent=False):
     return None
 
 
-def response_json_stripper(parsed_json_dict: dict):
+def response_json_stripper(parsed_json_dict: dict, silent=False):
     # if data has success code
     if "code" in parsed_json_dict:
         if "result" in parsed_json_dict:
             parsed_json_dict = parsed_json_dict['result']
         else:
             parsed_json_dict = None
+    elif 'errorCode' in parsed_json_dict:
+        err_tuple = (parsed_json_dict['errorCode'], parsed_json_dict['message'].replace("\n", " "))
+        if 'data' in parsed_json_dict:
+            auto_warn("Response has error [%s] %s" % err_tuple, APIServerResponseWarning, silent=silent)
+            parsed_json_dict = parsed_json_dict['data']
+        else:
+            auto_raise(APIServerResponseError('[%s] %s' % err_tuple), silent=silent)
 
     # if data has data field (Fanship)
     if "data" in parsed_json_dict and len(parsed_json_dict) == 1:

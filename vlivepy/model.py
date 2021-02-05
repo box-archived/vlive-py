@@ -33,7 +33,6 @@ class Video(object):
         self.refresh_rate = refresh_rate
         self.__cachedTime = 0
         self.__cached_post = {}
-        self.__is_paid = None
         self.__is_VOD = False
         self.__vodId = None
 
@@ -81,21 +80,11 @@ class Video(object):
         distance = time() - self.__cachedTime
         if distance >= self.refresh_rate or force:
             # Get data
-            data = api.getOfficialVideoPost(self.videoSeq)
+            data = api.getOfficialVideoPost(self.videoSeq, silent=True)
             if data is not None:
-                # Set Fanship info, when it is None
-                if self.__is_paid is None:
-                    if 'data' in data:
-                        self.__is_paid = True
-                    else:
-                        self.__is_paid = False
-
                 # Set data
                 self.__cachedTime = int(time())
-                if self.__is_paid:
-                    self.__cached_post = data['data']
-                else:
-                    self.__cached_post = data
+                self.__cached_post = data
 
                 if 'vodId' in self.__cached_post['officialVideo']:
                     self.__is_VOD = True
