@@ -7,8 +7,9 @@ from .exception import (
     auto_raise, APINetworkError, APISignInFailedError, APIJSONParesError
 )
 from .parser import (parseVideoSeqFromPostInfo, sessionUserCheck,
-                     parseVodIdFromOffcialVideoPost, parseUpcomingFromPage, response_json_stripper)
-from typing import Generator
+                     parseVodIdFromOffcialVideoPost, parseUpcomingFromPage, response_json_stripper,
+                     comment_parser, CommentItem)
+from typing import Generator, List
 
 
 def getUserSession(email, pwd, silent=False):
@@ -283,7 +284,10 @@ def getPostComments(post, session=None, after=None, silent=False):
                         headers=headers, wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
-        return response_json_stripper(sr.response.json(), silent=silent)
+        stripped_data = response_json_stripper(sr.response.json(), silent=silent)
+        if 'data' in stripped_data:
+            stripped_data['data'] = comment_parser(stripped_data['data'])
+        return stripped_data
     else:
         auto_raise(APINetworkError, silent)
 
@@ -296,7 +300,7 @@ def getPostCommentsIter(post, session=None):
     :param post: postId from VLIVE (like #-########)
     :param session: use specific session
     :return: comments generator
-    :rtype: Generator[dict, None, None]
+    :rtype: Generator[List[CommentItem], None, None]
     """
     def next_page_checker(page):
         if 'nextParams' in page['paging']:

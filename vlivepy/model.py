@@ -4,7 +4,7 @@ from . import api
 from . import utils
 from . import controllers
 from . import parser
-from .parser import UpcomingVideo
+from .parser import UpcomingVideo, CommentItem
 from time import time
 
 

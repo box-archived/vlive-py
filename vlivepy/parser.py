@@ -4,6 +4,8 @@ from collections import namedtuple
 from bs4 import BeautifulSoup
 
 UpcomingVideo = namedtuple("UpcomingVideo", "seq time cseq cname ctype name type product")
+CommentItem = namedtuple("CommentItem", 'isRestricted body createdAt commentCount '
+                                        'emotionCount commentId sticker parent author root')
 
 
 def parseVideoSeqFromPostInfo(info, silent=False):
@@ -138,3 +140,22 @@ def response_json_stripper(parsed_json_dict: dict, silent=False):
         parsed_json_dict = parsed_json_dict["data"]
 
     return parsed_json_dict
+
+
+def comment_parser(comment_list: list):
+    n_list = []
+    for comment in comment_list:
+        n_list.append(CommentItem(
+            isRestricted=comment['isRestricted'],
+            body=comment['body'],
+            createdAt=comment['createdAt'],
+            commentCount=comment['commentCount'],
+            emotionCount=comment['emotionCount'],
+            commentId=comment['commentId'],
+            sticker=comment['sticker'],
+            parent=comment['parent'],
+            author=comment['author'],
+            root=comment['root']
+        ))
+
+    return n_list
