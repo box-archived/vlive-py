@@ -1,0 +1,3 @@
+sphinx==3.4.3
+sphinx-intl
+sphinx-rtd-theme
