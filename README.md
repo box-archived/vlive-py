@@ -6,6 +6,7 @@
 [![PyPI](https://img.shields.io/pypi/v/vlivepy)](https://pypi.org/project/vlivepy/)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/box-archived/vlive-py?include_prereleases&label=dev)](https://github.com/box-archived/vlive-py/releases/)
 [![GitHub](https://img.shields.io/github/license/box-archived/vlive-py)](LICENSE)
+[![Documentation Status](https://readthedocs.org/projects/vlivepy/badge/?version=stable)](https://vlivepy.readthedocs.io/en/stable/?badge=stable)
 
 vlivepy is reverse-engineered Python-based API of VLIVE(vlive.tv)
 
