@@ -9,7 +9,7 @@ from .exception import (
 from .parser import (parseVideoSeqFromPostInfo, sessionUserCheck,
                      parseVodIdFromOffcialVideoPost, parseUpcomingFromPage, response_json_stripper,
                      comment_parser, CommentItem)
-from typing import Generator, List
+from typing import Generator
 
 
 def getUserSession(email, pwd, silent=False):
@@ -300,7 +300,7 @@ def getPostCommentsIter(post, session=None):
     :param post: postId from VLIVE (like #-########)
     :param session: use specific session
     :return: comments generator
-    :rtype: Generator[List[CommentItem], None, None]
+    :rtype: Generator[CommentItem, None, None]
     """
     def next_page_checker(page):
         if 'nextParams' in page['paging']:
@@ -310,12 +310,14 @@ def getPostCommentsIter(post, session=None):
 
     data = getPostComments(post, session=session)
     after = next_page_checker(data)
-    yield data['data']
+    for item in data['data']:
+        yield item
 
     while after:
         data = getPostComments(post, session=session, after=after)
         after = next_page_checker(data)
-        yield data['data']
+        for item in data['data']:
+            yield item
 
 
 def getPostStarComments(post, session=None, after=None, silent=False):
