@@ -318,6 +318,59 @@ def getPostCommentsIter(post, session=None):
         yield data['data']
 
 
+def getPostStarComments(post, session=None, after=None, silent=False):
+    r""" Get post's star comments
+
+    :param post: postId from VLIVE (like #-########)
+    :param after: load page after #comment-Id
+    :param session: use specific session
+    :param silent: Return `None` instead of Exception
+    :return: comments
+    :rtype: dict
+    """
+
+    # Make request
+    headers = {**gv.HeaderCommon, **gv.APIPostDataReferer(post)}
+    sr = reqWrapper.get(gv.APIPostStarCommentsUrl(post, after),
+                        headers=headers, wait=0.5, session=session, status=[200, 403])
+
+    if sr.success:
+        stripped_data = response_json_stripper(sr.response.json(), silent=silent)
+        if 'data' in stripped_data:
+            stripped_data['data'] = comment_parser(stripped_data['data'])
+        return stripped_data
+    else:
+        auto_raise(APINetworkError, silent)
+
+    return None
+
+
+def getPostStarCommentsIter(post, session=None):
+    r""" Get post's star comments as Iterable
+
+    :param post: postId from VLIVE (like #-########)
+    :param session: use specific session
+    :return: comments generator
+    :rtype: Generator[CommentItem, None, None]
+    """
+    def next_page_checker(page):
+        if 'nextParams' in page['paging']:
+            return data['paging']['nextParams']['after']
+        else:
+            return None
+
+    data = getPostStarComments(post, session=session)
+    after = next_page_checker(data)
+    for item in data['data']:
+        yield item
+
+    while after:
+        data = getPostStarComments(post, session=session, after=after)
+        after = next_page_checker(data)
+        for item in data['data']:
+            yield item
+
+
 def postIdToVideoSeq(post, silent=False):
     r""" postId to videoSeq
 

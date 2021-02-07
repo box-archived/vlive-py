@@ -92,6 +92,19 @@ def APIPostCommentsUrl(post, after=None):
             "%s" % (post, after, AppId, LocaleParam))
 
 
+def APIPostStarCommentsUrl(post, after=None):
+    if after is None:
+        after = ""
+    else:
+        after = "after=%s&" % after
+
+    return ("https://www.vlive.tv/globalv-web/vam-web/comment/v1.0/post-%s/"
+            "starComments?%sappId=%s&fields=root,parent,commentId,body,emotionCount,commentCount,"
+            "viewerEmotionId,viewerAvailableActions,createdAt,writtenIn,sticker,author,isRestricted,"
+            "lastModifierMember&startFrom=first"
+            "%s" % (post, after, AppId, LocaleParam))
+
+
 def APIPostDataReferer(post):
     return {"referer": "https://www.vlive.tv/post/%s" % post}
 
