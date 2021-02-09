@@ -23,9 +23,8 @@ def getUserSession(email, pwd, silent=False):
     """
 
     # Make request
-    data = {'email': email, 'pwd': pwd}
-    headers = {**gv.HeaderCommon, **gv.APISignInReferer}
-    sr = reqWrapper.post(gv.APISignInUrl, data=data, headers=headers, wait=0.5, status=[200])
+    sr = reqWrapper.post(**gv.endpoint_auth(email, pwd),
+                         wait=0.5, status=[200])
 
     if sr.success:
         # Case <Sign-in Failed (Exception)>
@@ -56,8 +55,8 @@ def getInkeyData(videoSeq, session=None, silent=False):
     """
 
     # Make request
-    headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
-    sr = reqWrapper.get(gv.APIInkeyUrl(videoSeq), headers=headers, wait=0.5, session=session, status=[200])
+    sr = reqWrapper.get(**gv.endpoint_inkey(videoSeq),
+                        wait=0.5, session=session, status=[200])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
@@ -98,9 +97,8 @@ def getPostInfo(post, session=None, silent=False):
     :rtype: dict
     """
 
-    # Make request
-    headers = {**gv.HeaderCommon, **gv.APIPostReferer(post)}
-    sr = reqWrapper.get(gv.APIPostUrl(post), headers=headers, wait=0.5, session=session, status=[200, 403])
+    sr = reqWrapper.get(**gv.endpoint_post(post),
+                        wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
@@ -120,8 +118,7 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
     :rtype: dict
     """
 
-    headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
-    sr = reqWrapper.get(gv.APIofficialVideoPostUrl(videoSeq), headers=headers,
+    sr = reqWrapper.get(**gv.endpoint_official_video_post(videoSeq),
                         session=session, wait=0.5, status=[200, 403])
 
     if sr.success:
@@ -149,14 +146,9 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
         if sessionUserCheck(session):
             vpdid2 = getVpdid2(session, silent=silent)
 
-    # Add vpdid2 param, if vpdid2 is valid
-    url = gv.APILiveV3PlayInfoUrl(videoSeq)
-    if vpdid2 is not None:
-        url += "&vpdid2=%s" % vpdid2
-
     # Make request
-    headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
-    sr = reqWrapper.get(url, headers=headers, session=session, status=[200, 403])
+    sr = reqWrapper.get(**gv.endpoint_live_play_info(videoSeq, vpdid2),
+                        session=session, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
@@ -176,8 +168,8 @@ def getLiveStatus(videoSeq, silent=False):
     """
 
     # Make request
-    headers = {**gv.HeaderCommon, **gv.APIofficialVideoPostReferer(videoSeq)}
-    sr = reqWrapper.get(gv.APILiveV2StatusUrl(videoSeq), headers=headers, wait=0.2, status=[200])
+    sr = reqWrapper.get(**gv.endpoint_live_status(videoSeq),
+                        wait=0.2, status=[200])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
@@ -210,59 +202,28 @@ def getVodPlayInfo(videoSeq, vodId=None, session=None, silent=False):
         vodId = getVodId(videoSeq)
 
     # make request
-    url = gv.APIVodPlayInfoUrl(vodId, inkey)
-    headers = {**gv.HeaderCommon, **gv.APIVodPlayInfoReferer}
-    sr = reqWrapper.get(url, headers=headers, session=session, wait=0.3, status=[200, 403])
+    sr = reqWrapper.get(**gv.endpoint_vod_play_info(vodId, inkey),
+                        session=session, wait=0.3, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent=silent)
-
-
-def loadUpcoming(day=None, silent=False):
-    params = dict()
-    if day is not None:
-        params.update({"d": day})
-
-    # make request
-    url = "https://www.vlive.tv/upcoming"
-    headers = gv.HeaderCommon
-    sr = reqWrapper.get(url, params=params, headers=headers)
-    if sr.success:
-        return sr.response.text
-    else:
-        auto_raise(APINetworkError, silent=silent)
-
-    return None
 
 
 def getUpcomingList(date=None, silent=False):
-    html = loadUpcoming(day=date, silent=silent)
-    if html is None:
-        return None
-    else:
-        return parseUpcomingFromPage(html)
+    params = dict()
+    if date is not None:
+        params.update({"d": date})
 
-
-def getPostData(post, session=None, silent=False):
-    r""" Get detailed post data
-
-    :param post: postId from VLIVE (like #-########)
-    :param session: use specific session
-    :param silent: Return `None` instead of Exception
-    :return: postData
-    :rtype: dict
-    """
-
-    # Make request
-    headers = {**gv.HeaderCommon, **gv.APIPostDataReferer(post)}
-    sr = reqWrapper.get(gv.APIPostDataUrl(post), headers=headers, wait=0.5, session=session, status=[200, 403])
+    # make request
+    url = "https://www.vlive.tv/upcoming"
+    sr = reqWrapper.get(url, params=params, headers=gv.HeaderCommon)
 
     if sr.success:
-        return response_json_stripper(sr.response.json(), silent=silent)
+        return parseUpcomingFromPage(sr.response.text)
     else:
-        auto_raise(APINetworkError, silent)
+        auto_raise(APINetworkError, silent=silent)
 
     return None
 
@@ -279,9 +240,8 @@ def getPostComments(post, session=None, after=None, silent=False):
     """
 
     # Make request
-    headers = {**gv.HeaderCommon, **gv.APIPostDataReferer(post)}
-    sr = reqWrapper.get(gv.APIPostCommentsUrl(post, after),
-                        headers=headers, wait=0.5, session=session, status=[200, 403])
+    sr = reqWrapper.get(**gv.endpoint_post_comments(post, after),
+                        wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
         stripped_data = response_json_stripper(sr.response.json(), silent=silent)
@@ -332,9 +292,8 @@ def getPostStarComments(post, session=None, after=None, silent=False):
     """
 
     # Make request
-    headers = {**gv.HeaderCommon, **gv.APIPostDataReferer(post)}
-    sr = reqWrapper.get(gv.APIPostStarCommentsUrl(post, after),
-                        headers=headers, wait=0.5, session=session, status=[200, 403])
+    sr = reqWrapper.get(**gv.endpoint_post_star_comments(post, after),
+                        wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
         stripped_data = response_json_stripper(sr.response.json(), silent=silent)
@@ -382,7 +341,7 @@ def postIdToVideoSeq(post, silent=False):
     :rtype: str
     """
 
-    postInfo = getPostInfo(post, silent=silent)
+    postInfo = getPostInfo(post, silent=True)
 
     return parseVideoSeqFromPostInfo(postInfo, silent=silent)
 

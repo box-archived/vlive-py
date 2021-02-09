@@ -1,121 +1,199 @@
 # VLive React App ID
-AppId = "8c6cc7b45d2568fb668be6e05b6e5a3b"
+AppId = {"appId": "8c6cc7b45d2568fb668be6e05b6e5a3b"}
 
 # locale parameter(url postfix)
-LocaleParam = "&gcc=KR&locale=ko_KR"
+LocaleParam = {"gcc": "KR", "locale": "ko_KR"}
 
-PlatformPCParam = "&platformType=PC"
+PlatformPCParam = {"platformType": "PC"}
+
+# Header for common use
+HeaderCommon = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                  "AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/87.0.4280.88 Safari/537.36",
+    "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
+}
 
 
-# API: Post Info API
-# APIPostUrl("POST-ID"): str
-# APIPostReferer("POST-ID"): dict
-def APIPostUrl(post):
-    return "https://www.vlive.tv/globalv-web/vam-web/post/v1.0/post-%s?" \
-           "appId=%s&fields=title,attachments,officialVideo%s" \
-           % (post, AppId, LocaleParam)
-
-
-def APIPostReferer(post):
+# Referer
+def referer_post(post):
     return {"Referer": "https://www.vlive.tv/post/%s" % post}
 
 
-# API: Get user session (sign-in)
-# APISignInUrl: str
-# APISignInReferer: dict
-APISignInUrl = "https://www.vlive.tv/auth/email/login"
-APISignInReferer = {'Referer': 'https://www.vlive.tv/auth/email/login'}
+def referer_auth():
+    return {'Referer': 'https://www.vlive.tv/auth/email/login'}
 
 
-def APIInkeyUrl(videoSeq):
-    return ("https://www.vlive.tv/globalv-web/vam-web/video/v1.0/vod/%s/inkey?appId=%s%s%s" %
-            (videoSeq, AppId, LocaleParam, PlatformPCParam))
-
-
-# API: officialVideoPost
-def APIofficialVideoPostUrl(videoSeq):
-    return ("https://www.vlive.tv/globalv-web/vam-web/post/v1.0/officialVideoPost-"
-            "%s?appId=%s&fields=attachments,author,authorId,availableActions,"
-            "board{boardId,title,boardType,readAllowedLabel,payRequired,"
-            "includedCountries,excludedCountries},boardId,body,channel{channelName,channelCode},"
-            "channelCode,commentCount,contentType,createdAt,emotionCount,excludedCountries,"
-            "includedCountries,isViewerBookmarked,isCommentEnabled,isHiddenFromStar,lastModifierMember,"
-            "notice,officialVideo,originPost,plainBody,postId,postVersion,reservation,starReactions,"
-            "targetMember,targetMemberId,thumbnail,title,url,smartEditorAsHtml,viewerEmotionId,"
-            "writtenIn"
-            "%s" % (videoSeq, AppId, LocaleParam))
-
-
-def APIofficialVideoPostReferer(videoSeq):
+def referer_video(videoSeq):
     return {"referer": "https://www.vlive.tv/video/%s" % videoSeq}
 
 
-def APILiveV3PlayInfoUrl(videoSeq):
-    # Optional: vpdid2
-    return ("https://www.vlive.tv/globalv-web/vam-web/old/v3/live/%s/playInfo?appId=%s%s%s" %
-            (videoSeq, AppId, PlatformPCParam, LocaleParam))
+def referer_vlive():
+    return {"referer": "https://www.vlive.tv/"}
 
 
-def APILiveV2StatusUrl(videoSeq):
-    return ("https://www.vlive.tv/globalv-web/vam-web/old/v2/live/%s/status?appId=%s%s" %
-            (videoSeq, AppId, LocaleParam))
+# Endpoint
+def endpoint_post(post):
+    url = "https://www.vlive.tv/globalv-web/vam-web/post/v1.0/post-%s" % post
+    params = {
+        "fields": "attachments,author,authorId,availableActions,board{boardId,title,boardType,"
+                  "readAllowedLabel,payRequired,includedCountries,excludedCountries},boardId,"
+                  "body,channel{channelName,channelCode},channelCode,commentCount,contentType,"
+                  "createdAt,emotionCount,excludedCountries,includedCountries,isViewerBookmarked,"
+                  "isCommentEnabled,isHiddenFromStar,lastModifierMember,notice,officialVideo,"
+                  "originPost,plainBody,postId,postVersion,reservation,starReactions,targetMember,"
+                  "targetMemberId,thumbnail,title,url,smartEditorAsHtml,viewerEmotionId,writtenIn,"
+                  "playlist.limit(30)",
+        **AppId,
+        **LocaleParam
+    }
+    headers = {
+        **referer_post(post),
+        **HeaderCommon
+    }
+
+    return {"url": url, "params": params, "headers": headers}
 
 
-def APIVodPlayInfoUrl(vodId, inkey):
-    return "https://apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/%s?key=%s&videoId=%s" % (vodId, inkey, vodId)
+def endpoint_auth(email, pwd):
+    url = "https://www.vlive.tv/auth/email/login"
+    data = {
+        'email': email,
+        'pwd': pwd
+    }
+    headers = {
+        **referer_auth(),
+        **HeaderCommon
+    }
+
+    return {"url": url, "data": data, "headers": headers}
 
 
-APIVodPlayInfoReferer = {"referer": "https://www.vlive.tv/"}
+def endpoint_inkey(videoSeq):
+    url = "https://www.vlive.tv/globalv-web/vam-web/video/v1.0/vod/%s/inkey" % videoSeq
+    params = {
+        **AppId,
+        **LocaleParam,
+        **PlatformPCParam
+    }
+    headers = {
+        **HeaderCommon,
+        **referer_video(videoSeq)
+    }
+
+    return {"url": url, "params": params, "headers": headers}
 
 
-def APIPostDataUrl(post):
-    return ("https://www.vlive.tv/globalv-web/vam-web/post/v1.0/post-%s"
-            "?appId=%s&fields=attachments,author,authorId,availableActions,"
-            "board{boardId,title,boardType,readAllowedLabel,payRequired,includedCountries,excludedCountries},"
-            "boardId,body,channel{channelName,channelCode},channelCode,commentCount,contentType,createdAt,"
-            "emotionCount,excludedCountries,includedCountries,isViewerBookmarked,isCommentEnabled,isHiddenFromStar,"
-            "lastModifierMember,notice,officialVideo,originPost,plainBody,postId,postVersion,reservation,starReactions,"
-            "targetMember,targetMemberId,thumbnail,title,url,smartEditorAsHtml,viewerEmotionId,writtenIn,"
-            "playlist.limit(30)%s" % (post, AppId, LocaleParam))
+def endpoint_official_video_post(videoSeq):
+    url = "https://www.vlive.tv/globalv-web/vam-web/post/v1.0/officialVideoPost-%s" % videoSeq
+    params = {
+        **AppId,
+        **LocaleParam,
+        "fields": "attachments,author,authorId,availableActions,board{boardId,title,boardType,"
+                  "readAllowedLabel,payRequired,includedCountries,excludedCountries},boardId,"
+                  "body,channel{channelName,channelCode},channelCode,commentCount,contentType,"
+                  "createdAt,emotionCount,excludedCountries,includedCountries,isViewerBookmarked,"
+                  "isCommentEnabled,isHiddenFromStar,lastModifierMember,notice,officialVideo,"
+                  "originPost,plainBody,postId,postVersion,reservation,starReactions,targetMember,"
+                  "targetMemberId,thumbnail,title,url,smartEditorAsHtml,viewerEmotionId,writtenIn"
+    }
+    headers = {
+        **HeaderCommon,
+        **referer_video(videoSeq)
+    }
+
+    return {"url": url, "params": params, "headers": headers}
 
 
-def APIPostCommentsUrl(post, after=None):
-    if after is None:
-        after = ""
-    else:
-        after = "after=%s&" % after
+def endpoint_live_play_info(videoSeq, vpdid2=None):
+    url = "https://www.vlive.tv/globalv-web/vam-web/old/v3/live/%s/playInfo" % videoSeq
+    params = {
+        **AppId,
+        **PlatformPCParam,
+        **LocaleParam,
+    }
+    if vpdid2:
+        params.update({"vpdid2": vpdid2})
+    headers = {
+        **HeaderCommon,
+        **referer_video(videoSeq)
+    }
 
-    return ("https://www.vlive.tv/globalv-web/vam-web/comment/v1.0/post-%s/"
-            "comments?%sappId=%s&fields=root,parent,commentId,body,emotionCount,commentCount,viewerEmotionId,"
-            "viewerAvailableActions,createdAt,writtenIn,sticker,author,latestComments,isRestricted,"
-            "lastModifierMember&startFrom=first"
-            "%s" % (post, after, AppId, LocaleParam))
-
-
-def APIPostStarCommentsUrl(post, after=None):
-    if after is None:
-        after = ""
-    else:
-        after = "after=%s&" % after
-
-    return ("https://www.vlive.tv/globalv-web/vam-web/comment/v1.0/post-%s/"
-            "starComments?%sappId=%s&fields=root,parent,commentId,body,emotionCount,commentCount,"
-            "viewerEmotionId,viewerAvailableActions,createdAt,writtenIn,sticker,author,isRestricted,"
-            "lastModifierMember&startFrom=first"
-            "%s" % (post, after, AppId, LocaleParam))
+    return {"url": url, "params": params, "headers": headers}
 
 
-def APIPostDataReferer(post):
-    return {"referer": "https://www.vlive.tv/post/%s" % post}
+def endpoint_live_status(videoSeq):
+    url = "https://www.vlive.tv/globalv-web/vam-web/old/v2/live/%s/status" % videoSeq
+    params = {
+        **AppId,
+        **LocaleParam
+    }
+    headers = {
+        **HeaderCommon,
+        **referer_video(videoSeq)
+    }
+
+    return {"url": url, "params": params, "headers": headers}
 
 
-# User-Agent header for requests module
-HeaderUserAgent = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                                 "AppleWebKit/537.36 (KHTML, like Gecko) "
-                                 "Chrome/87.0.4280.88 Safari/537.36"}
+def endpoint_vod_play_info(vodId, inkey):
+    url = "https://apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/%s" % vodId
+    params = {
+        "key": inkey,
+        "videoId": vodId,
+        "ver": "2.0",
+        "ctls": '{"visible":{"fullscreen":true,"logo":false,"playbackRate":false,"scrap":false,"playCount":true,'
+                '"commentCount":true,"title":true,"writer":true,"expand":true,"subtitles":true,"thumbnails":true,'
+                '"quality":true,"setting":true,"script":false,"logoDimmed":true,"badge":true,"seekingTime":true,'
+                '"muted":true,"muteButton":false,"viewerNotice":false,"linkCount":false,"createTime":false,'
+                '"thumbnail":true},"clicked":{"expand":false,"subtitles":false}}',
+        "devt": "html5_pc",
+        "doct": "json",
+        "cpt": "vtt",
+        "cpl": "ko_KR",
+        "lc": "ko_KR"
+    }
+    headers = {
+        **HeaderCommon,
+        **referer_vlive()
+    }
 
-# Accept-Language header for requests module
-HeaderAcceptLang = {"Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"}
+    return {"url": url, "params": params, "headers": headers}
 
-# Header for common use
-HeaderCommon = {**HeaderUserAgent, **HeaderAcceptLang}
+
+def endpoint_post_comments(post, after=None):
+    url = "https://www.vlive.tv/globalv-web/vam-web/comment/v1.0/post-%s/comments" % post
+    params = {
+        **AppId,
+        **LocaleParam,
+        "fields": "root,parent,commentId,body,emotionCount,commentCount,viewerEmotionId,viewerAvailableActions,"
+                  "createdAt,writtenIn,sticker,author,latestComments,isRestricted,lastModifierMember",
+        "startFrom": "first"
+    }
+    if after:
+        params.update({"after": after})
+    headers = {
+        **HeaderCommon,
+        **referer_post(post)
+    }
+
+    return {"url": url, "params": params, "headers": headers}
+
+
+def endpoint_post_star_comments(post, after=None):
+    url = "https://www.vlive.tv/globalv-web/vam-web/comment/v1.0/post-%s/starComments" % post
+    params = {
+        **AppId,
+        **LocaleParam,
+        "fields": "root,parent,commentId,body,emotionCount,commentCount,viewerEmotionId,viewerAvailableActions,"
+                  "createdAt,writtenIn,sticker,author,isRestricted,lastModifierMember",
+        "startFrom": "first"
+    }
+    if after:
+        params.update({"after": after})
+    headers = {
+        **HeaderCommon,
+        **referer_post(post)
+    }
+
+    return {"url": url, "params": params, "headers": headers}
