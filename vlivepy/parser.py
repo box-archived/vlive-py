@@ -4,8 +4,8 @@ from collections import namedtuple
 from bs4 import BeautifulSoup
 
 UpcomingVideo = namedtuple("UpcomingVideo", "seq time cseq cname ctype name type product")
-CommentItem = namedtuple("CommentItem", 'isRestricted body createdAt commentCount '
-                                        'emotionCount commentId sticker parent author root')
+CommentItem = namedtuple("CommentItem", 'commentId author body sticker createdAt '
+                                        'commentCount emotionCount isRestricted parent root')
 
 
 def parseVideoSeqFromPostInfo(info, silent=False):
@@ -146,15 +146,15 @@ def comment_parser(comment_list: list):
     n_list = []
     for comment in comment_list:
         n_list.append(CommentItem(
-            isRestricted=comment['isRestricted'],
+            commentId=comment['commentId'],
+            author=comment['author'],
             body=comment['body'],
+            sticker=comment['sticker'],
             createdAt=comment['createdAt'],
             commentCount=comment['commentCount'],
             emotionCount=comment['emotionCount'],
-            commentId=comment['commentId'],
-            sticker=comment['sticker'],
+            isRestricted=comment['isRestricted'],
             parent=comment['parent'],
-            author=comment['author'],
             root=comment['root']
         ))
 
