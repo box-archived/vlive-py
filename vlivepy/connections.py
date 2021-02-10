@@ -48,7 +48,6 @@ def getInkeyData(videoSeq, session=None, silent=False):
 
     :param videoSeq: postId from VLIVE (like ######)(Numbers)
     :param session: use specific session
-    :type session: reqWrapper.requests.Session
     :param silent: Return `None` instead of Exception
     :return: Inkey data
     :rtype: dict
@@ -91,7 +90,6 @@ def getPostInfo(post, session=None, silent=False):
 
     :param post: postId from VLIVE (like #-########)
     :param session: use specific session
-    :type session: reqWrapper.requests.Session
     :param silent: Return `None` instead of Exception
     :return: videoInfo
     :rtype: dict
@@ -134,7 +132,6 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
 
     :param videoSeq: postId from VLIVE (like ######)(Numbers)
     :param session: use specific session
-    :type session: reqWrapper.requests.Session
     :param vpdid2: vpdid2 from api.getInkeyData()
     :param silent: Return `None` instead of Exception
     :return: `LivePlayInfoV3` Data
