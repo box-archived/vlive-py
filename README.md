@@ -31,7 +31,6 @@ $ python -m pip install vlivepy
     - [getLiveStatus()](#getlivestatus)
     - [getVodPlayInfo()](#getvodplayinfo)
     - [getPostComments()](#getpostcomments)
-    - [getPostCommentsIter()](#getpostcommentsiter)
 - [Utils](#utils)
     - [utils.postIdToVideoSeq()](#utilspostidtovideoseq)
     - [utils.getVpdid2()](#utilsgetvpdid2)
@@ -40,6 +39,8 @@ $ python -m pip install vlivepy
         - [UpcomingVideo](#upcomingvideo)
     - [utils.dumpSession()](#utilsdumpsession)
     - [utils.loadSession()](#utilsloadsession)
+    - [utils.getPostCommentsIter()](#utilsgetpostcommentsiter)
+        - [CommentItem](#commentitem)
 - [Video](#video)
     - [Properties](#videoproperties)
     - [Video.refresh()](#videorefresh)
@@ -192,27 +193,6 @@ getPostComments(post="0-12345678",
 - `after`: Required if post has over 20 comments, Format is like `commentId,createdAt` of last comment
 - `silent`: When a connection or parsing error occurs, it returns None instead of Exception.
 
-### getPostCommentsIter()
-> Dev item (>=0.2.0)
->
-Get comments from post as iterable by page(20 comments)
-```python
-from vlivepy import getPostCommentsIter
-
-for item in getPostCommentsIter(post="0-12345678",
-                                session=None):  # Optional
-    print(item)
-
-# [comment, comment...]
-# [comment, comment...]
-# [comment, comment...]
-# ...
-```
-
-Each item only returns `data` field compared to [`getPostComments()`](#getpostcomments)
-- `post`: Enter the postId of the post to parse comment.
-- `session`: UserSession is required for videos that require membership authentication.
-
 
 ## Utils
 ### utils.postIdToVideoSeq()
@@ -301,6 +281,45 @@ from vlivepy.utils import loadSession
 with open("user.pkl", mode="rb") as f:
     user = loadSession(f)
 ```
+
+### utils.getPostCommentsIter()
+> Dev item (>=0.2.0)
+>
+Get comments from post as iterable by page(20 comments)
+```python
+from vlivepy.utils import getPostCommentsIter
+
+for item in getPostCommentsIter(post="0-12345678",
+                                session=None):  # Optional
+    print(item)
+
+# CommentItem(isRestricted=False, body=""...)
+# CommentItem(isRestricted=False, body=""...)
+# CommentItem(isRestricted=False, body=""...)
+# ...
+```
+
+Each item only returns `VideoComment` object compared to [`getPostComments()`](#getpostcomments)
+- `post`: Enter the postId of the post to parse comment.
+- `session`: UserSession is required for videos that require membership authentication.
+
+#### CommentItem
+`CommentItem` is a `namedTuple` object that corresponds to each comment
+
+`CommentItem` has the following fields:
+
+| Field | Explanation | Value |
+|:---:|:---:|:---|
+| `commentId` | ID of comment | str |
+| `author` | Author info of comment | dict |
+| `body` | Comment body | Any |
+| `sticker` | Sticker in body | List\[dict\] |
+| `createdAt` | Created time (Epoch) | int |
+| `commentCount` | count of nested comment | int |
+| `emotionCount` | Like count | int |
+| `isRestricted` |  | Bool |
+| `parent` | Information about parent post or comment | dict  |
+| `root` | Information about origin post | dict |
 
 ## Video
 The `Video` object [getPostInfo](#getpostinfo) caches the results and has an API available as a method.
