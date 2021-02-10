@@ -41,6 +41,7 @@ $ python -m pip install vlivepy
     - [utils.loadSession()](#utilsloadsession)
     - [utils.getPostCommentsIter()](#utilsgetpostcommentsiter)
         - [CommentItem](#commentitem)
+    - [utils.getPostStarCommentsIter()](#utilsgetpoststarcommentsiter)
 - [Video](#video)
     - [Properties](#videoproperties)
     - [Video.refresh()](#videorefresh)
@@ -194,6 +195,25 @@ getPostComments(post="0-12345678",
 - `silent`: When a connection or parsing error occurs, it returns None instead of Exception.
 
 
+### getPostStarComments()
+> Dev item (>=0.2.0)
+>
+Get star's comments from post
+```python
+from vlivepy import getPostStarComments
+
+getPostStarComments(post="0-12345678",
+                    session=None,  # Optional
+                    after=None,  # Optional
+                    silent=False)  # Optional
+```
+- `post`: Enter the postId of the post to parse comment.
+- `session`: UserSession is required for videos that require membership authentication.
+- `after`: Required if post has over 20 comments, Format is like `commentId,createdAt` of last comment
+- `silent`: When a connection or parsing error occurs, it returns None instead of Exception.
+
+
+
 ## Utils
 ### utils.postIdToVideoSeq()
 Convert VLIVE postId to videoSeq.
@@ -299,7 +319,7 @@ for item in getPostCommentsIter(post="0-12345678",
 # ...
 ```
 
-Each item only returns `VideoComment` object compared to [`getPostComments()`](#getpostcomments)
+Each item only returns [`CommentItem`](#commentitem) object compared to [`getPostComments()`](#getpostcomments)
 - `post`: Enter the postId of the post to parse comment.
 - `session`: UserSession is required for videos that require membership authentication.
 
@@ -320,6 +340,27 @@ Each item only returns `VideoComment` object compared to [`getPostComments()`](#
 | `isRestricted` |  | Bool |
 | `parent` | Information about parent post or comment | dict  |
 | `root` | Information about origin post | dict |
+
+### utils.getPostStarCommentsIter()
+> Dev item (>=0.2.0)
+>
+Get star's comments from post as iterable by page(20 comments)
+```python
+from vlivepy.utils import getPostStarCommentsIter
+
+for item in getPostStarCommentsIter(post="0-12345678",
+                                    session=None):  # Optional
+    print(item)
+
+# CommentItem(isRestricted=False, body=""...)
+# CommentItem(isRestricted=False, body=""...)
+# CommentItem(isRestricted=False, body=""...)
+# ...
+```
+
+Each item only returns [`CommentItem`](#commentitem) object compared to [`getPostComments()`](#getpostcomments)
+- `post`: Enter the postId of the post to parse comment.
+- `session`: UserSession is required for videos that require membership authentication.
 
 ## Video
 The `Video` object [getPostInfo](#getpostinfo) caches the results and has an API available as a method.

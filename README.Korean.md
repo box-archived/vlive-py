@@ -31,6 +31,7 @@ $ python -m pip install vlivepy
     - [getLiveStatus()](#getlivestatus)
     - [getVodPlayInfo()](#getvodplayinfo)
     - [getPostComments()](#getpostcomments)
+    - [getPostStarComments()](#getpoststarcomments)
 - [Utils](#utils)
     - [utils.postIdToVideoSeq()](#utilspostidtovideoseq)
     - [utils.getVpdid2()](#utilsgetvpdid2)
@@ -41,6 +42,7 @@ $ python -m pip install vlivepy
     - [utils.loadSession()](#utilsloadsession)
     - [utils.getPostCommentsIter()](#utilsgetpostcommentsiter)
         - [CommentItem](#commentitem)
+    - [utils.getPostStarCommentsIter](#utilsgetpoststarcommentsiter)
 - [Video](#video)
     - [Properties](#videoproperties)
     - [Video.refresh()](#videorefresh)
@@ -193,6 +195,22 @@ getPostComments(post="0-12345678",
 - `after`: 댓글이 20개 이상인 경우, `commentId,createdAt`(마지막 댓글의 정보) 형태의 load after 정보가 필요합니다.
 - `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
+### getPostStarComments()
+> Dev item (>=0.2.0)
+>
+Post의 스타가 작성한 댓글을 가져옵니다.
+```python
+from vlivepy import getPostStarComments
+
+getPostStarComments(post="0-12345678",
+                    session=None,  # Optional
+                    after=None,  # Optional
+                    silent=False)  # Optional
+```
+- `post`: 가져오려는 Post의 postId를 입력합니다
+- `session`: 회원인증이 필요한 영상인 경우 UserSession이 필요합니다.
+- `after`: 댓글이 20개 이상인 경우, `commentId,createdAt`(마지막 댓글의 정보) 형태의 load after 정보가 필요합니다.
+- `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ## Utils
 ### utils.postIdToVideoSeq()
@@ -299,7 +317,7 @@ for item in getPostCommentsIter(post="0-12345678",
 # ...
 ```
 
-[`getPostComments()`](#getpostcomments) 와 다르게 결과 중 `CommentItem` 객체만 리턴합니다.
+[`getPostComments()`](#getpostcomments) 와 다르게 결과 중 [`CommentItem`](#commentitem) 객체만 리턴합니다.
 - `post`: 가져오려는 Post의 postId를 입력합니다
 - `session`: 회원인증이 필요한 영상인 경우 UserSession이 필요합니다.
 
@@ -321,6 +339,28 @@ for item in getPostCommentsIter(post="0-12345678",
 | `isRestricted` |  | Bool |
 | `parent` | 부모 글 정보 | dict  |
 | `root` | 댓글이 작성된 게시물 정보 | dict |
+
+
+### utils.getPostStarCommentsIter()
+> Dev item (>=0.2.0)
+>
+Post의 스타가 작성한 댓글을 iterable 형태로 가져옵니다
+```python
+from vlivepy.utils import getPostStarCommentsIter
+
+for item in getPostStarCommentsIter(post="0-12345678",
+                                    session=None):  # Optional
+    print(item)
+
+# CommentItem(isRestricted=False, body=""...)
+# CommentItem(isRestricted=False, body=""...)
+# CommentItem(isRestricted=False, body=""...)
+# ...
+```
+
+[`getPostComments()`](#getpostcomments) 와 다르게 결과 중 [`CommentItem`](#commentitem) 객체만 리턴합니다.
+- `post`: 가져오려는 Post의 postId를 입력합니다
+- `session`: 회원인증이 필요한 영상인 경우 UserSession이 필요합니다.
 
 ## Video
 `Video` 객체는 [getPostInfo](#getpostinfo) 결과를 캐싱하고 사용 가능한 API를 메소드로 갖습니다.
