@@ -142,6 +142,13 @@ def response_json_stripper(parsed_json_dict: dict, silent=False):
     return parsed_json_dict
 
 
+def next_page_checker(page):
+    if 'nextParams' in page['paging']:
+        return page['paging']['nextParams']['after']
+    else:
+        return None
+
+
 def comment_parser(comment_list: list):
     n_list = []
     for comment in comment_list:

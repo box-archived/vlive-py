@@ -6,9 +6,11 @@ from . import variables as gv
 from .exception import (
     auto_raise, APINetworkError, APISignInFailedError, APIJSONParesError
 )
-from .parser import (parseVideoSeqFromPostInfo, sessionUserCheck,
-                     parseVodIdFromOffcialVideoPost, parseUpcomingFromPage, response_json_stripper,
-                     comment_parser, CommentItem)
+from .parser import (
+    parseVideoSeqFromPostInfo, sessionUserCheck, parseVodIdFromOffcialVideoPost,
+    parseUpcomingFromPage, response_json_stripper, comment_parser, CommentItem,
+    next_page_checker
+)
 from typing import Generator
 
 
@@ -259,11 +261,6 @@ def getPostCommentsIter(post, session=None):
     :return: comments generator
     :rtype: Generator[CommentItem, None, None]
     """
-    def next_page_checker(page):
-        if 'nextParams' in page['paging']:
-            return data['paging']['nextParams']['after']
-        else:
-            return None
 
     data = getPostComments(post, session=session)
     after = next_page_checker(data)
@@ -311,11 +308,6 @@ def getPostStarCommentsIter(post, session=None):
     :return: comments generator
     :rtype: Generator[CommentItem, None, None]
     """
-    def next_page_checker(page):
-        if 'nextParams' in page['paging']:
-            return data['paging']['nextParams']['after']
-        else:
-            return None
 
     data = getPostStarComments(post, session=session)
     after = next_page_checker(data)
