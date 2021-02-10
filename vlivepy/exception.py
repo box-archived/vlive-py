@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
-from warnings import warn
 
 
 # auto raise exception
 def auto_raise(exception, silent):
     if not silent:
         raise exception
-
-
-def auto_warn(message, warning, silent):
-    if not silent:
-        warn(message, warning)
 
 
 class APIError(Exception):
