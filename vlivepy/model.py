@@ -4,7 +4,7 @@ from . import api
 from . import utils
 from . import controllers
 from . import parser
-from .parser import UpcomingVideo, CommentItem
+from .parser import UpcomingVideo
 from time import time
 
 
@@ -29,7 +29,7 @@ class Video(object):
             self.__VideoSeq = number
 
         # Variable declaration
-        self.userSession = session
+        self.session = session
         self.refresh_rate = refresh_rate
         self.__cachedTime = 0
         self.__cached_post = {}
@@ -91,19 +91,19 @@ class Video(object):
                     self.__vodId = parser.parseVodIdFromOffcialVideoPost(self.__cached_post, silent=True)
 
     def getOfficialVideoPost(self, silent=False):
-        return api.getOfficialVideoPost(self.videoSeq, session=self.userSession, silent=silent)
+        return api.getOfficialVideoPost(self.videoSeq, session=self.session, silent=silent)
 
     def getLivePlayInfo(self, silent=False):
-        return api.getLivePlayInfo(self.videoSeq, session=self.userSession, silent=silent)
+        return api.getLivePlayInfo(self.videoSeq, session=self.session, silent=silent)
 
     def getInkeyData(self, silent=False):
-        return api.getInkeyData(self.videoSeq, session=self.userSession, silent=silent)
+        return api.getInkeyData(self.videoSeq, session=self.session, silent=silent)
 
     def getLiveStatus(self, silent=False):
         return api.getLiveStatus(self.videoSeq, silent=silent)
 
     def getUserSession(self, email, pwd, silent):
-        self.userSession = api.getUserSession(email, pwd, silent)
+        self.session = api.getUserSession(email, pwd, silent)
         self.refresh(force=True)
 
     def loadSession(self, fp):
@@ -112,12 +112,12 @@ class Video(object):
         :param fp:
         :return: Nothing
         """
-        self.userSession = controllers.loadSession(fp)
+        self.session = controllers.loadSession(fp)
         self.refresh(force=True)
 
     def getVodPlayInfo(self, silent=False):
         if self.is_vod:
-            return api.getVodPlayInfo(self.videoSeq, self.vod_id, session=self.userSession, silent=silent)
+            return api.getVodPlayInfo(self.videoSeq, self.vod_id, session=self.session, silent=silent)
         else:
             return None
 
