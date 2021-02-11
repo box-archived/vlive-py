@@ -561,6 +561,14 @@ The `load()` method takes the following variables:
 
 ## Post
 `Post` object loads vlive post and contains related API as method
+```python
+from vlivepy import Post
+
+post = Post(
+  post_id="0-12345678",
+  session=None  # Optional
+)
+```
 
 ### Post.Property
 The properties provided by the Post object

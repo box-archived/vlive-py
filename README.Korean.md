@@ -563,6 +563,14 @@ print(upc.load(date=tomorrow.strftime("%Y%m%d"),
 
 ## Post
 `Post` 객체는 채널의 포스트를 로드하고 관련된 API를 메소드로 갖습니다.
+```python
+from vlivepy import Post
+
+post = Post(
+  post_id="0-12345678",
+  session=None  # Optional
+)
+```
 
 ### Post.Property
 Post 객체에서 제공하는 property는 아래와 같습니다.
