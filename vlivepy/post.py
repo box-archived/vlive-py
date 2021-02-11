@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup, element
 from .api import getPostInfo, getFVideoPlayInfo
 from .parser import max_res_from_play_info, format_epoch
+from .utils import getPostCommentsIter, getPostStarCommentsIter
 
 
 class Post(object):
@@ -122,3 +123,9 @@ class Post(object):
         html += str(soup)
 
         return html
+
+    def getPostCommentsIter(self):
+        return getPostCommentsIter(self.post_id, session=self.session)
+
+    def getPostStarCommentsIter(self):
+        return getPostStarCommentsIter(self.post_id, session=self.session)
