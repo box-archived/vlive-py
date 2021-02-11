@@ -69,7 +69,7 @@ def endpoint_auth(email, pwd):
     return {"url": url, "data": data, "headers": headers}
 
 
-def endpoint_inkey(videoSeq):
+def endpoint_vod_inkey(videoSeq):
     url = "https://www.vlive.tv/globalv-web/vam-web/video/v1.0/vod/%s/inkey" % videoSeq
     params = {
         **AppId,
@@ -79,6 +79,20 @@ def endpoint_inkey(videoSeq):
     headers = {
         **HeaderCommon,
         **referer_video(videoSeq)
+    }
+
+    return {"url": url, "params": params, "headers": headers}
+
+
+def endpoint_fvideo_inkey(fvideo):
+    url = "https://www.vlive.tv/globalv-web/vam-web/fvideo/v1.0/fvideo-%s/inKey" % fvideo
+    params = {
+        **AppId,
+        **LocaleParam,
+    }
+    headers = {
+        **HeaderCommon,
+        **referer_post("")
     }
 
     return {"url": url, "params": params, "headers": headers}

@@ -4,6 +4,6 @@
 
 from .connections import (
     getUserSession, getPostInfo, getOfficialVideoPost, getInkeyData,
-    getLivePlayInfo, getLiveStatus, getVodPlayInfo,
-    getPostComments, getPostStarComments
+    getLivePlayInfo, getLiveStatus, getVodPlayInfo, getFVideoInkeyData,
+    getPostComments, getPostStarComments, getFVideoPlayInfo
 )
