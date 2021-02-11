@@ -12,6 +12,9 @@ class Post(object):
 
         self.refresh()
 
+    def __repr__(self):
+        return "<VLIVE Post [%s]>" % self.post_id
+
     def refresh(self):
         result = getPostInfo(self.post_id, session=self.session, silent=True)
         if result:
