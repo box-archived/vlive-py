@@ -1,3 +1,4 @@
+from os.path import dirname
 from bs4 import BeautifulSoup, element
 from .api import getPostInfo, getFVideoPlayInfo
 from .parser import max_res_from_play_info, format_epoch
@@ -68,6 +69,13 @@ class Post(object):
         return self.__cached_post['title']
 
     def formatted_body(self):
+        loc = dirname(__file__)
+        with open(loc + "/video_template.html", encoding="utf8") as f:
+            video_template = f.read()
+
+        with open(loc + "/formatted_body.html", encoding="utf8") as f:
+            doc_template = f.read()
+
         soup = BeautifulSoup(self.body, 'html.parser')
         for item in soup.children:
             if type(item) == element.NavigableString:
@@ -86,11 +94,11 @@ class Post(object):
             if at_type == 'photo':
                 dom_obj = soup.new_tag("img")
                 dom_obj.attrs['src'] = at_data['url']
-                dom_obj.attrs['width'] = at_data['width']
-                dom_obj.attrs['height'] = at_data['height']
                 dom_obj.attrs["class"] = "photo"
+                dom_obj.attrs['style'] = "display: block;margin-bottom:10px;width:100%"
 
             elif at_type == "video":
+
                 play_info = getFVideoPlayInfo(
                     videoSeqId=at_data['videoId'],
                     videoVodId=at_data['uploadInfo']['videoId'],
@@ -100,32 +108,22 @@ class Post(object):
                 dom_obj = soup.new_tag("video")
                 dom_obj.attrs['src'] = video['source']
                 dom_obj.attrs['type'] = "video/mp4"
-                dom_obj.attrs['width'] = video['encodingOption']['width']
-                dom_obj.attrs['height'] = video['encodingOption']['height']
                 dom_obj.attrs['poster'] = at_data['uploadInfo']['imageUrl']
                 dom_obj.attrs['controls'] = ""
                 dom_obj.attrs["class"] = "video"
-
+                dom_obj.attrs['style'] = "display: block;width: 100%;height: 100%;outline:none;"
+                dom_obj = BeautifulSoup(video_template.replace("###VIDEO###", str(dom_obj)), 'html.parser')
             else:
                 dom_obj = ""
-
-            dom_obj.attrs['style'] = "display: block;margin-bottom:10px;"
             item.replace_with(dom_obj)
 
-        # add author
-        html = ('<div style="padding:15px 0;border-bottom:1px solid #f2f2f2">'
-                '<div><span class="author" style="font-weight:600;color:#111;font-size:14px">%s</span></div>'
-                '<div><span class="createdAt" style="color:#777;font-size:12px">%s</span></div>'
-                '</div>'
-                % (self.author_nickname, format_epoch(self.created_at, "%Y.%m.%d %H:%M:%S")))
+        doc_template = doc_template.replace("###LINK###", "https://www.vlive.tv/post/" + self.post_id)
+        doc_template = doc_template.replace("###AUTHOR###", self.author_nickname)
+        doc_template = doc_template.replace("###TIME###", format_epoch(self.created_at, "%Y.%m.%d %H:%M:%S"))
+        doc_template = doc_template.replace("###TITLE###", self.title)
+        doc_template = doc_template.replace("###POST###", str(soup))
 
-        # add title
-        html += '<h2 class="title">%s</h2>' % self.title
-
-        # add content
-        html += str(soup)
-
-        return html
+        return doc_template
 
     def getPostCommentsIter(self):
         return getPostCommentsIter(self.post_id, session=self.session)
