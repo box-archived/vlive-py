@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from . import api
-from . import model
+from . import video
 from . import utils
 from . import variables as gv
 from .api import *
-from .model import Video, Upcoming
+from .video import Video
+from .upcoming import Upcoming
 from .parser import UpcomingVideo, CommentItem
