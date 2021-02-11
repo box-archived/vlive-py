@@ -31,6 +31,7 @@ $ python -m pip install vlivepy
     - [getLiveStatus()](#getlivestatus)
     - [getVodPlayInfo()](#getvodplayinfo)
     - [getPostComments()](#getpostcomments)
+    - [getPostStarComments()](#getpoststarcomments)
 - [Utils](#utils)
     - [utils.postIdToVideoSeq()](#utilspostidtovideoseq)
     - [utils.getVpdid2()](#utilsgetvpdid2)
