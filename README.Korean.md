@@ -57,6 +57,9 @@ $ python -m pip install vlivepy
     - [Upcoming.upcoming()](#upcomingupcoming)
     - [Upcoming.refresh()](#upcomingrefresh)
     - [Upcoming.load()](#upcomingload)
+- [Post](#post)
+    - [Post.Property](#postproperty)
+    - [Post.formatted_body()](#postformatted_body)
 
 
 ## 들어가기에 앞서
@@ -556,3 +559,27 @@ print(upc.load(date=tomorrow.strftime("%Y%m%d"),
 - `date`: 로드 할 날짜를 입력합니다. 포맷은 `%Y%m%d` 입니다.
 - `show_vod`, `show_upcoming_vod`, `show_upcoming_live`, `show_live`: 목록 포함 옵션 오버라이드
 - `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
+
+
+## Post
+`Post` 객체는 채널의 포스트를 로드하고 관련된 API를 메소드로 갖습니다.
+
+### Post.Property
+Post 객체에서 제공하는 property는 아래와 같습니다.
+- `attachments`: 포스트의 첨부파일 정보
+- `attachments_photo`: 포스트의 사진 첨부파일 정보
+- `attachments_video`: 포스트의 영상 첨부파일 정보
+- `author`: 포스트 작성자의 정보
+- `author_nickname`: 포스트 작성자의 닉네임
+- `author_id`: 포스트 작성자의 고유 ID
+- `created_at`: 포스트 작성시간 (timestamp)
+- `plain_body`: 첨부파일을 제외한 본문
+- `body`: 첨부파일 태그가 포함된 본문
+- `title`: 포스트의 제목
+
+
+### Post.refresh()
+데이터를 새로 로드합니다.
+
+### Post.formatted_body()
+본문의 첨부파일 태그를 로드 가능한 html로 치환하여 리턴합니다.

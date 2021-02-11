@@ -57,7 +57,9 @@ $ python -m pip install vlivepy
     - [Upcoming.upcoming()](#upcomingupcoming)
     - [Upcoming.refresh()](#upcomingrefresh)
     - [Upcoming.load()](#upcomingload)
-
+- [Post](#post)
+    - [Post.Property](#postproperty)
+    - [Post.formatted_body()](#postformatted_body)
 
 ## Before Entering
 Learn about terms and expressions used in this document.
@@ -555,3 +557,28 @@ The `load()` method takes the following variables:
 - `date`: Enter the date to load. The format is `%Y%m%d`.
 - `show_vod`, `show_upcoming_vod`, `show_upcoming_live`, `show_live`: Override list inclusion options
 - `silent`: When a connection or parsing error occurs, it returns None instead of Exception.
+
+
+## Post
+`Post` object loads vlive post and contains related API as method
+
+### Post.Property
+The properties provided by the Post object
+
+- `attachments`: Attachments data
+- `attachments_photo`: Photo attachments data
+- `attachments_video`: Video attachments data
+- `author`: Author data of post
+- `author_nickname`: nickname of author
+- `author_id`: Unique ID of author
+- `created_at`: Created time of post (timestamp)
+- `plain_body`: Contents of post without attachments
+- `body`: Contents of post with attachment tag
+- `title`: Title of post
+
+
+### Post.refresh()
+Refresh post data
+
+### Post.formatted_body()
+Return body as html with replacing attachment tag as proper tag
