@@ -3,6 +3,7 @@ from warnings import warn
 from .exception import auto_raise, APIJSONParesError, APIServerResponseWarning, APIServerResponseError
 from collections import namedtuple
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 UpcomingVideo = namedtuple("UpcomingVideo", "seq time cseq cname ctype name type product")
 CommentItem = namedtuple("CommentItem", 'commentId author body sticker createdAt '
@@ -167,3 +168,13 @@ def comment_parser(comment_list: list):
         ))
 
     return n_list
+
+
+def max_res_from_play_info(play_info):
+    vl = play_info['videos']['list']
+    sorted_res = sorted(vl, key=lambda x: x['bitrate']['video'], reverse=True)
+    return sorted_res[0]
+
+
+def format_epoch(epoch, fmt):
+    return datetime.fromtimestamp(epoch).strftime(fmt)
