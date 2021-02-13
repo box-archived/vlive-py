@@ -60,6 +60,8 @@ $ python -m pip install vlivepy
 - [Post](#post)
     - [Post.Property](#postproperty)
     - [Post.formatted_body()](#postformatted_body)
+    - [Post.getPostCommentsIter()](#postgetpostcommentsiter)
+    - [Post.getPostStarCommentsIter()](#postgetpoststarcommentsiter)
 
 
 ## 들어가기에 앞서
@@ -591,3 +593,23 @@ Post 객체에서 제공하는 property는 아래와 같습니다.
 
 ### Post.formatted_body()
 본문의 첨부파일 태그를 로드 가능한 html로 치환하여 리턴합니다.
+
+### Post.getPostCommentsIter()
+[utils.getPostCommentsIter()](#utilsgetpostcommentsiter) 를 호출합니다.
+```python
+from vlivepy import Post
+
+post = Post("0-12345678")
+for item in post.getPostCommentsIter():
+    print(item.body)
+```
+
+### Post.getPostStarCommentsIter()
+[utils.getPostStarCommentsIter()](#utilsgetpoststarcommentsiter) 를 호출합니다.
+```python
+from vlivepy import Post
+
+post = Post("0-12345678")
+for item in post.getPostStarCommentsIter():
+    print(item.body)
+```

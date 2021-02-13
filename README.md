@@ -60,6 +60,8 @@ $ python -m pip install vlivepy
 - [Post](#post)
     - [Post.Property](#postproperty)
     - [Post.formatted_body()](#postformatted_body)
+    - [Post.getPostCommentsIter()](#postgetpostcommentsiter)
+    - [Post.getPostStarCommentsIter()](#postgetpoststarcommentsiter)
 
 ## Before Entering
 Learn about terms and expressions used in this document.
@@ -590,3 +592,23 @@ Refresh post data
 
 ### Post.formatted_body()
 Return body as html with replacing attachment tag as proper tag
+
+### Post.getPostCommentsIter()
+Call [utils.getPostCommentsIter()](#utilsgetpostcommentsiter)
+```python
+from vlivepy import Post
+
+post = Post("0-12345678")
+for item in post.getPostCommentsIter():
+    print(item.body)
+```
+
+### Post.getPostStarCommentsIter()
+Call [utils.getPostStarCommentsIter()](#utilsgetpoststarcommentsiter)
+```python
+from vlivepy import Post
+
+post = Post("0-12345678")
+for item in post.getPostStarCommentsIter():
+    print(item.body)
+```
