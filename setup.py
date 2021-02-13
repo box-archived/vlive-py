@@ -13,7 +13,7 @@ setup(
     author_email='box.cassette@gmail.com',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    description='vlivepy is reverse-engineered Python-based API of VLIVE(vlive.tv)',
+    description='vlivepy is unofficial, Python-based, API of VLIVE(vlive.tv)',
     install_requires=[
         'requests>=2.*',
         'reqWrapper>=0.2.*',
