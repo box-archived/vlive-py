@@ -184,8 +184,6 @@ getVodPlayInfo(videoSeq="123456",
 - `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### getPostComments()
-> Dev item (>=0.2.0)
->
 Post의 댓글을 가져옵니다.
 ```python
 from vlivepy import getPostComments
@@ -201,8 +199,6 @@ getPostComments(post="0-12345678",
 - `silent`: 연결이나 파싱 오류가 발생했을 시 Exception 대신 None을 리턴합니다.
 
 ### getPostStarComments()
-> Dev item (>=0.2.0)
->
 Post의 스타가 작성한 댓글을 가져옵니다.
 ```python
 from vlivepy import getPostStarComments
@@ -306,8 +302,6 @@ with open("user.pkl", mode="rb") as f:
 ```
 
 ### utils.getPostCommentsIter()
-> Dev item (>=0.2.0)
->
 Post의 댓글을 iterable 형태로 가져옵니다
 ```python
 from vlivepy.utils import getPostCommentsIter
@@ -347,8 +341,6 @@ for item in getPostCommentsIter(post="0-12345678",
 
 
 ### utils.getPostStarCommentsIter()
-> Dev item (>=0.2.0)
->
 Post의 스타가 작성한 댓글을 iterable 형태로 가져옵니다
 ```python
 from vlivepy.utils import getPostStarCommentsIter

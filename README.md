@@ -183,8 +183,6 @@ getVodPlayInfo(videoSeq="123456",
 - `silent`: When a connection or parsing error occurs, it returns None instead of Exception.
 
 ### getPostComments()
-> Dev item (>=0.2.0)
->
 Get comments from post
 ```python
 from vlivepy import getPostComments
@@ -201,8 +199,6 @@ getPostComments(post="0-12345678",
 
 
 ### getPostStarComments()
-> Dev item (>=0.2.0)
->
 Get star's comments from post
 ```python
 from vlivepy import getPostStarComments
@@ -308,8 +304,6 @@ with open("user.pkl", mode="rb") as f:
 ```
 
 ### utils.getPostCommentsIter()
-> Dev item (>=0.2.0)
->
 Get comments from post as iterable by page(20 comments)
 ```python
 from vlivepy.utils import getPostCommentsIter
@@ -347,8 +341,6 @@ Each item only returns [`CommentItem`](#commentitem) object compared to [`getPos
 | `root` | Information about origin post | dict |
 
 ### utils.getPostStarCommentsIter()
-> Dev item (>=0.2.0)
->
 Get star's comments from post as iterable by page(20 comments)
 ```python
 from vlivepy.utils import getPostStarCommentsIter
