@@ -151,25 +151,6 @@ def next_page_checker(page):
         return None
 
 
-def comment_parser(comment_list: list):
-    n_list = []
-    for comment in comment_list:
-        n_list.append(CommentItem(
-            commentId=comment['commentId'],
-            author=comment['author'],
-            body=comment['body'],
-            sticker=comment['sticker'],
-            createdAt=comment['createdAt'],
-            commentCount=comment['commentCount'],
-            emotionCount=comment['emotionCount'],
-            isRestricted=comment['isRestricted'],
-            parent=comment['parent'],
-            root=comment['root']
-        ))
-
-    return n_list
-
-
 def max_res_from_play_info(play_info):
     vl = play_info['videos']['list']
     sorted_res = sorted(vl, key=lambda x: x['bitrate']['video'], reverse=True)
