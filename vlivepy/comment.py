@@ -25,16 +25,6 @@ class Comment(object):
         else:
             warn("Failed to refresh %s" % self, ModelRefreshWarning)
 
-        # commentId = comment['commentId'],
-        # author = comment['author'],
-        # body = comment['body'],
-        # sticker = comment['sticker'],
-        # createdAt = comment['createdAt'],
-        # commentCount = comment['commentCount'],
-        # emotionCount = comment['emotionCount'],
-        # isRestricted = comment['isRestricted'],
-        # parent = comment['parent'],
-        # root = comment['root']
     @property
     def commentId(self) -> str:
         return self._comment_id
