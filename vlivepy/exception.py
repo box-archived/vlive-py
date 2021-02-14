@@ -37,3 +37,7 @@ class ModelInitError(Exception):
 
 class APIServerResponseWarning(Warning):
     """ Warning if server response with error"""
+
+
+class ModelRefreshWarning(Warning):
+    """ Model refresh failed """
