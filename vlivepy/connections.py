@@ -363,6 +363,28 @@ def getPostStarCommentsIter(post, session=None):
             yield item
 
 
+def getCommentData(commentId, session=None, silent=False):
+    r""" Get post's star comments
+
+    :param commentId: comment ID from VLIVE (like #-########)
+    :param session: use specific session
+    :param silent: Return `None` instead of Exception
+    :return: comment
+    :rtype: dict
+    """
+
+    # Make request
+    sr = reqWrapper.get(**gv.endpoint_comment_data(commentId),
+                        wait=0.5, session=session, status=[200, 403])
+
+    if sr.success:
+        return response_json_stripper(sr.response.json(), silent=silent)
+    else:
+        auto_raise(APINetworkError, silent)
+
+    return None
+
+
 def postIdToVideoSeq(post, silent=False):
     r""" postId to videoSeq
 

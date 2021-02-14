@@ -214,3 +214,9 @@ def endpoint_post_star_comments(post, after=None):
     return endpoint_post_comment_template(
         "post", post, postfix="starComments", after=after
     )
+
+
+def endpoint_comment_data(post):
+    return endpoint_post_comment_template(
+        "comment", post
+    )
