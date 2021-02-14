@@ -178,3 +178,8 @@ def max_res_from_play_info(play_info):
 
 def format_epoch(epoch, fmt):
     return datetime.fromtimestamp(epoch).strftime(fmt)
+
+
+def v_timestamp_parser(ts):
+    str_ts = str(ts)
+    return float("%s.%s" % (str_ts[:-3], str_ts[-3:]))
