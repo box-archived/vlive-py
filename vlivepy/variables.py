@@ -175,27 +175,14 @@ def endpoint_vod_play_info(vodId, inkey):
     return {"url": url, "params": params, "headers": headers}
 
 
-def endpoint_post_comments(post, after=None):
-    url = "https://www.vlive.tv/globalv-web/vam-web/comment/v1.0/post-%s/comments" % post
-    params = {
-        **AppId,
-        **LocaleParam,
-        "fields": "root,parent,commentId,body,emotionCount,commentCount,viewerEmotionId,viewerAvailableActions,"
-                  "createdAt,writtenIn,sticker,author,latestComments,isRestricted,lastModifierMember",
-        "startFrom": "first"
-    }
-    if after:
-        params.update({"after": after})
-    headers = {
-        **HeaderCommon,
-        **referer_post(post)
-    }
+def endpoint_post_comment_template(prefix, srl, postfix=None, after=None, field: list = None):
+    if field is None:
+        field = []
 
-    return {"url": url, "params": params, "headers": headers}
+    url = "https://www.vlive.tv/globalv-web/vam-web/comment/v1.0/%s-%s" % (prefix, srl)
+    if postfix:
+        url += "/%s" % postfix
 
-
-def endpoint_post_star_comments(post, after=None):
-    url = "https://www.vlive.tv/globalv-web/vam-web/comment/v1.0/post-%s/starComments" % post
     params = {
         **AppId,
         **LocaleParam,
@@ -205,9 +192,25 @@ def endpoint_post_star_comments(post, after=None):
     }
     if after:
         params.update({"after": after})
+
+    for item in field:
+        params["fields"] += ",%s" % item
+
     headers = {
         **HeaderCommon,
-        **referer_post(post)
+        **referer_post(srl)
     }
 
     return {"url": url, "params": params, "headers": headers}
+
+
+def endpoint_post_comments(post, after=None):
+    return endpoint_post_comment_template(
+        "post", post, postfix="comments", after=after, field=["latestComments"]
+    )
+
+
+def endpoint_post_star_comments(post, after=None):
+    return endpoint_post_comment_template(
+        "post", post, postfix="starComments", after=after
+    )
