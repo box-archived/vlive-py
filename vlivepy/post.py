@@ -1,7 +1,7 @@
 from os.path import dirname
 from bs4 import BeautifulSoup, element
 from .api import getPostInfo, getFVideoPlayInfo
-from .parser import max_res_from_play_info, format_epoch
+from .parser import max_res_from_play_info, format_epoch, v_timestamp_parser
 from .utils import getPostCommentsIter, getPostStarCommentsIter
 
 
@@ -53,8 +53,7 @@ class Post(object):
 
     @property
     def created_at(self) -> float:
-        parsed = str(self.__cached_post['createdAt'])
-        return float("%s.%s" % (parsed[:-3], parsed[-3:]))
+        return v_timestamp_parser(self.__cached_post['createdAt'])
 
     @property
     def plain_body(self) -> str:
