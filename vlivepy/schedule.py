@@ -4,7 +4,7 @@ from .exception import auto_raise, APINetworkError
 from .parser import response_json_stripper
 
 
-def getScheduleData(schedule, session, silent):
+def getScheduleData(schedule, session, silent=False):
 
     r""" get post info
     :param schedule: schedule Id from VLIVE
