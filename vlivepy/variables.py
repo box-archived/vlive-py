@@ -232,3 +232,9 @@ def endpoint_schedule_data(schedule):
                   "timezoneId,type,startAt,commentCount,emotionCount,commentWritable,availableActions,writtenIn,"
                   "url,viewerEmotionId,channel{channelCode,channelName},post{url},timeUsing,lastModifierMember"
     }
+    headers = {
+        **HeaderCommon,
+        "referer": "https://www.vlive.tv/schedule/%s" % schedule
+    }
+
+    return {"url": url, "params": params, "headers": headers}
