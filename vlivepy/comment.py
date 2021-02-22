@@ -131,77 +131,77 @@ def getCommentData(commentId, session=None, silent=False):
 
 
 class Comment(object):
-    __slots__ = ['_cached_data', '_comment_id', 'session']
+    __slots__ = ['__cached_data', '__comment_id', 'session']
 
     def __init__(self, commentId, init_data=None, session=None):
         self.session = session
-        self._comment_id = commentId
+        self.__comment_id = commentId
         if init_data:
-            self._cached_data = init_data
+            self.__cached_data = init_data
         else:
             self.refresh()
 
     def __repr__(self):
-        return "<Comment [%s]>" % self._comment_id
+        return "<Comment [%s]>" % self.__comment_id
 
     def refresh(self):
-        res = getCommentData(commentId=self._comment_id, session=self.session, silent=True)
+        res = getCommentData(commentId=self.__comment_id, session=self.session, silent=True)
         if res:
-            self._cached_data = res
+            self.__cached_data = res
         else:
             warn("Failed to refresh %s" % self, ModelRefreshWarning)
 
     @property
     def commentId(self) -> str:
-        return self._comment_id
+        return self.__comment_id
 
     @property
     def author(self) -> dict:
-        return self._cached_data['author']
+        return self.__cached_data['author']
 
     @property
     def author_nickname(self) -> str:
-        return self._cached_data['author']['nickname']
+        return self.__cached_data['author']['nickname']
 
     @property
     def author_memberId(self) -> str:
-        return self._cached_data['author']['memberId']
+        return self.__cached_data['author']['memberId']
 
     @property
     def body(self) -> str:
-        return self._cached_data['body']
+        return self.__cached_data['body']
 
     @property
     def sticker(self) -> list:
-        return self._cached_data['sticker']
+        return self.__cached_data['sticker']
 
     @property
     def created_at(self) -> float:
-        return v_timestamp_parser(self._cached_data['createdAt'])
+        return v_timestamp_parser(self.__cached_data['createdAt'])
 
     @property
     def comment_count(self) -> int:
-        return self._cached_data['commentCount']
+        return self.__cached_data['commentCount']
 
     @property
     def emotion_count(self) -> int:
-        return self._cached_data['emotionCount']
+        return self.__cached_data['emotionCount']
 
     @property
     def is_restricted(self) -> bool:
-        return self._cached_data['isRestricted']
+        return self.__cached_data['isRestricted']
 
     @property
     def parent(self) -> dict:
-        return self._cached_data['parent']
+        return self.__cached_data['parent']
 
     @property
     def root(self) -> dict:
-        return self._cached_data['root']
+        return self.__cached_data['root']
 
     @property
     def written_in(self) -> str:
-        return self._cached_data['writtenIn']
+        return self.__cached_data['writtenIn']
 
     def parent_info_tuple(self):
         tp = self.parent['type']
