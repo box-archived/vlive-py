@@ -165,7 +165,8 @@ def endpoint_vod_play_info(vodId, inkey):
         "doct": "json",
         "cpt": "vtt",
         "cpl": "ko_KR",
-        "lc": "ko_KR"
+        "lc": "ko_KR",
+        "CC": "KR"
     }
     headers = {
         **HeaderCommon,
@@ -220,3 +221,14 @@ def endpoint_comment_data(post):
     return endpoint_post_comment_template(
         "comment", post
     )
+
+
+def endpoint_schedule_data(schedule):
+    url = "https://www.vlive.tv/globalv-web/vam-web/schedule/v1.0/schedule-%s" % schedule
+    params = {
+        **AppId,
+        **LocaleParam,
+        "fields": "scheduleId,title,description,alarm,location,postId,videoSeq,officialVideo,photos,author,"
+                  "timezoneId,type,startAt,commentCount,emotionCount,commentWritable,availableActions,writtenIn,"
+                  "url,viewerEmotionId,channel{channelCode,channelName},post{url},timeUsing,lastModifierMember"
+    }
