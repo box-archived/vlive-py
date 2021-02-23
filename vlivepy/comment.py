@@ -1,12 +1,12 @@
-from warnings import warn
 import reqWrapper
 from . import variables as gv
-from .exception import ModelRefreshWarning, APINetworkError, auto_raise
-from .parser import v_timestamp_parser, response_json_stripper, next_page_checker
+from .exception import APINetworkError, auto_raise
+from .parser import response_json_stripper, next_page_checker
 from typing import Generator
 
 
 def comment_parser(comment_list: list, session=None):
+    from .model import Comment
     n_list = []
     for comment in comment_list:
         n_list.append(Comment(comment['commentId'], init_data=comment, session=session))
@@ -128,87 +128,3 @@ def getCommentData(commentId, session=None, silent=False):
         auto_raise(APINetworkError, silent)
 
     return None
-
-
-class Comment(object):
-    __slots__ = ['__cached_data', '__comment_id', 'session']
-
-    def __init__(self, commentId, init_data=None, session=None):
-        self.session = session
-        self.__comment_id = commentId
-        if init_data:
-            self.__cached_data = init_data
-        else:
-            self.refresh()
-
-    def __repr__(self):
-        return "<Comment [%s]>" % self.__comment_id
-
-    def refresh(self):
-        res = getCommentData(commentId=self.__comment_id, session=self.session, silent=True)
-        if res:
-            self.__cached_data = res
-        else:
-            warn("Failed to refresh %s" % self, ModelRefreshWarning)
-
-    @property
-    def commentId(self) -> str:
-        return self.__comment_id
-
-    @property
-    def author(self) -> dict:
-        return self.__cached_data['author']
-
-    @property
-    def author_nickname(self) -> str:
-        return self.__cached_data['author']['nickname']
-
-    @property
-    def author_memberId(self) -> str:
-        return self.__cached_data['author']['memberId']
-
-    @property
-    def body(self) -> str:
-        return self.__cached_data['body']
-
-    @property
-    def sticker(self) -> list:
-        return self.__cached_data['sticker']
-
-    @property
-    def created_at(self) -> float:
-        return v_timestamp_parser(self.__cached_data['createdAt'])
-
-    @property
-    def comment_count(self) -> int:
-        return self.__cached_data['commentCount']
-
-    @property
-    def emotion_count(self) -> int:
-        return self.__cached_data['emotionCount']
-
-    @property
-    def is_restricted(self) -> bool:
-        return self.__cached_data['isRestricted']
-
-    @property
-    def parent(self) -> dict:
-        return self.__cached_data['parent']
-
-    @property
-    def root(self) -> dict:
-        return self.__cached_data['root']
-
-    @property
-    def written_in(self) -> str:
-        return self.__cached_data['writtenIn']
-
-    def parent_info_tuple(self):
-        tp = self.parent['type']
-        key = "%sId" % tp.lower()
-        return self.parent['type'], self.parent['data'][key]
-
-    def root_info_tuple(self):
-        tp = self.root['type']
-        key = "%sId" % tp.lower()
-        return tp, self.root['data'][key]

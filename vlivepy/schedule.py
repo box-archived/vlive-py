@@ -23,34 +23,3 @@ def getScheduleData(schedule_id, session, silent=False):
         auto_raise(APINetworkError, silent)
 
     return None
-
-
-class Schedule(object):
-    __slots__ = ["__cached_data", "__schedule_id", "session"]
-
-    def __init__(self, schedule_id, session):
-        self.__schedule_id = schedule_id
-        self.__cached_data = {}
-        self.session = session
-        self.refresh()
-
-    def refresh(self, silent=False):
-        data = getScheduleData(self.__schedule_id, self.session, silent)
-        if data is not None:
-            self.__cached_data = data
-
-    @property
-    def raw(self) -> dict:
-        return self.__cached_data.copy()
-
-    @property
-    def author(self) -> dict:
-        return self.raw['author'].copy()
-
-    @property
-    def author_nickname(self) -> str:
-        return self.raw['author']['nickname']
-
-    @property
-    def author_id(self) -> str:
-        return self.raw['author']
