@@ -372,9 +372,7 @@ class Video(object):
         self.session = session
         self.refresh_rate = refresh_rate
         self.__cachedTime = 0
-        self.__cached_post = {}
-        self.__is_VOD = False
-        self.__vodId = None
+        self.__cached_data = {}
 
         # init variables
         while self.__cachedTime == 0:
@@ -387,33 +385,35 @@ class Video(object):
             return "<VLIVE Video(LIVE) [%s]>" % self.videoSeq
 
     @property
+    def raw(self) -> dict:
+        return deepcopy(self.__cached_data)
+
+    @property
+    def created_at(self):
+        return v_timestamp_parser(self.__cached_data['createdAt'])
+
+    @property
     def videoSeq(self) -> str:
         return self.__VideoSeq
 
     @property
-    def postInfo(self) -> dict:
-        self.refresh()
-        return deepcopy(self.__cached_post)
-
-    @property
-    def is_vod(self) -> bool:
-        return self.__is_VOD
-
-    @property
     def vod_id(self) -> str:
-        return self.__vodId
+        if self.is_vod():
+            return parseVodIdFromOffcialVideoPost(self.__cached_data, silent=True)
+        else:
+            return ""
 
     @property
     def title(self) -> str:
-        return self.__cached_post['officialVideo']['title']
+        return self.__cached_data['officialVideo']['title']
 
     @property
     def channelCode(self) -> str:
-        return self.__cached_post['author']['channelCode']
+        return self.__cached_data['author']['channelCode']
 
     @property
     def channelName(self) -> str:
-        return self.__cached_post['author']['nickname']
+        return self.__cached_data['author']['nickname']
 
     def refresh(self, force=False):
         # Cached time distance
@@ -424,11 +424,13 @@ class Video(object):
             if data is not None:
                 # Set data
                 self.__cachedTime = int(time())
-                self.__cached_post = data
+                self.__cached_data = data
 
-                if 'vodId' in self.__cached_post['officialVideo']:
-                    self.__is_VOD = True
-                    self.__vodId = parseVodIdFromOffcialVideoPost(self.__cached_post, silent=True)
+    def is_vod(self) -> bool:
+        if 'vodId' in self.__cached_data['officialVideo']:
+            return True
+        else:
+            return False
 
     def getOfficialVideoPost(self, silent=False):
         return getOfficialVideoPost(self.videoSeq, session=self.session, silent=silent)
