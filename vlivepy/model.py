@@ -5,8 +5,7 @@ from typing import Generator
 from warnings import warn
 from bs4 import BeautifulSoup, element
 from .comment import getCommentData, getPostCommentsIter, getPostStarCommentsIter
-from .connections import getPostInfo, getUserSession, postIdToVideoSeq
-from .controllers import loadSession
+from .connections import getPostInfo, postIdToVideoSeq
 from .exception import ModelRefreshWarning
 from .parser import (format_epoch, max_res_from_play_info, parseVodIdFromOffcialVideoPost,
                      UpcomingVideo, v_timestamp_parser)
@@ -442,19 +441,6 @@ class Video(object):
 
     def getLiveStatus(self, silent=False):
         return getLiveStatus(self.videoSeq, silent=silent)
-
-    def getUserSession(self, email, pwd, silent):
-        self.session = getUserSession(email, pwd, silent)
-        self.refresh(force=True)
-
-    def loadSession(self, fp):
-        r"""
-
-        :param fp:
-        :return: Nothing
-        """
-        self.session = loadSession(fp)
-        self.refresh(force=True)
 
     def getVodPlayInfo(self, silent=False):
         if self.is_vod:
