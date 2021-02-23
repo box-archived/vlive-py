@@ -1,3 +1,4 @@
+from copy import deepcopy
 from os.path import dirname
 from time import time
 from typing import Generator
@@ -22,7 +23,7 @@ class Comment(object):
         self.session = session
         self.__comment_id = commentId
         if init_data:
-            self.__cached_data = init_data
+            self.__cached_data = deepcopy(init_data)
         else:
             self.refresh()
 
@@ -37,12 +38,16 @@ class Comment(object):
             warn("Failed to refresh %s" % self, ModelRefreshWarning)
 
     @property
+    def raw(self) -> dict:
+        return deepcopy(self.__cached_data)
+
+    @property
     def commentId(self) -> str:
         return self.__comment_id
 
     @property
     def author(self) -> dict:
-        return self.__cached_data['author']
+        return self.raw['author']
 
     @property
     def author_nickname(self) -> str:
@@ -54,11 +59,11 @@ class Comment(object):
 
     @property
     def body(self) -> str:
-        return self.__cached_data['body']
+        return self.raw['body']
 
     @property
     def sticker(self) -> list:
-        return self.__cached_data['sticker']
+        return self.raw['sticker']
 
     @property
     def created_at(self) -> float:
@@ -70,7 +75,7 @@ class Comment(object):
 
     @property
     def emotion_count(self) -> int:
-        return self.__cached_data['emotionCount']
+        return self.raw['emotionCount']
 
     @property
     def is_restricted(self) -> bool:
@@ -78,11 +83,11 @@ class Comment(object):
 
     @property
     def parent(self) -> dict:
-        return self.__cached_data['parent']
+        return self.raw['parent']
 
     @property
     def root(self) -> dict:
-        return self.__cached_data['root']
+        return self.raw['root']
 
     @property
     def written_in(self) -> str:
@@ -116,26 +121,30 @@ class Post(object):
             self.__cached_post = result
 
     @property
+    def raw(self):
+        return deepcopy(self.__cached_post)
+
+    @property
     def attachments(self) -> dict:
-        return self.__cached_post['attachments']
+        return self.raw['attachments']
 
     @property
     def attachments_photo(self) -> dict:
         if 'photo' in self.__cached_post['attachments']:
-            return self.__cached_post['attachments']['photo']
+            return self.raw['attachments']['photo']
         else:
             return {}
 
     @property
     def attachments_video(self) -> dict:
         if 'video' in self.__cached_post['attachments']:
-            return self.__cached_post['attachments']['video']
+            return self.raw['attachments']['video']
         else:
             return {}
 
     @property
     def author(self) -> dict:
-        return self.__cached_post['author']
+        return self.raw['author']
 
     @property
     def author_nickname(self) -> str:
@@ -241,19 +250,19 @@ class Schedule(object):
 
     @property
     def raw(self) -> dict:
-        return self.__cached_data.copy()
+        return deepcopy(self.__cached_data)
 
     @property
     def author(self) -> dict:
-        return self.raw['author'].copy()
+        return self.raw['author']
 
     @property
     def author_nickname(self) -> str:
-        return self.raw['author']['nickname']
+        return self.__cached_data['author']['nickname']
 
     @property
     def author_id(self) -> str:
-        return self.raw['author']
+        return self.__cached_data['author']
 
 
 class Upcoming(object):
@@ -385,7 +394,7 @@ class Video(object):
     @property
     def postInfo(self) -> dict:
         self.refresh()
-        return self.__cached_post.copy()
+        return deepcopy(self.__cached_post)
 
     @property
     def is_vod(self) -> bool:
