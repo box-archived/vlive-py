@@ -33,6 +33,15 @@ class Comment(object):
     def __repr__(self):
         return "<Comment [%s]>" % self.__comment_id
 
+    def __eq__(self, other):
+        if type(self) == type(other):
+            if self.commentId == other.commentId:
+                return True
+        return False
+
+    def __dict__(self):
+        return self.raw
+
     def refresh(self):
         res = getCommentData(commentId=self.__comment_id, session=self.session, silent=True)
         if res:
@@ -117,6 +126,15 @@ class PostBase(object):
 
     def __repr__(self):
         return "<VLIVE Post [%s]>" % self.__post_id
+
+    def __eq__(self, other):
+        if type(self) == type(other):
+            if self.post_id == other.post_id:
+                return True
+        return False
+
+    def __dict__(self):
+        return self.raw
 
     def refresh(self):
         result = getPostInfo(self.__post_id, session=self.session, silent=True)
@@ -271,6 +289,15 @@ class Schedule(object):
         self.session = session
         self.refresh()
 
+    def __eq__(self, other):
+        if type(self) == type(other):
+            if self.schedule_id == other.schedule_id:
+                return True
+        return False
+
+    def __dict__(self):
+        return self.raw
+
     def refresh(self, silent=False):
         data = getScheduleData(self.__schedule_id, self.session, silent)
         if data is not None:
@@ -279,6 +306,10 @@ class Schedule(object):
     @property
     def raw(self) -> dict:
         return deepcopy(self.__cached_data)
+
+    @property
+    def schedule_id(self) -> str:
+        return self.__schedule_id
 
     @property
     def author(self) -> dict:
@@ -378,6 +409,7 @@ class Upcoming(object):
 
 
 class Video(object):
+    # Will be deprecate
     def __init__(self, number, session=None, refresh_rate=10):
         r""" Init
 
