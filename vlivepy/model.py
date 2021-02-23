@@ -7,12 +7,16 @@ from bs4 import BeautifulSoup, element
 from .comment import getCommentData, getPostCommentsIter, getPostStarCommentsIter
 from .connections import getPostInfo, postIdToVideoSeq, videoSeqToPostId
 from .exception import ModelRefreshWarning
-from .parser import (format_epoch, max_res_from_play_info, parseVodIdFromOffcialVideoPost,
-                     UpcomingVideo, v_timestamp_parser)
+from .parser import (
+    format_epoch, max_res_from_play_info,
+    parseVodIdFromOffcialVideoPost, UpcomingVideo, v_timestamp_parser
+)
 from .post import getFVideoPlayInfo
 from .schedule import getScheduleData
 from .upcoming import getUpcomingList
-from .video import getInkeyData, getLivePlayInfo, getLiveStatus, getOfficialVideoPost, getVodPlayInfo
+from .video import (
+    getInkeyData, getLivePlayInfo, getLiveStatus, getOfficialVideoPost, getVodPlayInfo
+)
 
 
 class Comment(object):
@@ -103,7 +107,7 @@ class Comment(object):
         return tp, self.root['data'][key]
 
 
-class Post(object):
+class PostBase(object):
     def __init__(self, post_id, session=None):
         self.__post_id = post_id
         self.__cached_post = {}
@@ -158,20 +162,31 @@ class Post(object):
         return v_timestamp_parser(self.__cached_post['createdAt'])
 
     @property
-    def plain_body(self) -> str:
-        return self.__cached_post['plainBody']
-
-    @property
     def post_id(self) -> str:
         return self.__post_id
 
     @property
-    def body(self) -> str:
-        return self.__cached_post['body']
-
-    @property
     def title(self) -> str:
         return self.__cached_post['title']
+
+    def getPostCommentsIter(self) -> Generator[Comment, None, None]:
+        return getPostCommentsIter(self.__post_id, session=self.session)
+
+    def getPostStarCommentsIter(self) -> Generator[Comment, None, None]:
+        return getPostStarCommentsIter(self.__post_id, session=self.session)
+
+
+class Post(PostBase):
+    def __init__(self, post_id, session=None):
+        super().__init__(post_id, session)
+
+    @property
+    def plain_body(self) -> str:
+        return self.raw['plainBody']
+
+    @property
+    def body(self) -> str:
+        return self.raw['body']
 
     def formatted_body(self):
         loc = dirname(__file__)
@@ -222,7 +237,7 @@ class Post(object):
                 dom_obj = ""
             item.replace_with(dom_obj)
 
-        doc_template = doc_template.replace("###LINK###", "https://www.vlive.tv/post/" + self.__post_id)
+        doc_template = doc_template.replace("###LINK###", "https://www.vlive.tv/post/" + self.post_id)
         doc_template = doc_template.replace("###AUTHOR###", self.author_nickname)
         doc_template = doc_template.replace("###TIME###", format_epoch(self.created_at, "%Y.%m.%d %H:%M:%S"))
         doc_template = doc_template.replace("###TITLE###", self.title)
@@ -230,14 +245,8 @@ class Post(object):
 
         return doc_template
 
-    def getPostCommentsIter(self) -> Generator[Comment, None, None]:
-        return getPostCommentsIter(self.__post_id, session=self.session)
 
-    def getPostStarCommentsIter(self) -> Generator[Comment, None, None]:
-        return getPostStarCommentsIter(self.__post_id, session=self.session)
-
-
-class OfficialVideoPost(Post):
+class OfficialVideoPost(PostBase):
     def __init__(self, init_id, session=None):
         # interpret number
         if type(init_id) == int:
@@ -247,6 +256,10 @@ class OfficialVideoPost(Post):
         if "-" not in init_id:
             init_id = videoSeqToPostId(init_id)
         super().__init__(init_id, session)
+
+    @property
+    def official_video(self):
+        return self.raw['officialVideo']
 
 
 class Schedule(object):
