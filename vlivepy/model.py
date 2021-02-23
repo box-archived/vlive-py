@@ -5,7 +5,7 @@ from typing import Generator
 from warnings import warn
 from bs4 import BeautifulSoup, element
 from .comment import getCommentData, getPostCommentsIter, getPostStarCommentsIter
-from .connections import getPostInfo, postIdToVideoSeq
+from .connections import getPostInfo, postIdToVideoSeq, videoSeqToPostId
 from .exception import ModelRefreshWarning
 from .parser import (format_epoch, max_res_from_play_info, parseVodIdFromOffcialVideoPost,
                      UpcomingVideo, v_timestamp_parser)
@@ -105,17 +105,17 @@ class Comment(object):
 
 class Post(object):
     def __init__(self, post_id, session=None):
-        self.post_id = post_id
+        self.__post_id = post_id
         self.__cached_post = {}
         self.session = session
 
         self.refresh()
 
     def __repr__(self):
-        return "<VLIVE Post [%s]>" % self.post_id
+        return "<VLIVE Post [%s]>" % self.__post_id
 
     def refresh(self):
-        result = getPostInfo(self.post_id, session=self.session, silent=True)
+        result = getPostInfo(self.__post_id, session=self.session, silent=True)
         if result:
             self.__cached_post = result
 
@@ -160,6 +160,10 @@ class Post(object):
     @property
     def plain_body(self) -> str:
         return self.__cached_post['plainBody']
+
+    @property
+    def post_id(self) -> str:
+        return self.__post_id
 
     @property
     def body(self) -> str:
@@ -218,7 +222,7 @@ class Post(object):
                 dom_obj = ""
             item.replace_with(dom_obj)
 
-        doc_template = doc_template.replace("###LINK###", "https://www.vlive.tv/post/" + self.post_id)
+        doc_template = doc_template.replace("###LINK###", "https://www.vlive.tv/post/" + self.__post_id)
         doc_template = doc_template.replace("###AUTHOR###", self.author_nickname)
         doc_template = doc_template.replace("###TIME###", format_epoch(self.created_at, "%Y.%m.%d %H:%M:%S"))
         doc_template = doc_template.replace("###TITLE###", self.title)
@@ -227,10 +231,22 @@ class Post(object):
         return doc_template
 
     def getPostCommentsIter(self) -> Generator[Comment, None, None]:
-        return getPostCommentsIter(self.post_id, session=self.session)
+        return getPostCommentsIter(self.__post_id, session=self.session)
 
     def getPostStarCommentsIter(self) -> Generator[Comment, None, None]:
-        return getPostStarCommentsIter(self.post_id, session=self.session)
+        return getPostStarCommentsIter(self.__post_id, session=self.session)
+
+
+class OfficialVideoPost(Post):
+    def __init__(self, init_id, session=None):
+        # interpret number
+        if type(init_id) == int:
+            init_id = str(init_id)
+
+        # Case <videoSeq>
+        if "-" not in init_id:
+            init_id = videoSeqToPostId(init_id)
+        super().__init__(init_id, session)
 
 
 class Schedule(object):
