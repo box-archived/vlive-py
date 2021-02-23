@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # VLive React App ID
 AppId = {"appId": "8c6cc7b45d2568fb668be6e05b6e5a3b"}
 

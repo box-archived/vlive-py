@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import reqWrapper
 from . import variables as gv
 from .exception import auto_raise, APINetworkError

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import pickle
-
-from .parser import sessionUserCheck
 from reqWrapper import Session
+from .parser import sessionUserCheck
 
 
 def dumpSession(session, fp):

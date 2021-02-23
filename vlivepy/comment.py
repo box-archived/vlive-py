@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+
+from typing import Generator
 import reqWrapper
 from . import variables as gv
 from .exception import APINetworkError, auto_raise
 from .parser import response_json_stripper, next_page_checker
-from typing import Generator
 
 
 def comment_parser(comment_list: list, session=None):

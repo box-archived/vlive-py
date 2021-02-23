@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from warnings import warn
-from .exception import auto_raise, APIJSONParesError, APIServerResponseWarning, APIServerResponseError
+
 from collections import namedtuple
-from bs4 import BeautifulSoup
 from datetime import datetime
+from warnings import warn
+from bs4 import BeautifulSoup
+from .exception import auto_raise, APIJSONParesError, APIServerResponseWarning, APIServerResponseError
 
 UpcomingVideo = namedtuple("UpcomingVideo", "seq time cseq cname ctype name type product")
 CommentItem = namedtuple("CommentItem", 'commentId author body sticker createdAt '
