@@ -276,8 +276,12 @@ class OfficialVideoPost(PostBase):
         super().__init__(init_id, session)
 
     @property
-    def official_video(self):
+    def official_video(self) -> dict:
         return self.raw['officialVideo']
+
+    @property
+    def video_seq(self) -> int:
+        return self.raw["officialVideo"]["videoSeq"]
 
 
 class Schedule(object):
