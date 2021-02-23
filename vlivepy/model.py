@@ -21,91 +21,100 @@ from .video import (
 )
 
 
-class Comment(object):
-    __slots__ = ['__cached_data', '__comment_id', 'session']
+class DataModel(object):
+    __slots__ = ['_data_cache', '_target_id', 'session', '_method']
 
-    def __init__(self, commentId, session=None, init_data=None):
+    def __init__(self, method, target_id, session=None, init_data=None):
+        self._method = method
+        self._target_id = target_id
         self.session = session
-        self.__comment_id = commentId
+
         if init_data:
-            self.__cached_data = deepcopy(init_data)
+            self._data_cache = init_data
         else:
             self.refresh()
 
-    def __repr__(self):
-        return "<Comment [%s]>" % self.__comment_id
-
     def __eq__(self, other):
         if type(self) == type(other):
-            if self.commentId == other.commentId:
+            if self.target_id == other.target_id:
                 return True
         return False
 
-    def __dict__(self):
-        return self.raw
-
     def refresh(self):
-        res = getCommentData(commentId=self.__comment_id, session=self.session, silent=True)
+        res = self._method(self._target_id, session=self.session, silent=True)
         if res:
-            self.__cached_data = res
+            self._data_cache = res
         else:
             warn("Failed to refresh %s" % self, ModelRefreshWarning)
 
     @property
     def raw(self) -> dict:
-        return deepcopy(self.__cached_data)
+        return deepcopy(self._data_cache)
+
+    @property
+    def target_id(self) -> str:
+        return str(self._target_id)
+
+
+class Comment(DataModel):
+
+    def __init__(self, commentId, session=None, init_data=None):
+        super().__init__(getCommentData, commentId, session=session, init_data=init_data)
+
+    def __repr__(self):
+        return "<Comment [%s]>" % self._target_id
 
     @property
     def commentId(self) -> str:
-        return self.__comment_id
+        return self._target_id
 
     @property
     def author(self) -> dict:
-        return self.raw['author']
+        return deepcopy(self._data_cache['author'])
 
     @property
     def author_nickname(self) -> str:
-        return self.__cached_data['author']['nickname']
+        return self._data_cache['author']['nickname']
 
     @property
     def author_memberId(self) -> str:
-        return self.__cached_data['author']['memberId']
+        return self._data_cache['author']['memberId']
 
     @property
     def body(self) -> str:
-        return self.raw['body']
+        return self._data_cache['body']
 
     @property
     def sticker(self) -> list:
-        return self.raw['sticker']
+        return deepcopy(self._data_cache['sticker'])
 
     @property
     def created_at(self) -> float:
-        return v_timestamp_parser(self.__cached_data['createdAt'])
+        return v_timestamp_parser(self._data_cache['createdAt'])
 
     @property
     def comment_count(self) -> int:
-        return self.__cached_data['commentCount']
+        return self._data_cache['commentCount']
 
     @property
     def emotion_count(self) -> int:
-        return self.raw['emotionCount']
+        return self._data_cache['emotionCount']
 
     @property
     def is_restricted(self) -> bool:
-        return self.__cached_data['isRestricted']
+        return self._data_cache['isRestricted']
 
     @property
     def parent(self) -> dict:
-        return self.raw['parent']
+        return deepcopy(self._data_cache['parent'])
 
     @property
     def root(self) -> dict:
-        return self.raw['root']
+        return deepcopy(self._data_cache['root'])
 
     @property
     def written_in(self) -> str:
-        return self.__cached_data['writtenIn']
+        return self._data_cache['writtenIn']
 
     def parent_info_tuple(self):
         tp = self.parent['type']
@@ -118,95 +127,73 @@ class Comment(object):
         return tp, self.root['data'][key]
 
 
-class PostBase(object):
+class PostBase(DataModel):
     def __init__(self, post_id, session=None):
-        self.__post_id = post_id
-        self.__cached_post = {}
-        self.session = session
-
-        self.refresh()
-
-    def __repr__(self):
-        return "<VLIVE Post [%s]>" % self.__post_id
-
-    def __eq__(self, other):
-        if type(self) == type(other):
-            if self.post_id == other.post_id:
-                return True
-        return False
-
-    def __dict__(self):
-        return self.raw
-
-    def refresh(self):
-        result = getPostInfo(self.__post_id, session=self.session, silent=True)
-        if result:
-            self.__cached_post = result
-
-    @property
-    def raw(self):
-        return deepcopy(self.__cached_post)
+        super().__init__(getPostInfo, post_id, session=session)
 
     @property
     def attachments(self) -> dict:
-        return self.raw['attachments']
+        return deepcopy(self._data_cache['attachments'])
 
     @property
     def attachments_photo(self) -> dict:
-        if 'photo' in self.__cached_post['attachments']:
-            return self.raw['attachments']['photo']
+        if 'photo' in self._data_cache['attachments']:
+            return deepcopy(self._data_cache['attachments']['photo'])
         else:
             return {}
 
     @property
     def attachments_video(self) -> dict:
-        if 'video' in self.__cached_post['attachments']:
-            return self.raw['attachments']['video']
+        if 'video' in self._data_cache['attachments']:
+            return deepcopy(self._data_cache['attachments']['video'])
         else:
             return {}
 
     @property
     def author(self) -> dict:
-        return self.raw['author']
+        return deepcopy(self._data_cache['author'])
 
     @property
     def author_nickname(self) -> str:
-        return self.__cached_post['author']['nickname']
+        return self._data_cache['author']['nickname']
 
     @property
     def author_id(self) -> str:
-        return self.__cached_post['author']['memberId']
+        return self._data_cache['author']['memberId']
 
     @property
     def created_at(self) -> float:
-        return v_timestamp_parser(self.__cached_post['createdAt'])
+        return v_timestamp_parser(self._data_cache['createdAt'])
 
     @property
     def post_id(self) -> str:
-        return self.__post_id
+        return self._target_id
 
     @property
     def title(self) -> str:
-        return self.__cached_post['title']
+        return self._data_cache['title']
 
     def getPostCommentsIter(self) -> Generator[Comment, None, None]:
-        return getPostCommentsIter(self.__post_id, session=self.session)
+        return getPostCommentsIter(self.post_id, session=self.session)
 
     def getPostStarCommentsIter(self) -> Generator[Comment, None, None]:
-        return getPostStarCommentsIter(self.__post_id, session=self.session)
+        return getPostStarCommentsIter(self.post_id, session=self.session)
 
 
 class Post(PostBase):
     def __init__(self, post_id, session=None):
         super().__init__(post_id, session)
 
+    def __repr__(self):
+        return "<VLIVE Post [%s]>" % self.post_id
+
     @property
     def plain_body(self) -> str:
-        return self.raw['plainBody']
+        return self._data_cache['plainBody']
 
     @property
     def body(self) -> str:
-        return self.raw['body']
+        return self._data_cache['body']
 
     def formatted_body(self):
         loc = dirname(__file__)
@@ -277,57 +264,40 @@ class OfficialVideoPost(PostBase):
             init_id = videoSeqToPostId(init_id)
         super().__init__(init_id, session)
 
+    def __repr__(self):
+        return "<VLIVE OfficialVideoPost [%s]>" % self.video_seq
+
     @property
     def official_video(self) -> dict:
-        return self.raw['officialVideo']
+        return deepcopy(self._data_cache['officialVideo'])
 
     @property
     def video_seq(self) -> int:
-        return self.raw["officialVideo"]["videoSeq"]
+        return self._data_cache["officialVideo"]["videoSeq"]
 
 
-class Schedule(object):
-    __slots__ = ["__cached_data", "__schedule_id", "session"]
-
+class Schedule(DataModel):
     def __init__(self, schedule_id, session):
-        self.__schedule_id = schedule_id
-        self.__cached_data = {}
-        self.session = session
-        self.refresh()
+        super().__init__(getScheduleData, schedule_id, session=session)
 
-    def __eq__(self, other):
-        if type(self) == type(other):
-            if self.schedule_id == other.schedule_id:
-                return True
-        return False
-
-    def __dict__(self):
-        return self.raw
-
-    def refresh(self, silent=False):
-        data = getScheduleData(self.__schedule_id, self.session, silent)
-        if data is not None:
-            self.__cached_data = data
-
-    @property
-    def raw(self) -> dict:
-        return deepcopy(self.__cached_data)
+    def __repr__(self):
+        return "<VLIVE Schedule [%s]>" % self._target_id
 
     @property
     def schedule_id(self) -> str:
-        return self.__schedule_id
+        return self._target_id
 
     @property
     def author(self) -> dict:
-        return self.raw['author']
+        return deepcopy(self._data_cache['author'])
 
     @property
     def author_nickname(self) -> str:
-        return self.__cached_data['author']['nickname']
+        return self._data_cache['author']['nickname']
 
     @property
     def author_id(self) -> str:
-        return self.__cached_data['author']
+        return self._data_cache['author']
 
 
 class Upcoming(object):
