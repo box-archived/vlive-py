@@ -9,7 +9,7 @@ def comment_parser(comment_list: list, session=None):
     from .model import Comment
     n_list = []
     for comment in comment_list:
-        n_list.append(Comment(comment['commentId'], init_data=comment, session=session))
+        n_list.append(Comment(comment['commentId'], session=session, init_data=comment))
 
     return n_list
 

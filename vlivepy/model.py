@@ -19,7 +19,7 @@ from .video import getInkeyData, getLivePlayInfo, getLiveStatus, getOfficialVide
 class Comment(object):
     __slots__ = ['__cached_data', '__comment_id', 'session']
 
-    def __init__(self, commentId, init_data=None, session=None):
+    def __init__(self, commentId, session=None, init_data=None):
         self.session = session
         self.__comment_id = commentId
         if init_data:
