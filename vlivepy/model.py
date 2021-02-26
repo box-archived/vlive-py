@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations
 from copy import deepcopy
 from os.path import dirname
 from time import time
 from typing import Generator
 from warnings import warn
 from bs4 import BeautifulSoup, element
-from .comment import getCommentData, getPostCommentsIter, getPostStarCommentsIter
+from .comment import getCommentData, getPostCommentsIter, getPostStarCommentsIter, getNestedCommentsIter
 from .connections import getPostInfo, postIdToVideoSeq, videoSeqToPostId
 from .exception import ModelRefreshWarning
 from .parser import (
@@ -115,6 +116,9 @@ class Comment(DataModel):
     @property
     def written_in(self) -> str:
         return self._data_cache['writtenIn']
+
+    def getNestedCommentsIter(self) -> Generator[Comment]:
+        return getNestedCommentsIter(self.commentId, session=self.session)
 
     def parent_info_tuple(self):
         tp = self.parent['type']

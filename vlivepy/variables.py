@@ -225,6 +225,12 @@ def endpoint_comment_data(post):
     )
 
 
+def endpoint_comment_nested(post, after=None):
+    return endpoint_post_comment_template(
+        "comment", post, postfix="comments", after=after
+    )
+
+
 def endpoint_schedule_data(schedule):
     url = "https://www.vlive.tv/globalv-web/vam-web/schedule/v1.0/schedule-%s" % schedule
     params = {

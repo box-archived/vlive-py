@@ -130,3 +130,40 @@ def getCommentData(commentId, session=None, silent=False):
         auto_raise(APINetworkError, silent)
 
     return None
+
+
+def getNestedComments(commentId, session=None, after=None, silent=False):
+    # Make request
+    sr = reqWrapper.get(**gv.endpoint_comment_nested(commentId, after),
+                        wait=0.5, session=session, status=[200, 403])
+
+    if sr.success:
+        stripped_data = response_json_stripper(sr.response.json(), silent=silent)
+        if 'data' in stripped_data:
+            stripped_data['data'] = comment_parser(stripped_data['data'], session=session)
+        return stripped_data
+    else:
+        auto_raise(APINetworkError, silent)
+
+    return None
+
+
+def getNestedCommentsIter(commentId, session=None):
+    r""" Get post's comments
+
+    :param commentId: commentId from VLIVE (like #-########)
+    :param session: use specific session
+    :return: comments generator
+    :rtype: Generator[Comment, None, None]
+    """
+
+    data = getNestedComments(commentId, session=session)
+    after = next_page_checker(data)
+    for item in data['data']:
+        yield item
+
+    while after:
+        data = getNestedComments(commentId, session=session, after=after)
+        after = next_page_checker(data)
+        for item in data['data']:
+            yield item
