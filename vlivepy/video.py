@@ -150,3 +150,7 @@ def getVodPlayInfo(videoSeq, vodId=None, session=None, silent=False):
         return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent=silent)
+
+
+def getOfficialVideoData(videoSeq, session=None, silent=False):
+    return getOfficialVideoPost(videoSeq, session=session, silent=silent)['officialVideo']

@@ -18,7 +18,7 @@ from .post import getFVideoPlayInfo
 from .schedule import getScheduleData
 from .upcoming import getUpcomingList
 from .video import (
-    getInkeyData, getLivePlayInfo, getLiveStatus, getOfficialVideoPost, getVodPlayInfo
+    getInkeyData, getLivePlayInfo, getLiveStatus, getOfficialVideoData, getOfficialVideoPost, getVodPlayInfo
 )
 
 
@@ -129,6 +129,22 @@ class Comment(DataModel):
         tp = self.root['type']
         key = "%sId" % tp.lower()
         return tp, self.root['data'][key]
+
+
+class OfficialVideoLive(DataModel):
+    def __init__(self, videoSeq, session=None):
+        super().__init__(getOfficialVideoData, videoSeq, session=session)
+
+    def __repr__(self):
+        return "<VLIVE OfficialVideo-Live [%s]>" % self.target_id
+
+
+class OfficialVideoVOD(DataModel):
+    def __init__(self, videoSeq, session=None):
+        super().__init__(getOfficialVideoData, videoSeq, session=session)
+
+    def __repr__(self):
+        return "<VLIVE OfficialVideo-VOD [%s]>" % self.target_id
 
 
 class PostBase(DataModel):
