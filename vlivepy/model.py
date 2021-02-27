@@ -131,14 +131,9 @@ class Comment(DataModel):
         return tp, self.root['data'][key]
 
 
-class OfficialVideoLive(DataModel):
+class OfficialVideoModel(DataModel):
     def __init__(self, videoSeq, session=None):
         super().__init__(getOfficialVideoData, videoSeq, session=session)
-        if self.video_type != "LIVE":
-            raise ValueError("OfficialVideo [%s] is not Live." % videoSeq)
-
-    def __repr__(self):
-        return "<VLIVE OfficialVideo-Live [%s]>" % self.target_id
 
     @property
     def video_seq(self) -> int:
@@ -239,12 +234,22 @@ class OfficialVideoLive(DataModel):
         return self._data_cache['mobileDAYn']
 
     @property
-    def has_filter_ad(self) -> bool:
-        return self._data_cache['filterAdYn']
-
-    @property
     def vr_content_type(self) -> str:
         return self._data_cache['vrContentType']
+
+
+class OfficialVideoLive(OfficialVideoModel):
+    def __init__(self, videoSeq, session=None):
+        super().__init__(videoSeq, session=session)
+        if self.video_type != "LIVE":
+            raise ValueError("OfficialVideo [%s] is not Live." % videoSeq)
+
+    def __repr__(self):
+        return "<VLIVE OfficialVideo-Live [%s]>" % self.target_id
+
+    @property
+    def has_filter_ad(self) -> bool:
+        return self._data_cache['filterAdYn']
 
     @property
     def momentable(self) -> bool:
@@ -277,12 +282,58 @@ class OfficialVideoLive(DataModel):
         return getLiveStatus(self.video_seq, silent=silent)
 
 
-class OfficialVideoVOD(DataModel):
+class OfficialVideoVOD(OfficialVideoModel):
     def __init__(self, videoSeq, session=None):
-        super().__init__(getOfficialVideoData, videoSeq, session=session)
+        super().__init__(videoSeq, session=session)
+        if self.video_type != "VOD":
+            raise ValueError("OfficialVideo [%s] is not VOD." % videoSeq)
 
     def __repr__(self):
         return "<VLIVE OfficialVideo-VOD [%s]>" % self.target_id
+    
+    @property
+    def has_preview(self) -> bool:
+        return self._data_cache['previewYn']
+    
+    @property
+    def has_moment(self) -> bool:
+        return self._data_cache['hasMoment']
+
+    @property
+    def vod_id(self) -> str:
+        return self._data_cache['vodId']
+
+    @property
+    def play_time(self) -> str:
+        return self._data_cache['playTime']
+    
+    @property
+    def encoding_status(self) -> str:
+        return self._data_cache['encodingStatus']
+    
+    @property
+    def vod_secure_status(self) -> str:
+        return self._data_cache['vodSecureStatus']
+    
+    @property
+    def dimension_type(self) -> str:
+        return self._data_cache['dimensionType']
+
+    def recommended_videos(self, as_object=True) -> list:
+        if as_object:
+            video_list = []
+            for item in self._data_cache['recommendedVideos']:
+                video_list.append(OfficialVideoPost(item['videoSeq']))
+
+            return video_list
+        else:
+            return deepcopy(self._data_cache['recommendedVideos'])
+
+    def getInkeyData(self, silent=False):
+        return getInkeyData(self.video_seq, session=self.session, silent=silent)
+
+    def getVodPlayInfo(self, silent=False):
+        return getVodPlayInfo(self.video_seq, self.vod_id, session=self.session, silent=silent)
 
 
 class PostBase(DataModel):
