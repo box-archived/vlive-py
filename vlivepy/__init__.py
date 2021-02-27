@@ -12,6 +12,7 @@ from .connections import (
     getUserSession,
     postIdToVideoSeq,
     postTypeDetector,
+    decode_channel_code,
 )
 from .controllers import (
     dumpSession,

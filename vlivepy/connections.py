@@ -103,3 +103,18 @@ def postTypeDetector(post, silent=False):
         return data['contentType']
 
     return None
+
+
+def decode_channel_code(channel_code, silent=False):
+    sr = reqWrapper.get(**gv.endpoint_decode_channel_code(channel_code),
+                        wait=0.5, status=[200])
+
+    if sr.success:
+        if len(sr.response.text) > 0:
+            return sr.response.json()['result']['channelSeq']
+        else:
+            auto_raise(ValueError("inappropriate ChannelCode"), silent)
+    else:
+        auto_raise(APINetworkError, silent)
+
+    return None

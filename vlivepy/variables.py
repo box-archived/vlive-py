@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 
+# Overwrite-able vars
+overwrite_app_id = "8c6cc7b45d2568fb668be6e05b6e5a3b"
+overwrite_gcc = "KR"
+overwrite_locale = "ko_KR"
+
+
 # VLive React App ID
-AppId = {"appId": "8c6cc7b45d2568fb668be6e05b6e5a3b"}
+AppId = {"appId": overwrite_app_id}
 
 # locale parameter(url postfix)
-LocaleParam = {"gcc": "KR", "locale": "ko_KR"}
+LocaleParam = {"gcc": overwrite_gcc, "locale": overwrite_locale}
 
 PlatformPCParam = {"platformType": "PC"}
 
@@ -243,6 +249,21 @@ def endpoint_schedule_data(schedule):
     headers = {
         **HeaderCommon,
         "referer": "https://www.vlive.tv/schedule/%s" % schedule
+    }
+
+    return {"url": url, "params": params, "headers": headers}
+
+
+def endpoint_decode_channel_code(channel_code):
+    url = "http://api.vfan.vlive.tv/vproxy/channelplus/decodeChannelCode"
+    params = {
+        "app_id": overwrite_app_id,
+        "channelCode": channel_code,
+        "_": "1614426919000"
+    }
+    headers = {
+        **HeaderCommon,
+        "referer": "https://www.vlive.tv/"
     }
 
     return {"url": url, "params": params, "headers": headers}
