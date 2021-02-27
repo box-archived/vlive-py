@@ -263,7 +263,7 @@ def endpoint_decode_channel_code(channel_code):
     }
     headers = {
         **HeaderCommon,
-        "referer": "https://www.vlive.tv/"
+        **referer_vlive()
     }
 
     return {"url": url, "params": params, "headers": headers}
