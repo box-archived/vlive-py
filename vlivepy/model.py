@@ -685,7 +685,7 @@ class Channel(DataModel):
 
     @property
     def open_at(self) -> int:
-        return self._data_cache['openAt']
+        return self._data_cache['openAt'] // 1000
     
     @property
     def show_upcoming(self) -> bool:
