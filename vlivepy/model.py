@@ -29,6 +29,7 @@ from .comment import (
 from .connections import (
     getPostInfo,
     videoSeqToPostId,
+    decode_channel_code,
 )
 from .exception import (
     ModelRefreshWarning,
@@ -635,6 +636,9 @@ class Channel(DataModel):
     def __init__(self, channel_code, session=None):
         super().__init__(getChannelInfo, channel_code, session)
 
+    def __repr__(self):
+        return "<VLIVE Channel [%s]>" % self._target_id
+
     @property
     def channel_code(self) -> str:
         return self._target_id
@@ -714,3 +718,6 @@ class Channel(DataModel):
     @property
     def video_comment_count(self) -> int:
         return self._data_cache['videoCommentCountOfStar']
+
+    def decode_channel_code(self) -> int:
+        return decode_channel_code(self.channel_code)
