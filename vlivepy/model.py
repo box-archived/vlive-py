@@ -1,24 +1,51 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import annotations
+
 from copy import deepcopy
 from os.path import dirname
 from time import time
-from typing import Generator, List, Union
+from typing import (
+    Generator,
+    List,
+    Union,
+)
 from warnings import warn
-from bs4 import BeautifulSoup, element
-from .comment import getCommentData, getPostCommentsIter, getPostStarCommentsIter, getNestedCommentsIter
-from .connections import getPostInfo, postIdToVideoSeq, videoSeqToPostId
-from .exception import ModelRefreshWarning, ModelInitError
+
+from bs4 import (
+    BeautifulSoup,
+    element,
+)
+
+from .comment import (
+    getCommentData,
+    getPostCommentsIter,
+    getPostStarCommentsIter,
+    getNestedCommentsIter,
+)
+from .connections import (
+    getPostInfo,
+    videoSeqToPostId,
+)
+from .exception import (
+    ModelRefreshWarning,
+    ModelInitError,
+)
 from .parser import (
-    format_epoch, max_res_from_play_info,
-    parseVodIdFromOffcialVideoPost, UpcomingVideo, v_timestamp_parser
+    format_epoch,
+    max_res_from_play_info,
+    UpcomingVideo,
+    v_timestamp_parser,
 )
 from .post import getFVideoPlayInfo
 from .schedule import getScheduleData
 from .upcoming import getUpcomingList
 from .video import (
-    getInkeyData, getLivePlayInfo, getLiveStatus, getOfficialVideoData, getOfficialVideoPost, getVodPlayInfo
+    getInkeyData,
+    getLivePlayInfo,
+    getLiveStatus,
+    getOfficialVideoData,
+    getVodPlayInfo
 )
 
 
@@ -599,107 +626,3 @@ class Upcoming(object):
                 data_list.append(item)
 
         return data_list
-
-
-class Video(object):
-    # Will be deprecate
-    def __init__(self, number, session=None, refresh_rate=10):
-        r""" Init
-
-        :param number: video post-id or videoSeq
-        :param session: use specific session
-        :param refresh_rate: cache refresh rate
-        """
-
-        # interpret number
-        if type(number) == int:
-            number = str(number)
-
-        # Case <post-id>
-        if "-" in number:
-            self.__VideoSeq = postIdToVideoSeq(number)
-        # Case <videoSeq>
-        else:
-            self.__VideoSeq = number
-
-        # Variable declaration
-        self.session = session
-        self.refresh_rate = refresh_rate
-        self.__cachedTime = 0
-        self.__cached_data = {}
-
-        # init variables
-        while self.__cachedTime == 0:
-            self.refresh(force=True)
-
-    def __repr__(self):
-        if self.is_vod:
-            return "<VLIVE Video(VOD) [%s]>" % self.videoSeq
-        else:
-            return "<VLIVE Video(LIVE) [%s]>" % self.videoSeq
-
-    @property
-    def raw(self) -> dict:
-        return deepcopy(self.__cached_data)
-
-    @property
-    def created_at(self):
-        return v_timestamp_parser(self.__cached_data['createdAt'])
-
-    @property
-    def videoSeq(self) -> str:
-        return self.__VideoSeq
-
-    @property
-    def vod_id(self) -> str:
-        if self.is_vod():
-            return parseVodIdFromOffcialVideoPost(self.__cached_data, silent=True)
-        else:
-            return ""
-
-    @property
-    def title(self) -> str:
-        return self.__cached_data['officialVideo']['title']
-
-    @property
-    def channelCode(self) -> str:
-        return self.__cached_data['author']['channelCode']
-
-    @property
-    def channelName(self) -> str:
-        return self.__cached_data['author']['nickname']
-
-    def refresh(self, force=False):
-        # Cached time distance
-        distance = time() - self.__cachedTime
-        if distance >= self.refresh_rate or force:
-            # Get data
-            data = getOfficialVideoPost(self.videoSeq, silent=True)
-            if data is not None:
-                # Set data
-                self.__cachedTime = int(time())
-                self.__cached_data = data
-
-    def is_vod(self) -> bool:
-        if 'vodId' in self.__cached_data['officialVideo']:
-            return True
-        else:
-            return False
-
-    def getOfficialVideoPost(self, silent=False):
-        return getOfficialVideoPost(self.videoSeq, session=self.session, silent=silent)
-
-    def getLivePlayInfo(self, silent=False):
-        return getLivePlayInfo(self.videoSeq, session=self.session, silent=silent)
-
-    def getInkeyData(self, silent=False):
-        return getInkeyData(self.videoSeq, session=self.session, silent=silent)
-
-    def getLiveStatus(self, silent=False):
-        return getLiveStatus(self.videoSeq, silent=silent)
-
-    def getVodPlayInfo(self, silent=False):
-        if self.is_vod:
-            return getVodPlayInfo(self.videoSeq, self.vod_id, session=self.session, silent=silent)
-        else:
-            return None
