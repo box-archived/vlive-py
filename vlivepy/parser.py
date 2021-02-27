@@ -2,8 +2,11 @@
 
 from collections import namedtuple
 from datetime import datetime
+import json
 from warnings import warn
+
 from bs4 import BeautifulSoup
+
 from .exception import auto_raise, APIJSONParesError, APIServerResponseWarning, APIServerResponseError
 
 UpcomingVideo = namedtuple("UpcomingVideo", "seq time cseq cname ctype name type product")
@@ -165,3 +168,11 @@ def format_epoch(epoch, fmt):
 def v_timestamp_parser(ts):
     str_ts = str(ts)
     return float("%s.%s" % (str_ts[:-3], str_ts[-3:]))
+
+
+def channel_info_from_channel_page(html):
+    soup = BeautifulSoup(html, "html.parser")
+    for item in soup.find_all("script"):
+        if "__PRELOADED_STATE__" in str(item):
+            script: str = item.contents[0].split("function")[0]
+            return json.loads(script[script.find("{"): -1])['channel']['channel']

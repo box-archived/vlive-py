@@ -267,3 +267,12 @@ def endpoint_decode_channel_code(channel_code):
     }
 
     return {"url": url, "params": params, "headers": headers}
+
+
+def endpoint_channel_webpage(channel_code):
+    url = "https://www.vlive.tv/channel/%s" % channel_code
+    headers = {
+        **HeaderCommon
+    }
+
+    return {"url": url, "headers": headers}
