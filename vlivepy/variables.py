@@ -39,6 +39,9 @@ def referer_video(videoSeq):
 def referer_vlive():
     return {"referer": "https://www.vlive.tv/"}
 
+def referer_channel(channel_code):
+    return {"referer": "https://www.vlive.tv/channel/%s" % channel_code}
+
 
 # Endpoint
 def endpoint_post(post):
@@ -276,3 +279,20 @@ def endpoint_channel_webpage(channel_code):
     }
 
     return {"url": url, "headers": headers}
+
+
+def endpoint_channel_grouped_boards(channel_code):
+    url = "https://www.vlive.tv/globalv-web/vam-web/board/v1.0/channel-%s/groupedBoards" % channel_code
+    params = {
+        **AppId,
+        **LocaleParam,
+        "fields": "boardId,title,boardType,openType,allowedViewers,includedCountries,excludedCountries,"
+                  "useStarFilter,payRequired,expose,channelCode,lastUpdatedAt",
+        "filter": ""
+    }
+    headers = {
+        **HeaderCommon,
+        **referer_channel(channel_code)
+    }
+
+    return {"url": url, "headers": headers, "params": params}

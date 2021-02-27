@@ -21,3 +21,16 @@ def getChannelInfo(channel_code, session=None, silent=False):
         auto_raise(APINetworkError, silent)
 
     return None
+
+
+def getGroupedBoards(channel_code, session=None, silent=False):
+    # Make request
+    sr = reqWrapper.get(**gv.endpoint_channel_grouped_boards(channel_code),
+                        wait=0.5, session=session, status=[200])
+
+    if sr.success:
+        return sr.response.json()
+    else:
+        auto_raise(APINetworkError, silent)
+
+    return None

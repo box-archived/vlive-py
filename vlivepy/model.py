@@ -18,7 +18,8 @@ from bs4 import (
 )
 
 from .channel import (
-    getChannelInfo
+    getChannelInfo,
+    getGroupedBoards,
 )
 from .comment import (
     getCommentData,
@@ -721,3 +722,6 @@ class Channel(DataModel):
 
     def decode_channel_code(self) -> int:
         return decode_channel_code(self.channel_code)
+
+    def getGroupBoards(self) -> dict:
+        return getGroupedBoards(self.channel_code, session=self.session)
