@@ -17,6 +17,9 @@ from bs4 import (
     element,
 )
 
+from .channel import (
+    getChannelInfo
+)
 from .comment import (
     getCommentData,
     getPostCommentsIter,
@@ -626,3 +629,88 @@ class Upcoming(object):
                 data_list.append(item)
 
         return data_list
+
+
+class Channel(DataModel):
+    def __init__(self, channel_code, session=None):
+        super().__init__(getChannelInfo, channel_code, session)
+
+    @property
+    def channel_code(self) -> str:
+        return self._target_id
+
+    @property
+    def channel_name(self) -> str:
+        return self._data_cache['channelName']
+
+    @property
+    def representative_color(self) -> str:
+        return self._data_cache['representativeColor']
+
+    @property
+    def background_color(self) -> str:
+        return self._data_cache['backgroundColor']
+
+    @property
+    def channel_profile_image(self) -> str:
+        return self._data_cache['channelProfileImage']
+
+    @property
+    def channel_cover_image(self) -> str:
+        return self._data_cache['channelCoverImage']
+
+    @property
+    def channel_description(self) -> str:
+        return self._data_cache['channelDescription']
+
+    @property
+    def prohibited_word_like_list(self) -> list:
+        return deepcopy(self._data_cache['prohibitedWordLikeList'])
+
+    @property
+    def prohibited_word_exact_list(self) -> list:
+        return deepcopy(self._data_cache['prohibitedWordExactList'])
+
+    @property
+    def sns_share_img(self) -> str:
+        return self._data_cache['snsShareImg']
+
+    @property
+    def qr_code(self) -> str:
+        return self._data_cache['qrCode']
+
+    @property
+    def open_at(self) -> int:
+        return self._data_cache['openAt']
+    
+    @property
+    def show_upcoming(self) -> bool:
+        return self._data_cache['showUpcoming']
+    
+    @property
+    def use_member_level(self) -> bool:
+        return self._data_cache['useMemberLevel']
+    
+    @property
+    def member_count(self) -> int:
+        return self._data_cache['memberCount']
+    
+    @property
+    def post_count(self) -> int:
+        return self._data_cache['postCountOfStar']
+
+    @property
+    def video_count(self) -> int:
+        return self._data_cache['videoCountOfStar']
+
+    @property
+    def video_play_count(self) -> int:
+        return self._data_cache['videoPlayCountOfStar']
+
+    @property
+    def video_like_count(self) -> int:
+        return self._data_cache['videoLikeCountOfStar']
+
+    @property
+    def video_comment_count(self) -> int:
+        return self._data_cache['videoCommentCountOfStar']

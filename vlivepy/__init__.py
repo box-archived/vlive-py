@@ -20,6 +20,7 @@ from .controllers import (
     loadSession,
 )
 from .model import (
+    Channel,
     Comment,
     OfficialVideoPost,
     Post,
