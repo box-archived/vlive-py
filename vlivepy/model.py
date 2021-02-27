@@ -4,12 +4,12 @@ from __future__ import annotations
 from copy import deepcopy
 from os.path import dirname
 from time import time
-from typing import Generator
+from typing import Generator, List, Union
 from warnings import warn
 from bs4 import BeautifulSoup, element
 from .comment import getCommentData, getPostCommentsIter, getPostStarCommentsIter, getNestedCommentsIter
 from .connections import getPostInfo, postIdToVideoSeq, videoSeqToPostId
-from .exception import ModelRefreshWarning
+from .exception import ModelRefreshWarning, ModelInitError
 from .parser import (
     format_epoch, max_res_from_play_info,
     parseVodIdFromOffcialVideoPost, UpcomingVideo, v_timestamp_parser
@@ -134,9 +134,147 @@ class Comment(DataModel):
 class OfficialVideoLive(DataModel):
     def __init__(self, videoSeq, session=None):
         super().__init__(getOfficialVideoData, videoSeq, session=session)
+        if self.video_type != "LIVE":
+            raise ValueError("OfficialVideo [%s] is not Live." % videoSeq)
 
     def __repr__(self):
         return "<VLIVE OfficialVideo-Live [%s]>" % self.target_id
+
+    @property
+    def video_seq(self) -> int:
+        return self._data_cache['videoSeq']
+
+    @property
+    def video_type(self) -> str:
+        return self._data_cache['type']
+
+    @property
+    def title(self) -> str:
+        return self._data_cache['title']
+
+    @property
+    def multinational_titles(self) -> List[dict]:
+        return deepcopy(self._data_cache['multinationalTitles'])
+
+    def multinational_title_locales(self) -> list:
+        locale_list = []
+        for item in self._data_cache['multinationalTitles']:
+            locale_list.append(item['locale'])
+
+        return locale_list
+
+    def multinational_title_get(self, locale) -> dict:
+        for item in self._data_cache['multinationalTitles']:
+            if item['locale'] == locale:
+                return item.copy()
+        else:
+            raise KeyError
+
+    @property
+    def play_count(self) -> int:
+        return self._data_cache['playCount']
+
+    @property
+    def like_count(self) -> int:
+        return self._data_cache['likeCount']
+
+    @property
+    def comment_count(self) -> int:
+        return self._data_cache['commentCount']
+
+    @property
+    def thumb(self) -> str:
+        return self._data_cache['thumb']
+
+    @property
+    def expose_status(self) -> str:
+        return self._data_cache['exposeStatus']
+
+    @property
+    def screen_orientation(self) -> str:
+        return self._data_cache['screenOrientation']
+
+    @property
+    def will_start_at(self) -> float:
+        return v_timestamp_parser(self._data_cache['willStartAt'])
+
+    @property
+    def on_air_start_at(self) -> float:
+        return v_timestamp_parser(self._data_cache['onAirStartAt'])
+
+    @property
+    def will_end_at(self) -> float:
+        return v_timestamp_parser(self._data_cache['willEndAt'])
+
+    @property
+    def created_at(self) -> float:
+        return v_timestamp_parser(self._data_cache['createdAt'])
+
+    @property
+    def has_live_thumb(self) -> bool:
+        return self._data_cache['liveThumbYn']
+
+    @property
+    def has_upcoming(self) -> bool:
+        return self._data_cache['upcomingYn']
+
+    @property
+    def has_notice(self) -> bool:
+        return self._data_cache['noticeYn']
+
+    @property
+    def product_type(self) -> str:
+        return self._data_cache['productType']
+
+    @property
+    def has_pre_ad(self) -> bool:
+        return self._data_cache['preAdYn']
+
+    @property
+    def has_post_ad(self) -> bool:
+        return self._data_cache['postAdYn']
+
+    @property
+    def has_mobile_da(self) -> bool:
+        return self._data_cache['mobileDAYn']
+
+    @property
+    def has_filter_ad(self) -> bool:
+        return self._data_cache['filterAdYn']
+
+    @property
+    def vr_content_type(self) -> str:
+        return self._data_cache['vrContentType']
+
+    @property
+    def momentable(self) -> bool:
+        return self._data_cache['momentable']
+
+    @property
+    def has_special_live(self) -> bool:
+        return self._data_cache['specialLiveYn']
+
+    @property
+    def status(self) -> str:
+        return self._data_cache['status']
+
+    @property
+    def hevc(self) -> bool:
+        return self._data_cache['hevc']
+
+    @property
+    def low_latency(self) -> bool:
+        return self._data_cache['lowLatency']
+
+    @property
+    def pp_type(self) -> str:
+        return self._data_cache['ppType']
+
+    def getLivePlayInfo(self, silent=False):
+        return getLivePlayInfo(self.video_seq, session=self.session, silent=silent)
+
+    def getLiveStatus(self, silent=False):
+        return getLiveStatus(self.video_seq, silent=silent)
 
 
 class OfficialVideoVOD(DataModel):
@@ -288,12 +426,20 @@ class OfficialVideoPost(PostBase):
         return "<VLIVE OfficialVideoPost [%s]>" % self.video_seq
 
     @property
-    def official_video(self) -> dict:
-        return deepcopy(self._data_cache['officialVideo'])
+    def official_video_type(self) -> str:
+        return self._data_cache['officialVideo']['type']
 
     @property
     def video_seq(self) -> int:
         return self._data_cache["officialVideo"]["videoSeq"]
+
+    def official_video(self) -> Union[OfficialVideoVOD, OfficialVideoLive]:
+        if self.official_video_type == "LIVE":
+            return OfficialVideoLive(self.video_seq, session=self.session)
+        elif self.official_video_type == "VOD":
+            return OfficialVideoVOD(self.video_seq, session=self.session)
+        else:
+            raise ModelInitError("Unknown official video type. please report issue with self.raw")
 
 
 class Schedule(DataModel):
