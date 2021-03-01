@@ -723,5 +723,5 @@ class Channel(DataModel):
     def decode_channel_code(self) -> int:
         return decode_channel_code(self.channel_code)
 
-    def getGroupBoards(self) -> dict:
+    def getGroupedBoards(self) -> dict:
         return getGroupedBoards(self.channel_code, session=self.session)
