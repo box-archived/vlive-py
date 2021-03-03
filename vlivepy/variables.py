@@ -177,7 +177,7 @@ def endpoint_vod_play_info(vodId, inkey):
         "cpt": "vtt",
         "cpl": "ko_KR",
         "lc": "ko_KR",
-        "CC": "KR"
+        "cc": overwrite_gcc
     }
     headers = {
         **HeaderCommon,
