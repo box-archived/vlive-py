@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from os.path import dirname
 from time import time
 from typing import (
     Generator,
@@ -35,6 +34,10 @@ from .connections import (
 from .exception import (
     ModelRefreshWarning,
     ModelInitError,
+)
+from .html_template import (
+    formatted_body_template,
+    video_box_template
 )
 from .parser import (
     format_epoch,
@@ -477,12 +480,9 @@ class Post(PostBase):
         return self._data_cache['writtenIn']
 
     def formatted_body(self):
-        loc = dirname(__file__)
-        with open(loc + "/video_template.html", encoding="utf8") as f:
-            video_template = f.read()
-
-        with open(loc + "/formatted_body.html", encoding="utf8") as f:
-            doc_template = f.read()
+        # load Template
+        video_template = video_box_template
+        doc_template = formatted_body_template
 
         soup = BeautifulSoup(self.body, 'html.parser')
         for item in soup.children:
