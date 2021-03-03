@@ -633,6 +633,36 @@ class Upcoming(object):
         return data_list
 
 
+class GroupedBoards(DataModel):
+    def __init__(self, channel_code, session=None):
+        super().__init__(getGroupedBoards, channel_code, session)
+
+    def __repr__(self):
+        return "<VLIVE GroupedBoards in [%s]>" % self.target_id
+
+    def groups(self) -> list:
+        group_names = []
+        for item in self._data_cache:
+            group_names.append(item['groupTitle'])
+
+        return group_names
+
+    def boards(self) -> list:
+        board_list = []
+        for item in self._data_cache:
+            for board in item['boards']:
+                board_list.append(board)
+
+        return deepcopy(board_list)
+
+    def board_names(self) -> list:
+        name_list = []
+        for item in self.boards():
+            name_list.append(item['title'])
+
+        return name_list
+
+
 class Channel(DataModel):
     def __init__(self, channel_code, session=None):
         super().__init__(getChannelInfo, channel_code, session)
@@ -723,5 +753,5 @@ class Channel(DataModel):
     def decode_channel_code(self) -> int:
         return decode_channel_code(self.channel_code)
 
-    def getGroupedBoards(self) -> dict:
-        return getGroupedBoards(self.channel_code, session=self.session)
+    def groupedBoards(self) -> GroupedBoards:
+        return GroupedBoards(self.channel_code, self.session)
