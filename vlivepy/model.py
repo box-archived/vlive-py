@@ -407,6 +407,42 @@ class PostBase(DataModel):
         return v_timestamp_parser(self._data_cache['createdAt'])
 
     @property
+    def board_id(self) -> int:
+        return self._data_cache['boardId']
+
+    @property
+    def channel_name(self) -> str:
+        return self._data_cache['channel']['channelName']
+
+    @property
+    def channel_code(self) -> str:
+        return self._data_cache['channelCode']
+    
+    @property
+    def comment_count(self) -> int:
+        return self._data_cache['commentCount']
+    
+    @property
+    def content_type(self) -> str:
+        return self._data_cache['contentType']
+
+    @property
+    def emotion_count(self) -> int:
+        return self._data_cache['emotionCount']
+    
+    @property
+    def is_comment_enabled(self) -> bool:
+        return self._data_cache['isCommentEnabled']
+    
+    @property
+    def is_hidden_from_star(self) -> bool:
+        return self._data_cache['isHiddenFromStar']
+    
+    @property
+    def is_viewer_bookmarked(self) -> bool:
+        return self._data_cache['isViewerBookmarked']
+
+    @property
     def post_id(self) -> str:
         return self._target_id
 
@@ -435,6 +471,10 @@ class Post(PostBase):
     @property
     def body(self) -> str:
         return self._data_cache['body']
+
+    @property
+    def written_in(self) -> str:
+        return self._data_cache['writtenIn']
 
     def formatted_body(self):
         loc = dirname(__file__)
