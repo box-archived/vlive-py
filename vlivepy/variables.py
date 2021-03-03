@@ -296,3 +296,28 @@ def endpoint_channel_grouped_boards(channel_code):
     }
 
     return {"url": url, "headers": headers, "params": params}
+
+
+def endpoint_board_posts(board, channel_code, after=None, latest=False):
+    url = "https://www.vlive.tv/globalv-web/vam-web/post/v1.0/board-%s/posts" % board
+    params = {
+        **AppId,
+        **LocaleParam,
+        "fields": "postId,officialVideo",
+        "limit": 20,
+    }
+    headers = {
+        **HeaderCommon,
+        **referer_channel(channel_code)
+    }
+    headers['referer'] += "/board/%s" % board
+
+    if after:
+        params.update({"after": after})
+
+    if latest:
+        params.update({'sortType': "LATEST"})
+    else:
+        params.update({'sortType': "OLDEST"})
+
+    return {"url": url, "headers": headers, "params": params}
