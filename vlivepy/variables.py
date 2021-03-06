@@ -1,25 +1,30 @@
 # -*- coding: utf-8 -*-
 
 # Overwrite-able vars
-overwrite_app_id = "8c6cc7b45d2568fb668be6e05b6e5a3b"
-overwrite_gcc = "KR"
-overwrite_locale = "ko_KR"
+override_gcc = "KR"
+override_locale = "ko_KR"
+override_user_agent = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/87.0.4280.88 "
+    "Safari/537.36"
+)
+override_accept_language = "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
 
 
 # VLive React App ID
-AppId = {"appId": overwrite_app_id}
+StrAppId = "8c6cc7b45d2568fb668be6e05b6e5a3b"
+AppId = {"appId": StrAppId}
 
 # locale parameter(url postfix)
-LocaleParam = {"gcc": overwrite_gcc, "locale": overwrite_locale}
+LocaleParam = {"gcc": override_gcc, "locale": override_locale}
 
 PlatformPCParam = {"platformType": "PC"}
 
 # Header for common use
 HeaderCommon = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                  "AppleWebKit/537.36 (KHTML, like Gecko) "
-                  "Chrome/87.0.4280.88 Safari/537.36",
-    "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"
+    "User-Agent": override_user_agent,
+    "Accept-Language": override_accept_language
 }
 
 
@@ -177,7 +182,7 @@ def endpoint_vod_play_info(vodId, inkey):
         "cpt": "vtt",
         "cpl": "ko_KR",
         "lc": "ko_KR",
-        "cc": overwrite_gcc
+        "cc": override_gcc
     }
     headers = {
         **HeaderCommon,
@@ -260,7 +265,7 @@ def endpoint_schedule_data(schedule):
 def endpoint_decode_channel_code(channel_code):
     url = "http://api.vfan.vlive.tv/vproxy/channelplus/decodeChannelCode"
     params = {
-        "app_id": overwrite_app_id,
+        "app_id": StrAppId,
         "channelCode": channel_code,
         "_": "1614426919000"
     }
