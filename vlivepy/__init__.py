@@ -1,15 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from . import (
-    board,
-    channel,
-    exception,
-    variables,
-    post,
-    schedule,
-    upcoming,
-    video,
-)
 from .connections import (
     getUserSession,
     postIdToVideoSeq,
