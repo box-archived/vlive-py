@@ -56,7 +56,7 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
                 silent
             )
         else:
-            return response_json_stripper(sr.response.json(), silent=silent)
+            return response_json_stripper(json_response, silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
@@ -84,7 +84,7 @@ def getLiveStatus(videoSeq, silent=False):
                 silent
             )
         else:
-            return response_json_stripper(sr.response.json(), silent=silent)
+            return response_json_stripper(json_response, silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
