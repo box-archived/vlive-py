@@ -12,4 +12,4 @@ vlivepy can be installed via PyPI.
 
 Get source code
 ---------------
-vlivepy is developed and maintained on GitHub. Check out `box-archived/vlive-py <https://github.com/box-archived/vlive-py>` on GitHub.
+vlivepy is developed and maintained on GitHub. Check out `box-archived/vlive-py <https://github.com/box-archived/vlive-py>`_ on GitHub.
