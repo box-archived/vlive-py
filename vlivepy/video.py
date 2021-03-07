@@ -3,7 +3,7 @@
 import reqWrapper
 from . import variables as gv
 from .controllers import sessionUserCheck
-from .exception import auto_raise, APINetworkError, APIJSONParesError
+from .exception import auto_raise, APINetworkError, APIJSONParesError, APIServerResponseError
 from .parser import parseVodIdFromOffcialVideoPost, response_json_stripper
 
 
@@ -49,7 +49,14 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
                         session=session, status=[200, 403])
 
     if sr.success:
-        return response_json_stripper(sr.response.json(), silent=silent)
+        json_response = sr.response.json()
+        if json_response['code'] != 1000:
+            auto_raise(
+                APIServerResponseError("Video-%s is not live or reserved live. It may be a VOD" % videoSeq),
+                silent
+            )
+        else:
+            return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
@@ -70,7 +77,14 @@ def getLiveStatus(videoSeq, silent=False):
                         wait=0.2, status=[200])
 
     if sr.success:
-        return response_json_stripper(sr.response.json(), silent=silent)
+        json_response = sr.response.json()
+        if json_response['code'] != 1000:
+            auto_raise(
+                APIServerResponseError("Video-%s is not live or reserved live. It may be a VOD" % videoSeq),
+                silent
+            )
+        else:
+            return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
