@@ -58,6 +58,23 @@ from .video import (
 
 
 class DataModel(object):
+    """This is the base object for other class objects.
+    It sends request with method from each modules and caching response.
+
+    Note:
+        This is bases object for other object without independent usage.
+
+    Arguments:
+        method (:class:`typing.Callable`) : function for loading data.
+        target_id (:class:`str`) : argument for `method`.
+        session (:class:`requests.Session`, optional) : session for `method`, defaults to None.
+        init_data (:class:`dict`, optional) : set initial data instead of loading data, defaults to None.
+
+    Attributes:
+        session (:class:`requests.Session`) : session for method
+
+    """
+
     __slots__ = ['_data_cache', '_target_id', 'session', '_method']
 
     def __init__(self, method, target_id, session=None, init_data=None):
@@ -76,7 +93,8 @@ class DataModel(object):
                 return True
         return False
 
-    def refresh(self):
+    def refresh(self) -> None:
+        """Reload self data."""
         res = self._method(self._target_id, session=self.session, silent=True)
         if res:
             self._data_cache = res
@@ -85,10 +103,18 @@ class DataModel(object):
 
     @property
     def raw(self) -> dict:
+        """Get full data as deep-copied dict.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache)
 
     @property
-    def target_id(self) -> str:
+    def target_id(self):
+        """Get internal target id.
+
+        :rtype: :class:`str`
+        """
         return str(self._target_id)
 
 
