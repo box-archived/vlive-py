@@ -5,6 +5,7 @@ from __future__ import annotations
 from copy import deepcopy
 from time import time
 from typing import (
+    Callable,
     Generator,
     List,
     Union,
@@ -15,6 +16,7 @@ from bs4 import (
     BeautifulSoup,
     element,
 )
+from requests import Session
 
 from .channel import (
     getChannelInfo,
@@ -61,6 +63,9 @@ class DataModel(object):
     """This is the base object for other class objects.
     It sends request with method from each modules and caching response.
 
+    DataModels and its child objects are able to compare equality.
+    Each objects are considered equal, if their :obj:`type` and :obj:`target_id` is equal.
+
     Note:
         This is bases object for other object without independent usage.
 
@@ -77,7 +82,7 @@ class DataModel(object):
 
     __slots__ = ['_data_cache', '_target_id', 'session', '_method']
 
-    def __init__(self, method, target_id, session=None, init_data=None):
+    def __init__(self, method: Callable, target_id: str, session: Session = None, init_data: dict = None):
         self._method = method
         self._target_id = target_id
         self.session = session
@@ -351,11 +356,11 @@ class OfficialVideoVOD(OfficialVideoModel):
 
     def __repr__(self):
         return "<VLIVE OfficialVideo-VOD [%s]>" % self.target_id
-    
+
     @property
     def has_preview(self) -> bool:
         return self._data_cache['previewYn']
-    
+
     @property
     def has_moment(self) -> bool:
         return self._data_cache['hasMoment']
@@ -367,15 +372,15 @@ class OfficialVideoVOD(OfficialVideoModel):
     @property
     def play_time(self) -> str:
         return self._data_cache['playTime']
-    
+
     @property
     def encoding_status(self) -> str:
         return self._data_cache['encodingStatus']
-    
+
     @property
     def vod_secure_status(self) -> str:
         return self._data_cache['vodSecureStatus']
-    
+
     @property
     def dimension_type(self) -> str:
         return self._data_cache['dimensionType']
@@ -446,11 +451,11 @@ class PostBase(DataModel):
     @property
     def channel_code(self) -> str:
         return self._data_cache['channelCode']
-    
+
     @property
     def comment_count(self) -> int:
         return self._data_cache['commentCount']
-    
+
     @property
     def content_type(self) -> str:
         return self._data_cache['contentType']
@@ -458,15 +463,15 @@ class PostBase(DataModel):
     @property
     def emotion_count(self) -> int:
         return self._data_cache['emotionCount']
-    
+
     @property
     def is_comment_enabled(self) -> bool:
         return self._data_cache['isCommentEnabled']
-    
+
     @property
     def is_hidden_from_star(self) -> bool:
         return self._data_cache['isHiddenFromStar']
-    
+
     @property
     def is_viewer_bookmarked(self) -> bool:
         return self._data_cache['isViewerBookmarked']
@@ -783,19 +788,19 @@ class Channel(DataModel):
     @property
     def open_at(self) -> int:
         return self._data_cache['openAt'] // 1000
-    
+
     @property
     def show_upcoming(self) -> bool:
         return self._data_cache['showUpcoming']
-    
+
     @property
     def use_member_level(self) -> bool:
         return self._data_cache['useMemberLevel']
-    
+
     @property
     def member_count(self) -> int:
         return self._data_cache['memberCount']
-    
+
     @property
     def post_count(self) -> int:
         return self._data_cache['postCountOfStar']
