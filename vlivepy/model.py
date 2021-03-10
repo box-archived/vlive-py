@@ -82,7 +82,13 @@ class DataModel(object):
 
     __slots__ = ['_data_cache', '_target_id', 'session', '_method']
 
-    def __init__(self, method: Callable, target_id: str, session: Session = None, init_data: dict = None):
+    def __init__(
+            self,
+            method: Callable,
+            target_id: str,
+            session: Session = None,
+            init_data: dict = None
+    ):
         self._method = method
         self._target_id = target_id
         self.session = session
@@ -124,8 +130,23 @@ class DataModel(object):
 
 
 class Comment(DataModel):
+    """This is the object represents a comment of VLIVE's post
 
-    def __init__(self, commentId, session=None, init_data=None):
+    Arguments:
+        commentId (:class:`str`) : Unique id of comment to load.
+        session (:class:`requests.Session`, optional) : Session for loading data with permission, defaults to None.
+        init_data (:class:`dict`, optional) : set initial data instead of loading data, defaults to None.
+
+    Attributes:
+        session (:class:`requests.Session`) : Optional. Session for loading data with permission.
+    """
+
+    def __init__(
+            self,
+            commentId: str,
+            session: Session = None,
+            init_data: dict = None
+    ):
         super().__init__(getCommentData, commentId, session=session, init_data=init_data)
 
     def __repr__(self):
@@ -133,6 +154,10 @@ class Comment(DataModel):
 
     @property
     def commentId(self) -> str:
+        """Unique id of comment
+
+        :rtype: :class:`str`
+        """
         return self._target_id
 
     @property

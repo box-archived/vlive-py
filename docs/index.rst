@@ -12,3 +12,6 @@ Getting started
 
     installation
     custom_variables
+
+.. autoclass:: vlivepy.Comment
+    :members:
