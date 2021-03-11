@@ -211,12 +211,12 @@ class Comment(DataModel):
     def getNestedCommentsIter(self) -> Generator[Comment]:
         return getNestedCommentsIter(self.commentId, session=self.session)
 
-    def parent_info_tuple(self):
+    def parent_info_tuple(self) -> tuple:
         tp = self.parent['type']
         key = "%sId" % tp.lower()
         return self.parent['type'], self.parent['data'][key]
 
-    def root_info_tuple(self):
+    def root_info_tuple(self) -> tuple:
         tp = self.root['type']
         key = "%sId" % tp.lower()
         return tp, self.root['data'][key]
