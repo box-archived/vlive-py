@@ -154,7 +154,7 @@ class Comment(DataModel):
 
     @property
     def commentId(self) -> str:
-        """Unique id of comment
+        """Unique id of comment.
 
         :rtype: :class:`str`
         """
@@ -162,34 +162,66 @@ class Comment(DataModel):
 
     @property
     def author(self) -> dict:
+        """Author information as dict.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache['author'])
 
     @property
     def author_nickname(self) -> str:
+        """Author nickname.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['author']['nickname']
 
     @property
     def author_memberId(self) -> str:
+        """Unique id of author.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['author']['memberId']
 
     @property
     def body(self) -> str:
+        """Content of comment.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['body']
 
     @property
     def sticker(self) -> list:
+        """Sticker list of comment.
+
+        :rtype: :class:`list`
+        """
         return deepcopy(self._data_cache['sticker'])
 
     @property
     def created_at(self) -> float:
+        """Created time to Epoch timestamp. The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['createdAt'])
 
     @property
     def comment_count(self) -> int:
+        """Count of its nested comments.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['commentCount']
 
     @property
     def emotion_count(self) -> int:
+        """Count of received emotion.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['emotionCount']
 
     @property
@@ -198,25 +230,49 @@ class Comment(DataModel):
 
     @property
     def parent(self) -> dict:
+        """Detailed information about parent(upper) item.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache['parent'])
 
     @property
     def root(self) -> dict:
+        """Detailed information about root post.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache['root'])
 
     @property
     def written_in(self) -> str:
+        """User language setting of comment.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['writtenIn']
 
     def getNestedCommentsIter(self) -> Generator[Comment]:
+        """Get nested comments as iterable (generator).
+
+        :rtype: :class:`Generator[Comment]`
+        """
         return getNestedCommentsIter(self.commentId, session=self.session)
 
     def parent_info_tuple(self) -> tuple:
+        """Get parent info as tuple (Parent type, Its(parent) id)
+
+        :rtype: :class:`tuple`
+        """
         tp = self.parent['type']
         key = "%sId" % tp.lower()
         return self.parent['type'], self.parent['data'][key]
 
     def root_info_tuple(self) -> tuple:
+        """Get root info as tuple (Root type, Its(root) id)
+
+        :rtype: :class:`tuple`
+        """
         tp = self.root['type']
         key = "%sId" % tp.lower()
         return tp, self.root['data'][key]
