@@ -67,7 +67,7 @@ class DataModel(object):
     Each objects are considered equal, if their :obj:`type` and :obj:`target_id` is equal.
 
     Note:
-        This is bases object for other object without independent usage.
+        This is the base object for other object without independent usage.
 
     Arguments:
         method (:class:`typing.Callable`) : function for loading data.
@@ -202,7 +202,8 @@ class Comment(DataModel):
 
     @property
     def created_at(self) -> float:
-        """Created time to Epoch timestamp. The nanosecond units are displayed below the decimal point.
+        """Epoch timestamp about created time.
+        The nanosecond units are displayed below the decimal point.
 
         :rtype: :class:`float`
         """
@@ -279,26 +280,67 @@ class Comment(DataModel):
 
 
 class OfficialVideoModel(DataModel):
-    def __init__(self, videoSeq, session=None):
+    """This is the base object for :class:`OfficialVideoLive` and :class:`OfficialVideoVOD`
+    This contains common property of Live and VOD object.
+
+    Note:
+        This is the base object for other object without independent usage.
+
+    Arguments:
+        videoSeq (:class:`Union[str, int]`) : Unique id(seq) of video.
+        session (:class:`requests.Session`, optional) : Session for loading data with permission, defaults to None.
+
+    Attributes:
+        session (:class:`requests.Session`) : Optional. Session for loading data with permission.
+
+    """
+    def __init__(
+            self,
+            videoSeq: Union[str, int],
+            session=None
+    ):
         super().__init__(getOfficialVideoData, videoSeq, session=session)
 
     @property
     def video_seq(self) -> int:
+        """Unique id(seq) of video.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['videoSeq']
 
     @property
     def video_type(self) -> str:
+        """Type of video.
+
+        Returns:
+            "LIVE" if the video is upcoming/on air live. "VOD" if the video is VOD.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['type']
 
     @property
     def title(self) -> str:
+        """Title of video.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['title']
 
     @property
     def multinational_titles(self) -> List[dict]:
+        """Title translations.
+
+        :rtype: :class:`List[dict]`
+        """
         return deepcopy(self._data_cache['multinationalTitles'])
 
     def multinational_title_locales(self) -> list:
+        """Get locales from multinational title.
+
+        :rtype: :class:`list`
+        """
         locale_list = []
         for item in self._data_cache['multinationalTitles']:
             locale_list.append(item['locale'])
@@ -306,6 +348,13 @@ class OfficialVideoModel(DataModel):
         return locale_list
 
     def multinational_title_get(self, locale) -> dict:
+        """Get multinational title info by locale.
+
+        Arguments:
+            locale (:class:`str`) : locale to load.
+
+        :rtype: :class:`dict`
+        """
         for item in self._data_cache['multinationalTitles']:
             if item['locale'] == locale:
                 return item.copy()
@@ -314,50 +363,105 @@ class OfficialVideoModel(DataModel):
 
     @property
     def play_count(self) -> int:
+        """Count of video play time.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['playCount']
 
     @property
     def like_count(self) -> int:
+        """Count of like received in video.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['likeCount']
 
     @property
     def comment_count(self) -> int:
+        """Count of comment in video.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['commentCount']
 
     @property
     def thumb(self) -> str:
+        """Url of thumbnail.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['thumb']
 
     @property
     def expose_status(self) -> str:
+        """Exposed-on-website status of video.
+
+        :rtype: bool
+        """
         return self._data_cache['exposeStatus']
 
     @property
     def screen_orientation(self) -> str:
+        """Orientation of video.
+
+        Returns:
+            "VERTICAL" if the video orientation is vertical. "HORIZONTAL" if the video orientation is horizontal.
+
+        :rtype: str
+        """
         return self._data_cache['screenOrientation']
 
     @property
     def will_start_at(self) -> float:
+        """Epoch timestamp about Unknown.
+        The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['willStartAt'])
 
     @property
     def on_air_start_at(self) -> float:
+        """Epoch timestamp about reserved/started on air time.
+        The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['onAirStartAt'])
 
     @property
     def will_end_at(self) -> float:
+        """Epoch timestamp about reserved end time.
+        The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['willEndAt'])
 
     @property
     def created_at(self) -> float:
+        """Epoch timestamp about Unknown.
+        The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['createdAt'])
 
     @property
     def has_live_thumb(self) -> bool:
+        """Boolean value for having live thumbnail or not.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['liveThumbYn']
 
     @property
     def has_upcoming(self) -> bool:
+        """Boolean value for having
+
+        :rtype: :class:`bool
+        """
         return self._data_cache['upcomingYn']
 
     @property
