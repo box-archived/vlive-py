@@ -460,7 +460,7 @@ class OfficialVideoModel(DataModel):
     def has_upcoming(self) -> bool:
         """Boolean value for having upcoming.
 
-        :rtype: :class:`bool
+        :rtype: :class:`bool`
         """
         return self._data_cache['upcomingYn']
 
