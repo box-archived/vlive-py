@@ -458,7 +458,7 @@ class OfficialVideoModel(DataModel):
 
     @property
     def has_upcoming(self) -> bool:
-        """Boolean value for having
+        """Boolean value for having upcoming.
 
         :rtype: :class:`bool
         """
@@ -466,26 +466,53 @@ class OfficialVideoModel(DataModel):
 
     @property
     def has_notice(self) -> bool:
+        """Boolean value for having notice.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['noticeYn']
 
     @property
     def product_type(self) -> str:
+        """Product type about VLIVE+
+
+        Returns:
+            "NONE" if the video is normal video. "VLIVE_PLUS" if the video is VLIVE+.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['productType']
 
     @property
     def has_pre_ad(self) -> bool:
+        """Boolean value for having pre advertise.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['preAdYn']
 
     @property
     def has_post_ad(self) -> bool:
+        """Boolean value for having post advertise.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['postAdYn']
 
     @property
     def has_mobile_da(self) -> bool:
+        """Boolean value for Unknown.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['mobileDAYn']
 
     @property
     def vr_content_type(self) -> str:
+        """String value for vr content type.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['vrContentType']
 
 
