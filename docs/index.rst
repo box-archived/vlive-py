@@ -12,6 +12,3 @@ Getting started
 
     installation
     custom_variables
-
-.. autoclass:: vlivepy.model.OfficialVideoModel
-    :members:
