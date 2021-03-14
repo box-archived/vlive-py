@@ -652,7 +652,7 @@ class OfficialVideoVOD(OfficialVideoModel):
         """Get recommended video list
 
         Arguments:
-            as_object (:class:`bool`, optional) : Init each item to :class:`OfficialVideoPost`, defaults to False
+            as_object (:class:`bool`, optional) : Init each item to :class:`OfficialVideoPost`, defaults to False.
 
         :rtype: :class:`list`
         """
@@ -672,7 +672,7 @@ class OfficialVideoVOD(OfficialVideoModel):
         """Get InKey data of video
 
         Arguments:
-            silent (:class:`bool`, optional) : Return None instead of raising exception.
+            silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
 
         :rtype: :class:`dict`
         """
@@ -685,7 +685,7 @@ class OfficialVideoVOD(OfficialVideoModel):
         """Get VOD play info of video
 
         Arguments:
-            silent (:class:`bool`, optional) : Return None instead of raising exception.
+            silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
 
         :rtype: :class:`dict`
         """
