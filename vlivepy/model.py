@@ -692,7 +692,7 @@ class OfficialVideoVOD(OfficialVideoModel):
         return getVodPlayInfo(self.video_seq, self.vod_id, session=self.session, silent=silent)
 
 
-class PostBase(DataModel):
+class PostModel(DataModel):
     def __init__(self, post_id, session=None):
         super().__init__(getPostInfo, post_id, session=session)
 
@@ -781,7 +781,7 @@ class PostBase(DataModel):
         return getPostStarCommentsIter(self.post_id, session=self.session)
 
 
-class Post(PostBase):
+class Post(PostModel):
     def __init__(self, post_id, session=None):
         super().__init__(post_id, session)
 
@@ -855,7 +855,7 @@ class Post(PostBase):
         return doc_template
 
 
-class OfficialVideoPost(PostBase):
+class OfficialVideoPost(PostModel):
     def __init__(self, init_id, session=None):
         # interpret number
         if type(init_id) == int:
