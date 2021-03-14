@@ -561,8 +561,22 @@ class OfficialVideoLive(OfficialVideoModel):
 
 
 class OfficialVideoVOD(OfficialVideoModel):
-    def __init__(self, videoSeq, session=None):
-        super().__init__(videoSeq, session=session)
+    """This is the object represents a VOD-type-OfficialVideo of VLIVE
+
+        Arguments:
+            videoSeq (:class:`str`) : Unique id of VOD to load.
+            session (:class:`requests.Session`, optional) : Session for loading data with permission, defaults to None.
+
+        Attributes:
+            session (:class:`requests.Session`) : Optional. Session for loading data with permission.
+        """
+
+    def __init__(
+            self,
+            videoSeq: Union[str, int],
+            session=None
+    ):
+        super().__init__(str(videoSeq), session=session)
         if self.video_type != "VOD":
             raise ValueError("OfficialVideo [%s] is not VOD." % videoSeq)
 
@@ -571,33 +585,77 @@ class OfficialVideoVOD(OfficialVideoModel):
 
     @property
     def has_preview(self) -> bool:
+        """Boolean value for having 30s preview video
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['previewYn']
 
     @property
     def has_moment(self) -> bool:
+        """Boolean value for having user-created-moments
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['hasMoment']
 
     @property
     def vod_id(self) -> str:
+        """Unique id of VOD that paired with videoSeq
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['vodId']
 
     @property
-    def play_time(self) -> str:
+    def play_time(self) -> int:
+        """Count of video play
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['playTime']
 
     @property
     def encoding_status(self) -> str:
+        """VOD encoding status
+
+        Returns:
+            "CONVERTING" if the video encoding is in progress. "COMPLETE" if the video encoding is done.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['encodingStatus']
 
     @property
     def vod_secure_status(self) -> str:
+        """Status of DRM protection
+
+        Returns:
+            "READY" if the DRM is ready but not applied to video. "COMPLETE" if the DRM is applied to video.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['vodSecureStatus']
 
     @property
     def dimension_type(self) -> str:
+        """Unknown value. Server commonly respond "NORMAL"
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['dimensionType']
 
-    def recommended_videos(self, as_object=True) -> list:
+    def recommended_videos(
+            self,
+            as_object: bool = False
+    ) -> list:
+        """Get recommended video list
+
+        Arguments:
+            as_object (:class:`bool`, optional) : Init each item to :class:`OfficialVideoPost`, defaults to False
+
+        :rtype: :class:`list`
+        """
         if as_object:
             video_list = []
             for item in self._data_cache['recommendedVideos']:
@@ -607,10 +665,30 @@ class OfficialVideoVOD(OfficialVideoModel):
         else:
             return deepcopy(self._data_cache['recommendedVideos'])
 
-    def getInkeyData(self, silent=False):
+    def getInkeyData(
+            self,
+            silent: bool = False
+    ) -> dict:
+        """Get InKey data of video
+
+        Arguments:
+            silent (:class:`bool`, optional) : Return None instead of raising exception.
+
+        :rtype: :class:`dict`
+        """
         return getInkeyData(self.video_seq, session=self.session, silent=silent)
 
-    def getVodPlayInfo(self, silent=False):
+    def getVodPlayInfo(
+            self,
+            silent: bool = False
+    ) -> dict:
+        """Get VOD play info of video
+
+        Arguments:
+            silent (:class:`bool`, optional) : Return None instead of raising exception.
+
+        :rtype: :class:`dict`
+        """
         return getVodPlayInfo(self.video_seq, self.vod_id, session=self.session, silent=silent)
 
 
