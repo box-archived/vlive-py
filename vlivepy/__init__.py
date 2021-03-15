@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from .connections import (
-    getUserSession,
     postIdToVideoSeq,
+    videoSeqToPostId,
     postTypeDetector,
     decode_channel_code,
 )
@@ -17,6 +17,7 @@ from .model import (
     Post,
     Schedule,
     Upcoming,
+    UserSession,
     OfficialVideoLive,
     OfficialVideoVOD,
 )
