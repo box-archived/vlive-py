@@ -18,7 +18,7 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
     """
 
     sr = reqWrapper.get(**gv.endpoint_official_video_post(videoSeq),
-                        session=session, wait=0.5, status=[200, 403])
+                        session=session.session, wait=0.5, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
@@ -46,7 +46,7 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
 
     # Make request
     sr = reqWrapper.get(**gv.endpoint_live_play_info(videoSeq, vpdid2),
-                        session=session, status=[200, 403])
+                        session=session.session, status=[200, 403])
 
     if sr.success:
         json_response = sr.response.json()
@@ -112,7 +112,7 @@ def getInkeyData(videoSeq, session=None, silent=False):
 
     # Make request
     sr = reqWrapper.get(**gv.endpoint_vod_inkey(videoSeq),
-                        wait=0.5, session=session, status=[200])
+                        wait=0.5, session=session.session, status=[200])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
@@ -127,7 +127,7 @@ def getVpdid2(session, silent=False):
     request to video "142851"
 
     :param session: use specific session
-    :type session: reqWrapper.requests.Session
+    :type session: vlivepy.UserSession
     :param silent: Return `None` instead of Exception
     :return: vpdid2 data
     :rtype: str
@@ -158,7 +158,7 @@ def getVodPlayInfo(videoSeq, vodId=None, session=None, silent=False):
 
     # make request
     sr = reqWrapper.get(**gv.endpoint_vod_play_info(vodId, inkey),
-                        session=session, wait=0.3, status=[200, 403])
+                        session=session.session, wait=0.3, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)

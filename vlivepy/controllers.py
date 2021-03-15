@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import pickle
-from reqWrapper import Session
 from .parser import sessionUserCheck
 
 
@@ -9,12 +8,12 @@ def dumpSession(session, fp):
     r""" Dump `UserSession`
 
     :param session: valid User Session to dump
-    :type session: Session
+    :type session: vlivepy.UserSession
     :param fp: file to dump
     :return: Nothing
     """
-    if sessionUserCheck(session):
-        pickle.dump(session.cookies, fp)
+    if sessionUserCheck(session.session):
+        pickle.dump(session, fp)
     else:
         raise ValueError("Can't find user data from session")
 
@@ -24,9 +23,9 @@ def loadSession(fp):
 
     :param fp: file to load
     :return: Loaded Session
-    :rtype: Session
+    :rtype: vlivepy.UserSession
     """
-    session = Session()
-    session.cookies = pickle.load(fp)
+
+    session = pickle.load(fp)
 
     return session

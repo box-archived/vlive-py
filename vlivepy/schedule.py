@@ -17,7 +17,7 @@ def getScheduleData(schedule_id, session, silent=False):
     """
 
     sr = reqWrapper.get(**gv.endpoint_schedule_data(schedule_id),
-                        wait=0.5, session=session, status=[200, 403])
+                        wait=0.5, session=session.session, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
