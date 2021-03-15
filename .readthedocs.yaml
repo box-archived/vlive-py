@@ -12,3 +12,12 @@ sphinx:
 # Optionally build your docs in additional formats such as PDF
 formats:
    - pdf
+
+# Build environment
+python:
+   version: 3.8
+   install:
+      - method: pip
+        path: .
+      - requirements: docs/requirements.txt
+      - requirements: requirements.txt
