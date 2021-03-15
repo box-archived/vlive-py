@@ -5,6 +5,7 @@ from __future__ import annotations
 from copy import deepcopy
 from time import time
 from typing import (
+    Callable,
     Generator,
     List,
     Union,
@@ -15,6 +16,7 @@ from bs4 import (
     BeautifulSoup,
     element,
 )
+from requests import Session
 
 from .channel import (
     getChannelInfo,
@@ -58,9 +60,35 @@ from .video import (
 
 
 class DataModel(object):
+    """This is the base object for other class objects.
+    It sends request with method from each modules and caching response.
+
+    DataModels and its child objects are able to compare equality.
+    Each objects are considered equal, if their :obj:`type` and :obj:`target_id` is equal.
+
+    Note:
+        This is the base object for other object without independent usage.
+
+    Arguments:
+        method (:class:`typing.Callable`) : function for loading data.
+        target_id (:class:`str`) : argument for `method`.
+        session (:class:`requests.Session`, optional) : session for `method`, defaults to None.
+        init_data (:class:`dict`, optional) : set initial data instead of loading data, defaults to None.
+
+    Attributes:
+        session (:class:`requests.Session`) : session for method
+
+    """
+
     __slots__ = ['_data_cache', '_target_id', 'session', '_method']
 
-    def __init__(self, method, target_id, session=None, init_data=None):
+    def __init__(
+            self,
+            method: Callable,
+            target_id: str,
+            session: Session = None,
+            init_data: dict = None
+    ):
         self._method = method
         self._target_id = target_id
         self.session = session
@@ -76,7 +104,8 @@ class DataModel(object):
                 return True
         return False
 
-    def refresh(self):
+    def refresh(self) -> None:
+        """Reload self data."""
         res = self._method(self._target_id, session=self.session, silent=True)
         if res:
             self._data_cache = res
@@ -85,16 +114,39 @@ class DataModel(object):
 
     @property
     def raw(self) -> dict:
+        """Get full data as deep-copied dict.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache)
 
     @property
-    def target_id(self) -> str:
+    def target_id(self):
+        """Get internal target id.
+
+        :rtype: :class:`str`
+        """
         return str(self._target_id)
 
 
 class Comment(DataModel):
+    """This is the object represents a comment of VLIVE's post
 
-    def __init__(self, commentId, session=None, init_data=None):
+    Arguments:
+        commentId (:class:`str`) : Unique id of comment to load.
+        session (:class:`requests.Session`, optional) : Session for loading data with permission, defaults to None.
+        init_data (:class:`dict`, optional) : set initial data instead of loading data, defaults to None.
+
+    Attributes:
+        session (:class:`requests.Session`) : Optional. Session for loading data with permission.
+    """
+
+    def __init__(
+            self,
+            commentId: str,
+            session: Session = None,
+            init_data: dict = None
+    ):
         super().__init__(getCommentData, commentId, session=session, init_data=init_data)
 
     def __repr__(self):
@@ -102,38 +154,75 @@ class Comment(DataModel):
 
     @property
     def commentId(self) -> str:
+        """Unique id of comment.
+
+        :rtype: :class:`str`
+        """
         return self._target_id
 
     @property
     def author(self) -> dict:
+        """Author information as dict.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache['author'])
 
     @property
     def author_nickname(self) -> str:
+        """Author nickname.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['author']['nickname']
 
     @property
     def author_memberId(self) -> str:
+        """Unique id of author.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['author']['memberId']
 
     @property
     def body(self) -> str:
+        """Content of comment.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['body']
 
     @property
     def sticker(self) -> list:
+        """Sticker list of comment.
+
+        :rtype: :class:`list`
+        """
         return deepcopy(self._data_cache['sticker'])
 
     @property
     def created_at(self) -> float:
+        """Epoch timestamp about created time.
+        The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['createdAt'])
 
     @property
     def comment_count(self) -> int:
+        """Count of its nested comments.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['commentCount']
 
     @property
     def emotion_count(self) -> int:
+        """Count of received emotion.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['emotionCount']
 
     @property
@@ -142,51 +231,116 @@ class Comment(DataModel):
 
     @property
     def parent(self) -> dict:
+        """Detailed information about parent(upper) item.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache['parent'])
 
     @property
     def root(self) -> dict:
+        """Detailed information about root post.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache['root'])
 
     @property
     def written_in(self) -> str:
+        """User language setting of comment.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['writtenIn']
 
     def getNestedCommentsIter(self) -> Generator[Comment]:
+        """Get nested comments as iterable (generator).
+
+        :rtype: :class:`Generator[Comment]`
+        """
         return getNestedCommentsIter(self.commentId, session=self.session)
 
-    def parent_info_tuple(self):
+    def parent_info_tuple(self) -> tuple:
+        """Get parent info as tuple (Parent type, Its(parent) id)
+
+        :rtype: :class:`tuple`
+        """
         tp = self.parent['type']
         key = "%sId" % tp.lower()
         return self.parent['type'], self.parent['data'][key]
 
-    def root_info_tuple(self):
+    def root_info_tuple(self) -> tuple:
+        """Get root info as tuple (Root type, Its(root) id)
+
+        :rtype: :class:`tuple`
+        """
         tp = self.root['type']
         key = "%sId" % tp.lower()
         return tp, self.root['data'][key]
 
 
 class OfficialVideoModel(DataModel):
-    def __init__(self, videoSeq, session=None):
+    """This is the base object for :class:`OfficialVideoLive` and :class:`OfficialVideoVOD`
+    This contains common property of Live and VOD object.
+
+    Note:
+        This is the base object for other object without independent usage.
+
+    Arguments:
+        videoSeq (:class:`Union[str, int]`) : Unique id(seq) of video.
+        session (:class:`requests.Session`, optional) : Session for loading data with permission, defaults to None.
+
+    Attributes:
+        session (:class:`requests.Session`) : Optional. Session for loading data with permission.
+
+    """
+    def __init__(
+            self,
+            videoSeq: Union[str, int],
+            session=None
+    ):
         super().__init__(getOfficialVideoData, videoSeq, session=session)
 
     @property
     def video_seq(self) -> int:
+        """Unique id(seq) of video.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['videoSeq']
 
     @property
     def video_type(self) -> str:
+        """Type of video.
+
+        Returns:
+            "LIVE" if the video is upcoming/on air live. "VOD" if the video is VOD.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['type']
 
     @property
     def title(self) -> str:
+        """Title of video.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['title']
 
     @property
     def multinational_titles(self) -> List[dict]:
+        """Title translations.
+
+        :rtype: :class:`List[dict]`
+        """
         return deepcopy(self._data_cache['multinationalTitles'])
 
     def multinational_title_locales(self) -> list:
+        """Get locales from multinational title.
+
+        :rtype: :class:`list`
+        """
         locale_list = []
         for item in self._data_cache['multinationalTitles']:
             locale_list.append(item['locale'])
@@ -194,6 +348,13 @@ class OfficialVideoModel(DataModel):
         return locale_list
 
     def multinational_title_get(self, locale) -> dict:
+        """Get multinational title info by locale.
+
+        Arguments:
+            locale (:class:`str`) : locale to load.
+
+        :rtype: :class:`dict`
+        """
         for item in self._data_cache['multinationalTitles']:
             if item['locale'] == locale:
                 return item.copy()
@@ -202,74 +363,156 @@ class OfficialVideoModel(DataModel):
 
     @property
     def play_count(self) -> int:
+        """Count of video play time.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['playCount']
 
     @property
     def like_count(self) -> int:
+        """Count of like received in video.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['likeCount']
 
     @property
     def comment_count(self) -> int:
+        """Count of comment in video.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['commentCount']
 
     @property
     def thumb(self) -> str:
+        """Url of thumbnail.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['thumb']
 
     @property
     def expose_status(self) -> str:
+        """Exposed-on-website status of video.
+
+        :rtype: bool
+        """
         return self._data_cache['exposeStatus']
 
     @property
     def screen_orientation(self) -> str:
+        """Orientation of video.
+
+        Returns:
+            "VERTICAL" if the video orientation is vertical. "HORIZONTAL" if the video orientation is horizontal.
+
+        :rtype: str
+        """
         return self._data_cache['screenOrientation']
 
     @property
     def will_start_at(self) -> float:
+        """Epoch timestamp about Unknown.
+        The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['willStartAt'])
 
     @property
     def on_air_start_at(self) -> float:
+        """Epoch timestamp about reserved/started on air time.
+        The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['onAirStartAt'])
 
     @property
     def will_end_at(self) -> float:
+        """Epoch timestamp about reserved end time.
+        The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['willEndAt'])
 
     @property
     def created_at(self) -> float:
+        """Epoch timestamp about Unknown.
+        The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['createdAt'])
 
     @property
     def has_live_thumb(self) -> bool:
+        """Boolean value for having live thumbnail or not.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['liveThumbYn']
 
     @property
     def has_upcoming(self) -> bool:
+        """Boolean value for having upcoming.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['upcomingYn']
 
     @property
     def has_notice(self) -> bool:
+        """Boolean value for having notice.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['noticeYn']
 
     @property
     def product_type(self) -> str:
+        """Product type about VLIVE+
+
+        Returns:
+            "NONE" if the video is normal video. "VLIVE_PLUS" if the video is VLIVE+.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['productType']
 
     @property
     def has_pre_ad(self) -> bool:
+        """Boolean value for having pre advertise.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['preAdYn']
 
     @property
     def has_post_ad(self) -> bool:
+        """Boolean value for having post advertise.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['postAdYn']
 
     @property
     def has_mobile_da(self) -> bool:
+        """Boolean value for Unknown.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['mobileDAYn']
 
     @property
     def vr_content_type(self) -> str:
+        """String value for vr content type.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['vrContentType']
 
 
@@ -318,43 +561,101 @@ class OfficialVideoLive(OfficialVideoModel):
 
 
 class OfficialVideoVOD(OfficialVideoModel):
-    def __init__(self, videoSeq, session=None):
-        super().__init__(videoSeq, session=session)
+    """This is the object represents a VOD-type-OfficialVideo of VLIVE
+
+        Arguments:
+            videoSeq (:class:`str`) : Unique id of VOD to load.
+            session (:class:`requests.Session`, optional) : Session for loading data with permission, defaults to None.
+
+        Attributes:
+            session (:class:`requests.Session`) : Optional. Session for loading data with permission.
+        """
+
+    def __init__(
+            self,
+            videoSeq: Union[str, int],
+            session=None
+    ):
+        super().__init__(str(videoSeq), session=session)
         if self.video_type != "VOD":
             raise ValueError("OfficialVideo [%s] is not VOD." % videoSeq)
 
     def __repr__(self):
         return "<VLIVE OfficialVideo-VOD [%s]>" % self.target_id
-    
+
     @property
     def has_preview(self) -> bool:
+        """Boolean value for having 30s preview video
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['previewYn']
-    
+
     @property
     def has_moment(self) -> bool:
+        """Boolean value for having user-created-moments
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['hasMoment']
 
     @property
     def vod_id(self) -> str:
+        """Unique id of VOD that paired with videoSeq
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['vodId']
 
     @property
-    def play_time(self) -> str:
+    def play_time(self) -> int:
+        """Count of video play
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['playTime']
-    
+
     @property
     def encoding_status(self) -> str:
+        """VOD encoding status
+
+        Returns:
+            "CONVERTING" if the video encoding is in progress. "COMPLETE" if the video encoding is done.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['encodingStatus']
-    
+
     @property
     def vod_secure_status(self) -> str:
+        """Status of DRM protection
+
+        Returns:
+            "READY" if the DRM is ready but not applied to video. "COMPLETE" if the DRM is applied to video.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['vodSecureStatus']
-    
+
     @property
     def dimension_type(self) -> str:
+        """Unknown value. Server commonly respond "NORMAL"
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['dimensionType']
 
-    def recommended_videos(self, as_object=True) -> list:
+    def recommended_videos(
+            self,
+            as_object: bool = False
+    ) -> list:
+        """Get recommended video list
+
+        Arguments:
+            as_object (:class:`bool`, optional) : Init each item to :class:`OfficialVideoPost`, defaults to False.
+
+        :rtype: :class:`list`
+        """
         if as_object:
             video_list = []
             for item in self._data_cache['recommendedVideos']:
@@ -364,14 +665,34 @@ class OfficialVideoVOD(OfficialVideoModel):
         else:
             return deepcopy(self._data_cache['recommendedVideos'])
 
-    def getInkeyData(self, silent=False):
+    def getInkeyData(
+            self,
+            silent: bool = False
+    ) -> dict:
+        """Get InKey data of video
+
+        Arguments:
+            silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+        :rtype: :class:`dict`
+        """
         return getInkeyData(self.video_seq, session=self.session, silent=silent)
 
-    def getVodPlayInfo(self, silent=False):
+    def getVodPlayInfo(
+            self,
+            silent: bool = False
+    ) -> dict:
+        """Get VOD play info of video
+
+        Arguments:
+            silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+        :rtype: :class:`dict`
+        """
         return getVodPlayInfo(self.video_seq, self.vod_id, session=self.session, silent=silent)
 
 
-class PostBase(DataModel):
+class PostModel(DataModel):
     def __init__(self, post_id, session=None):
         super().__init__(getPostInfo, post_id, session=session)
 
@@ -420,11 +741,11 @@ class PostBase(DataModel):
     @property
     def channel_code(self) -> str:
         return self._data_cache['channelCode']
-    
+
     @property
     def comment_count(self) -> int:
         return self._data_cache['commentCount']
-    
+
     @property
     def content_type(self) -> str:
         return self._data_cache['contentType']
@@ -432,15 +753,15 @@ class PostBase(DataModel):
     @property
     def emotion_count(self) -> int:
         return self._data_cache['emotionCount']
-    
+
     @property
     def is_comment_enabled(self) -> bool:
         return self._data_cache['isCommentEnabled']
-    
+
     @property
     def is_hidden_from_star(self) -> bool:
         return self._data_cache['isHiddenFromStar']
-    
+
     @property
     def is_viewer_bookmarked(self) -> bool:
         return self._data_cache['isViewerBookmarked']
@@ -460,7 +781,7 @@ class PostBase(DataModel):
         return getPostStarCommentsIter(self.post_id, session=self.session)
 
 
-class Post(PostBase):
+class Post(PostModel):
     def __init__(self, post_id, session=None):
         super().__init__(post_id, session)
 
@@ -534,7 +855,7 @@ class Post(PostBase):
         return doc_template
 
 
-class OfficialVideoPost(PostBase):
+class OfficialVideoPost(PostModel):
     def __init__(self, init_id, session=None):
         # interpret number
         if type(init_id) == int:
@@ -757,19 +1078,19 @@ class Channel(DataModel):
     @property
     def open_at(self) -> int:
         return self._data_cache['openAt'] // 1000
-    
+
     @property
     def show_upcoming(self) -> bool:
         return self._data_cache['showUpcoming']
-    
+
     @property
     def use_member_level(self) -> bool:
         return self._data_cache['useMemberLevel']
-    
+
     @property
     def member_count(self) -> int:
         return self._data_cache['memberCount']
-    
+
     @property
     def post_count(self) -> int:
         return self._data_cache['postCountOfStar']
