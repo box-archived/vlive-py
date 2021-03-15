@@ -70,24 +70,23 @@ class UserSession(object):
         email (:class:`str`) : Sign-in email
         pwd (:class:`str`) : Sign-in password
 
-    Attributes:
-        email (:class:`str`) : Sign-in email
-        pwd (:class:`str`) : Sign-in password
-
     """
-    __slots__ = ["email", "pwd", "_session"]
+    __slots__ = ["__email", "__pwd", "__session"]
 
     def __init__(self, email, pwd):
-        self.email = email
-        self.pwd = pwd
-        self._session = None
-        self._session: Session
+        self.__email = email
+        self.__pwd = pwd
+        self.__session = None
+        self.__session: Session
 
         self.refresh()
 
+    def __repr__(self):
+        return "<VLIVE UserSession [%s]>" % self.__email
+
     def refresh(self) -> None:
         """Reload login data"""
-        self._session = getUserSession(email=self.email, pwd=self.pwd)
+        self.__session = getUserSession(email=self.__email, pwd=self.__pwd)
 
     @property
     def session(self) -> Session:
@@ -95,7 +94,7 @@ class UserSession(object):
 
         :rtype: :class:`requests.Session`
         """
-        return self._session
+        return self.__session
 
 
 class DataModel(object):
@@ -111,11 +110,11 @@ class DataModel(object):
     Arguments:
         method (:class:`typing.Callable`) : function for loading data.
         target_id (:class:`str`) : argument for `method`.
-        session (:class:`requests.Session`, optional) : session for `method`, defaults to None.
+        session (:class:`UserSession`, optional) : session for `method`, defaults to None.
         init_data (:class:`dict`, optional) : set initial data instead of loading data, defaults to None.
 
     Attributes:
-        session (:class:`requests.Session`) : session for method
+        session (:class:`UserSession`) : session for method
 
     """
 
@@ -125,7 +124,7 @@ class DataModel(object):
             self,
             method: Callable,
             target_id: str,
-            session: Session = None,
+            session: UserSession = None,
             init_data: dict = None
     ):
         self._method = method
@@ -173,17 +172,17 @@ class Comment(DataModel):
 
     Arguments:
         commentId (:class:`str`) : Unique id of comment to load.
-        session (:class:`requests.Session`, optional) : Session for loading data with permission, defaults to None.
+        session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
         init_data (:class:`dict`, optional) : set initial data instead of loading data, defaults to None.
 
     Attributes:
-        session (:class:`requests.Session`) : Optional. Session for loading data with permission.
+        session (:class:`UserSession`) : Optional. Session for loading data with permission.
     """
 
     def __init__(
             self,
             commentId: str,
-            session: Session = None,
+            session: UserSession = None,
             init_data: dict = None
     ):
         super().__init__(getCommentData, commentId, session=session, init_data=init_data)
@@ -327,16 +326,16 @@ class OfficialVideoModel(DataModel):
 
     Arguments:
         videoSeq (:class:`Union[str, int]`) : Unique id(seq) of video.
-        session (:class:`requests.Session`, optional) : Session for loading data with permission, defaults to None.
+        session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
 
     Attributes:
-        session (:class:`requests.Session`) : Optional. Session for loading data with permission.
+        session (:class:`UserSession`) : Optional. Session for loading data with permission.
 
     """
     def __init__(
             self,
             videoSeq: Union[str, int],
-            session=None
+            session: UserSession = None
     ):
         super().__init__(getOfficialVideoData, videoSeq, session=session)
 
@@ -604,16 +603,16 @@ class OfficialVideoVOD(OfficialVideoModel):
 
         Arguments:
             videoSeq (:class:`str`) : Unique id of VOD to load.
-            session (:class:`requests.Session`, optional) : Session for loading data with permission, defaults to None.
+            session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
 
         Attributes:
-            session (:class:`requests.Session`) : Optional. Session for loading data with permission.
+            session (:class:`UserSession`) : Optional. Session for loading data with permission.
         """
 
     def __init__(
             self,
             videoSeq: Union[str, int],
-            session=None
+            session: UserSession = None
     ):
         super().__init__(str(videoSeq), session=session)
         if self.video_type != "VOD":

@@ -48,7 +48,7 @@ def getBoardPosts(board, channel_code, session=None, after=None, latest=False, s
 
     # Make request
     sr = reqWrapper.get(**gv.endpoint_board_posts(board, channel_code, after=after, latest=latest),
-                        wait=0.5, session=session, status=[200, 403])
+                        wait=0.5, session=session.session, status=[200, 403])
 
     if sr.success:
         stripped_data = response_json_stripper(sr.response.json(), silent=silent)
