@@ -30,6 +30,7 @@ from .comment import (
 )
 from .connections import (
     getPostInfo,
+    getUserSession,
     videoSeqToPostId,
     decode_channel_code,
 )
@@ -57,6 +58,44 @@ from .video import (
     getOfficialVideoData,
     getVodPlayInfo
 )
+
+
+class UserSession(object):
+    """This is the object for using vlivepy with user permission.
+    You need to use UserSession when you load user-only content (e.g VLIVE+, Membership, etc..)
+
+    Email-account info(email, pwd) should be used as login info. This is not working with social login info.
+
+    Arguments:
+        email (:class:`str`) : Sign-in email
+        pwd (:class:`str`) : Sign-in password
+
+    Attributes:
+        email (:class:`str`) : Sign-in email
+        pwd (:class:`str`) : Sign-in password
+
+    """
+    __slots__ = ["email", "pwd", "_session"]
+
+    def __init__(self, email, pwd):
+        self.email = email
+        self.pwd = pwd
+        self._session = None
+        self._session: Session
+
+        self.refresh()
+
+    def refresh(self) -> None:
+        """Reload login data"""
+        self._session = getUserSession(email=self.email, pwd=self.pwd)
+
+    @property
+    def session(self) -> Session:
+        """Get logged-in Session
+
+        :rtype: :class:`requests.Session`
+        """
+        return self._session
 
 
 class DataModel(object):
