@@ -555,6 +555,16 @@ class OfficialVideoModel(DataModel):
 
 
 class OfficialVideoLive(OfficialVideoModel):
+    """This is the object represents a Live-type-OfficialVideo of VLIVE
+
+    Arguments:
+        videoSeq (:class:`str`) : Unique id of Live to load.
+        session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
+
+    Attributes:
+        session (:class:`UserSession`) : Optional. Session for loading data with permission.
+    """
+
     def __init__(self, videoSeq, session=None):
         super().__init__(videoSeq, session=session)
         if self.video_type != "LIVE":
@@ -565,49 +575,96 @@ class OfficialVideoLive(OfficialVideoModel):
 
     @property
     def has_filter_ad(self) -> bool:
+        """Boolean value for having filter ad
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['filterAdYn']
 
     @property
     def momentable(self) -> bool:
+        """Boolean value for what user can create moment of the video
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['momentable']
 
     @property
     def has_special_live(self) -> bool:
+        """Boolean value for having special live
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['specialLiveYn']
 
     @property
     def status(self) -> str:
+        """Status of the live
+
+        Returns:
+            "RESERVED" if the live is reserved to broadcast.
+            "ON_AIR" if the live is going.
+            "ENDED" if the live is ended.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['status']
 
     @property
     def hevc(self) -> bool:
+        """Boolean value for broadcasting with hevc codec.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['hevc']
 
     @property
     def low_latency(self) -> bool:
+        """Boolean value for broadcasting with low-latency option
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['lowLatency']
 
     @property
     def pp_type(self) -> str:
+        """Unknown boolean value
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['ppType']
 
     def getLivePlayInfo(self, silent=False):
+        """Get play info of live
+
+        Arguments:
+            silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+        :rtype: :class:`dict`
+        """
         return getLivePlayInfo(self.video_seq, session=self.session, silent=silent)
 
     def getLiveStatus(self, silent=False):
+        """Get detailed status of live.
+
+        Arguments:
+            silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+        :rtype: :class:`dict`
+        """
         return getLiveStatus(self.video_seq, silent=silent)
 
 
 class OfficialVideoVOD(OfficialVideoModel):
     """This is the object represents a VOD-type-OfficialVideo of VLIVE
 
-        Arguments:
-            videoSeq (:class:`str`) : Unique id of VOD to load.
-            session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
+    Arguments:
+        videoSeq (:class:`str`) : Unique id of VOD to load.
+        session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
 
-        Attributes:
-            session (:class:`UserSession`) : Optional. Session for loading data with permission.
-        """
+    Attributes:
+        session (:class:`UserSession`) : Optional. Session for loading data with permission.
+    """
 
     def __init__(
             self,
@@ -912,7 +969,7 @@ class OfficialVideoPost(PostModel):
         return self._data_cache['officialVideo']['type']
 
     @property
-    def video_seq(self) -> int:
+    def video_seq(self) -> str:
         return self._data_cache["officialVideo"]["videoSeq"]
 
     def official_video(self) -> Union[OfficialVideoVOD, OfficialVideoLive]:
