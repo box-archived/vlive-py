@@ -42,6 +42,7 @@ Objects
     model/officialvideovod
     model/schedule
     model/upcoming
+    model/usersession
 
 Functions
 ---------
