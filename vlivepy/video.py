@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import reqWrapper
 from . import variables as gv
 from .controllers import sessionUserCheck
 from .exception import auto_raise, APINetworkError, APIJSONParesError, APIServerResponseError
 from .parser import parseVodIdFromOffcialVideoPost, response_json_stripper
+from .router import rew_get
 
 
 def getOfficialVideoPost(videoSeq, session=None, silent=False):
@@ -17,8 +17,8 @@ def getOfficialVideoPost(videoSeq, session=None, silent=False):
     :rtype: dict
     """
 
-    sr = reqWrapper.get(**gv.endpoint_official_video_post(videoSeq),
-                        session=session.session, wait=0.5, status=[200, 403])
+    sr = rew_get(**gv.endpoint_official_video_post(videoSeq),
+                 session=session, wait=0.5, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
@@ -45,8 +45,8 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
             vpdid2 = getVpdid2(session, silent=silent)
 
     # Make request
-    sr = reqWrapper.get(**gv.endpoint_live_play_info(videoSeq, vpdid2),
-                        session=session.session, status=[200, 403])
+    sr = rew_get(**gv.endpoint_live_play_info(videoSeq, vpdid2),
+                 session=session, status=[200, 403])
 
     if sr.success:
         json_response = sr.response.json()
@@ -73,8 +73,8 @@ def getLiveStatus(videoSeq, silent=False):
     """
 
     # Make request
-    sr = reqWrapper.get(**gv.endpoint_live_status(videoSeq),
-                        wait=0.2, status=[200])
+    sr = rew_get(**gv.endpoint_live_status(videoSeq),
+                 wait=0.2, status=[200])
 
     if sr.success:
         json_response = sr.response.json()
@@ -111,8 +111,8 @@ def getInkeyData(videoSeq, session=None, silent=False):
     """
 
     # Make request
-    sr = reqWrapper.get(**gv.endpoint_vod_inkey(videoSeq),
-                        wait=0.5, session=session.session, status=[200])
+    sr = rew_get(**gv.endpoint_vod_inkey(videoSeq),
+                 wait=0.5, session=session, status=[200])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
@@ -157,8 +157,8 @@ def getVodPlayInfo(videoSeq, vodId=None, session=None, silent=False):
         vodId = getVodId(videoSeq)
 
     # make request
-    sr = reqWrapper.get(**gv.endpoint_vod_play_info(vodId, inkey),
-                        session=session.session, wait=0.3, status=[200, 403])
+    sr = rew_get(**gv.endpoint_vod_play_info(vodId, inkey),
+                 session=session, wait=0.3, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)

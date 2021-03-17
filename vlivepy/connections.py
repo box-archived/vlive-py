@@ -8,6 +8,7 @@ from .exception import (
 from .parser import (
     parseVideoSeqFromPostInfo, response_json_stripper,
 )
+from .router import rew_get
 
 
 def getPostInfo(post, session=None, silent=False):
@@ -20,8 +21,8 @@ def getPostInfo(post, session=None, silent=False):
     :rtype: dict
     """
 
-    sr = reqWrapper.get(**gv.endpoint_post(post),
-                        wait=0.5, session=session.session, status=[200, 403])
+    sr = rew_get(**gv.endpoint_post(post),
+                 wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
@@ -106,8 +107,8 @@ def postTypeDetector(post, silent=False):
 
 
 def decode_channel_code(channel_code, silent=False):
-    sr = reqWrapper.get(**gv.endpoint_decode_channel_code(channel_code),
-                        wait=0.5, status=[200])
+    sr = rew_get(**gv.endpoint_decode_channel_code(channel_code),
+                 wait=0.5, status=[200])
 
     if sr.success:
         if len(sr.response.text) > 0:

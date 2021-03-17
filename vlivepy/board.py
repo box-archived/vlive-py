@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from typing import Generator, Union
-import reqWrapper
 from . import variables as gv
 from .exception import APINetworkError, auto_raise
 from .model import OfficialVideoPost, Post
 from .parser import response_json_stripper, next_page_checker
+from .router import rew_get
 
 
 class BoardPostItem(object):
@@ -47,8 +47,8 @@ def post_list_parser(data, session):
 def getBoardPosts(board, channel_code, session=None, after=None, latest=False, silent=False):
 
     # Make request
-    sr = reqWrapper.get(**gv.endpoint_board_posts(board, channel_code, after=after, latest=latest),
-                        wait=0.5, session=session.session, status=[200, 403])
+    sr = rew_get(**gv.endpoint_board_posts(board, channel_code, after=after, latest=latest),
+                 wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
         stripped_data = response_json_stripper(sr.response.json(), silent=silent)

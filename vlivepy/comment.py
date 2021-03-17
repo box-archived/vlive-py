@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from typing import Generator
-import reqWrapper
 from . import variables as gv
 from .exception import APINetworkError, auto_raise
 from .parser import response_json_stripper, next_page_checker
+from .router import rew_get
 
 
 def comment_parser(comment_list: list, session=None):
@@ -28,8 +28,8 @@ def getPostComments(post, session=None, after=None, silent=False):
     """
 
     # Make request
-    sr = reqWrapper.get(**gv.endpoint_post_comments(post, after),
-                        wait=0.5, session=session.session, status=[200, 403])
+    sr = rew_get(**gv.endpoint_post_comments(post, after),
+                 wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
         stripped_data = response_json_stripper(sr.response.json(), silent=silent)
@@ -75,8 +75,8 @@ def getPostStarComments(post, session=None, after=None, silent=False):
     """
 
     # Make request
-    sr = reqWrapper.get(**gv.endpoint_post_star_comments(post, after),
-                        wait=0.5, session=session.session, status=[200, 403])
+    sr = rew_get(**gv.endpoint_post_star_comments(post, after),
+                 wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
         stripped_data = response_json_stripper(sr.response.json(), silent=silent)
@@ -121,8 +121,8 @@ def getCommentData(commentId, session=None, silent=False):
     """
 
     # Make request
-    sr = reqWrapper.get(**gv.endpoint_comment_data(commentId),
-                        wait=0.5, session=session.session, status=[200, 403])
+    sr = rew_get(**gv.endpoint_comment_data(commentId),
+                 wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
@@ -134,8 +134,8 @@ def getCommentData(commentId, session=None, silent=False):
 
 def getNestedComments(commentId, session=None, after=None, silent=False):
     # Make request
-    sr = reqWrapper.get(**gv.endpoint_comment_nested(commentId, after),
-                        wait=0.5, session=session.session, status=[200, 403])
+    sr = rew_get(**gv.endpoint_comment_nested(commentId, after),
+                 wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
         stripped_data = response_json_stripper(sr.response.json(), silent=silent)
