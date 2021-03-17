@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import reqWrapper
 from . import variables as gv
 from .exception import auto_raise, APINetworkError
 from .parser import response_json_stripper
+from .router import rew_get
 
 
 def getFVideoInkeyData(fvideo, session=None, silent=False):
@@ -17,8 +17,8 @@ def getFVideoInkeyData(fvideo, session=None, silent=False):
     """
 
     # Make request
-    sr = reqWrapper.get(**gv.endpoint_fvideo_inkey(fvideo),
-                        wait=0.5, session=session.session, status=[200])
+    sr = rew_get(**gv.endpoint_fvideo_inkey(fvideo),
+                 wait=0.5, session=session, status=[200])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)['inKey']
@@ -39,8 +39,8 @@ def getFVideoPlayInfo(videoSeqId, videoVodId, session=None, silent=False):
     """
 
     inkey = getFVideoInkeyData(fvideo=videoSeqId, session=session)
-    sr = reqWrapper.get(**gv.endpoint_vod_play_info(videoVodId, inkey),
-                        session=session.session, wait=0.3, status=[200, 403])
+    sr = rew_get(**gv.endpoint_vod_play_info(videoVodId, inkey),
+                 session=session, wait=0.3, status=[200, 403])
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
