@@ -99,7 +99,7 @@ def sessionUserCheck(session):
         return False
 
 
-def parseVodIdFromOffcialVideoPost(post, silent=False):
+def parseVodIdFromOfficialVideoPost(post, silent=False):
     r"""
 
     :param post: OfficialVideoPost data from api.getOfficialVideoPost
