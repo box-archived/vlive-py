@@ -4,8 +4,8 @@ This page describes **controllers** module which can be imported as :code:`vlive
 
 dumpSession()
 -------------
-This function has alias of :ref:`vlivepy.dumpSession() <functions_dumpSession>`
+This function has alias of :func:`vlivepy.dumpSession`
 
 loadSession()
 -------------
-This function has alias of :ref:`vlivepy.loadSession() <functions_loadSession>`
+This function has alias of :func:`vlivepy.loadSession`
