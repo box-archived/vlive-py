@@ -1112,7 +1112,7 @@ class OfficialVideoPost(PostModel):
 
     def __init__(
             self, 
-            init_id, 
+            init_id: Union[str, int],
             session: Optional[UserSession] = None
     ):
         # interpret number
