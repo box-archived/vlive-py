@@ -1107,7 +1107,8 @@ class OfficialVideoPost(PostModel):
     """This is the object represents a post of VLIVE
 
     Arguments:
-        init_id (:class:`Union[str, int]`) : Unique id of post to load. Also, the object can be initialized by video_seq.
+        init_id (:class:`Union[str, int]`) : Unique id of post to load.
+            Also, the object can be initialized by video_seq.
         session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
 
     Attributes:
