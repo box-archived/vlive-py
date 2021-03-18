@@ -1087,6 +1087,16 @@ class Post(PostModel):
 
 
 class OfficialVideoPost(PostModel):
+    """This is the object represents a post of VLIVE
+
+    Arguments:
+        init_id (:class:`Union[str, int]`) : Unique id of post to load. Also, the object can be initialized by video_seq.
+        session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
+
+    Attributes:
+        session (:class:`UserSession`) : Optional. Session for loading data with permission.
+    """
+
     def __init__(self, init_id, session=None):
         # interpret number
         if type(init_id) == int:
@@ -1102,13 +1112,29 @@ class OfficialVideoPost(PostModel):
 
     @property
     def official_video_type(self) -> str:
+        """Type of video.
+
+        Returns:
+            "LIVE" if the video is upcoming/on air live. "VOD" if the video is VOD.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['officialVideo']['type']
 
     @property
     def video_seq(self) -> str:
+        """Unique id of OfficialVideoPost. (video_seq type)
+
+        :rtype: :class:`str`
+        """
         return self._data_cache["officialVideo"]["videoSeq"]
 
     def official_video(self) -> Union[OfficialVideoVOD, OfficialVideoLive]:
+        """Generate :class:`OfficialVideoLive` or :class:`OfficialVideoVOD` object that paired to official video posts
+
+        :return: :class:`OfficialVideoVOD`, if the video is VOD.
+        :return: :class:`OfficialVideoLive`, if the video is Live.
+        """
         if self.official_video_type == "LIVE":
             return OfficialVideoLive(self.video_seq, session=self.session)
         elif self.official_video_type == "VOD":
