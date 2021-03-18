@@ -74,7 +74,11 @@ class UserSession(object):
     """
     __slots__ = ["__email", "__pwd", "__session"]
 
-    def __init__(self, email, pwd):
+    def __init__(
+            self,
+            email: str,
+            pwd: str
+    ):
         self.__email = email
         self.__pwd = pwd
         self.__session = None
@@ -1332,6 +1336,16 @@ class GroupedBoards(DataModel):
 
 
 class Channel(DataModel):
+    """This is the object represents a post of VLIVE
+
+    Arguments:
+        channel_code (:class:`str`) : Unique id of channel.
+        session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
+
+    Attributes:
+        session (:class:`UserSession`) : Optional. Session for loading data with permission.
+    """
+
     def __init__(
             self,
             channel_code: str,
