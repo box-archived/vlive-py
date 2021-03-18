@@ -987,6 +987,16 @@ class PostModel(DataModel):
 
 
 class Post(PostModel):
+    """This is the object represents a post of VLIVE
+
+    Arguments:
+        post_id (:class:`str`) : Unique id of post to load.
+        session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
+
+    Attributes:
+        session (:class:`UserSession`) : Optional. Session for loading data with permission.
+    """
+
     def __init__(self, post_id, session=None):
         super().__init__(post_id, session)
 
@@ -995,17 +1005,33 @@ class Post(PostModel):
 
     @property
     def plain_body(self) -> str:
+        """Text-only contents of post
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['plainBody']
 
     @property
     def body(self) -> str:
+        """Contents of post with <v:attachment> tag
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['body']
 
     @property
     def written_in(self) -> str:
+        """User language setting of post.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['writtenIn']
 
-    def formatted_body(self):
+    def formatted_body(self) -> str:
+        """Get contents of post with formatting attachments and styles as html.
+
+        :rtype: :class:`str`
+        """
         # load Template
         video_template = video_box_template
         doc_template = formatted_body_template
