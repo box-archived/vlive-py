@@ -8,6 +8,7 @@ from typing import (
     Callable,
     Generator,
     List,
+    Optional,
     Union,
 )
 from warnings import warn
@@ -124,8 +125,8 @@ class DataModel(object):
             self,
             method: Callable,
             target_id: str,
-            session: UserSession = None,
-            init_data: dict = None
+            session: Optional[UserSession] = None,
+            init_data: Optional[dict] = None
     ):
         self._method = method
         self._target_id = target_id
@@ -182,8 +183,8 @@ class Comment(DataModel):
     def __init__(
             self,
             commentId: str,
-            session: UserSession = None,
-            init_data: dict = None
+            session: Optional[UserSession] = None,
+            init_data: Optional[dict] = None
     ):
         super().__init__(getCommentData, commentId, session=session, init_data=init_data)
 
@@ -325,7 +326,7 @@ class OfficialVideoModel(DataModel):
         This is the base object for other object without independent usage.
 
     Arguments:
-        videoSeq (:class:`Union[str, int]`) : Unique id(seq) of video.
+        video_seq (:class:`Union[str, int]`) : Unique id(seq) of video.
         session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
 
     Attributes:
@@ -334,10 +335,10 @@ class OfficialVideoModel(DataModel):
     """
     def __init__(
             self,
-            videoSeq: Union[str, int],
-            session: UserSession = None
+            video_seq: Union[str, int],
+            session: Optional[UserSession] = None
     ):
-        super().__init__(getOfficialVideoData, videoSeq, session=session)
+        super().__init__(getOfficialVideoData, video_seq, session=session)
 
     @property
     def video_seq(self) -> int:
@@ -558,17 +559,21 @@ class OfficialVideoLive(OfficialVideoModel):
     """This is the object represents a Live-type-OfficialVideo of VLIVE
 
     Arguments:
-        videoSeq (:class:`str`) : Unique id of Live to load.
+        video_seq (:class:`str`) : Unique id of Live to load.
         session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
 
     Attributes:
         session (:class:`UserSession`) : Optional. Session for loading data with permission.
     """
 
-    def __init__(self, videoSeq, session=None):
-        super().__init__(videoSeq, session=session)
+    def __init__(
+            self,
+            video_seq: Union[int, str],
+            session: Optional[UserSession] = None
+    ):
+        super().__init__(video_seq, session=session)
         if self.video_type != "LIVE":
-            raise ValueError("OfficialVideo [%s] is not Live." % videoSeq)
+            raise ValueError("OfficialVideo [%s] is not Live." % video_seq)
 
     def __repr__(self):
         return "<VLIVE OfficialVideo-Live [%s]>" % self.target_id
@@ -659,7 +664,7 @@ class OfficialVideoVOD(OfficialVideoModel):
     """This is the object represents a VOD-type-OfficialVideo of VLIVE
 
     Arguments:
-        videoSeq (:class:`str`) : Unique id of VOD to load.
+        video_seq (:class:`str`) : Unique id of VOD to load.
         session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
 
     Attributes:
@@ -668,12 +673,12 @@ class OfficialVideoVOD(OfficialVideoModel):
 
     def __init__(
             self,
-            videoSeq: Union[str, int],
-            session: UserSession = None
+            video_seq: Union[str, int],
+            session: Optional[UserSession] = None
     ):
-        super().__init__(str(videoSeq), session=session)
+        super().__init__(str(video_seq), session=session)
         if self.video_type != "VOD":
-            raise ValueError("OfficialVideo [%s] is not VOD." % videoSeq)
+            raise ValueError("OfficialVideo [%s] is not VOD." % video_seq)
 
     def __repr__(self):
         return "<VLIVE OfficialVideo-VOD [%s]>" % self.target_id
@@ -807,7 +812,11 @@ class PostModel(DataModel):
 
     """
 
-    def __init__(self, post_id, session=None):
+    def __init__(
+            self,
+            post_id: str,
+            session: Optional[UserSession] = None
+    ):
         super().__init__(getPostInfo, post_id, session=session)
 
     @property
@@ -997,7 +1006,11 @@ class Post(PostModel):
         session (:class:`UserSession`) : Optional. Session for loading data with permission.
     """
 
-    def __init__(self, post_id, session=None):
+    def __init__(
+            self,
+            post_id: str,
+            session: Optional[UserSession] = None
+    ):
         super().__init__(post_id, session)
 
     def __repr__(self):
@@ -1097,7 +1110,11 @@ class OfficialVideoPost(PostModel):
         session (:class:`UserSession`) : Optional. Session for loading data with permission.
     """
 
-    def __init__(self, init_id, session=None):
+    def __init__(
+            self, 
+            init_id, 
+            session: Optional[UserSession] = None
+    ):
         # interpret number
         if type(init_id) == int:
             init_id = str(init_id)
@@ -1144,7 +1161,11 @@ class OfficialVideoPost(PostModel):
 
 
 class Schedule(DataModel):
-    def __init__(self, schedule_id, session):
+    def __init__(
+            self,
+            schedule_id: str,
+            session: UserSession
+    ):
         super().__init__(getScheduleData, schedule_id, session=session)
 
     def __repr__(self):
@@ -1168,7 +1189,14 @@ class Schedule(DataModel):
 
 
 class Upcoming(object):
-    def __init__(self, refresh_rate=5, show_vod=True, show_upcoming_vod=True, show_upcoming_live=True, show_live=True):
+    def __init__(
+            self,
+            refresh_rate: float = 5,
+            show_vod: bool = True,
+            show_upcoming_vod: bool = True,
+            show_upcoming_live: bool = True,
+            show_live: bool = True
+    ):
         self.refresh_rate = refresh_rate
         self.__cached_data = []
         self.__cached_time = 0
@@ -1180,7 +1208,10 @@ class Upcoming(object):
         # refresh data
         self.refresh(True)
 
-    def refresh(self, force=False):
+    def refresh(
+            self,
+            force: bool = False
+    ):
         distance = time() - self.__cached_time
         if distance >= self.refresh_rate or force:
             new_data = self.load(date=None, silent=True,
@@ -1192,7 +1223,15 @@ class Upcoming(object):
                 return True
         return False
 
-    def load(self, date, show_vod=None, show_upcoming_vod=None, show_upcoming_live=None, show_live=None, silent=False):
+    def load(
+            self,
+            date: Optional[str],
+            show_vod: Optional[bool] = None,
+            show_upcoming_vod: Optional[bool] = None,
+            show_upcoming_live: Optional[bool] = None,
+            show_live: Optional[bool] = None,
+            silent: Optional[bool] = False
+    ):
         if show_live is None:
             show_live = self.show_live
         if show_vod is None:
@@ -1220,7 +1259,14 @@ class Upcoming(object):
             return data_list
         return None
 
-    def upcoming(self, force=False, show_vod=None, show_upcoming_vod=None, show_upcoming_live=None, show_live=None):
+    def upcoming(
+            self, 
+            force=False, 
+            show_vod: Optional[bool] = None, 
+            show_upcoming_vod: Optional[bool] = None, 
+            show_upcoming_live: Optional[bool] = None, 
+            show_live: Optional[bool] = None
+    ):
         r""" get upcoming list, auto refresh
 
         :return: Upcoming list
@@ -1252,7 +1298,11 @@ class Upcoming(object):
 
 
 class GroupedBoards(DataModel):
-    def __init__(self, channel_code, session=None):
+    def __init__(
+            self,
+            channel_code: str,
+            session: Optional[UserSession] = None
+    ):
         super().__init__(getGroupedBoards, channel_code, session)
 
     def __repr__(self):
@@ -1282,7 +1332,11 @@ class GroupedBoards(DataModel):
 
 
 class Channel(DataModel):
-    def __init__(self, channel_code, session=None):
+    def __init__(
+            self,
+            channel_code: str,
+            session: Optional[UserSession] = None
+    ):
         super().__init__(getChannelInfo, channel_code, session)
 
     def __repr__(self):
