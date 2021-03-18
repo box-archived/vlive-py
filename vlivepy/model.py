@@ -788,15 +788,42 @@ class OfficialVideoVOD(OfficialVideoModel):
 
 
 class PostModel(DataModel):
+
+    """This is the base object for :class:`Post` and :class:`OfficialVideoPost`
+    This contains common property of each object
+
+    :class:`OfficialVideoPost` has :class:`OfficialVideoModel` and doesn't have :obj:`body`
+    compared with :class:`Post`
+
+    Note:
+        This is the base object for other object without independent usage.
+
+    Arguments:
+        post_id (:class:`str`) : Unique id of post to load.
+        session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
+
+    Attributes:
+        session (:class:`UserSession`) : Optional. Session for loading data with permission.
+
+    """
+
     def __init__(self, post_id, session=None):
         super().__init__(getPostInfo, post_id, session=session)
 
     @property
     def attachments(self) -> dict:
+        """Detailed attachments data of post.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache['attachments'])
 
     @property
     def attachments_photo(self) -> dict:
+        """Detailed photo attachments data of post.
+
+        :rtype: :class:`dict`
+        """
         if 'photo' in self._data_cache['attachments']:
             return deepcopy(self._data_cache['attachments']['photo'])
         else:
@@ -804,6 +831,10 @@ class PostModel(DataModel):
 
     @property
     def attachments_video(self) -> dict:
+        """Detailed video attachments data of post.
+
+        :rtype: :class:`dict`
+        """
         if 'video' in self._data_cache['attachments']:
             return deepcopy(self._data_cache['attachments']['video'])
         else:
@@ -811,68 +842,147 @@ class PostModel(DataModel):
 
     @property
     def author(self) -> dict:
+        """Detailed author info of post.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache['author'])
 
     @property
     def author_nickname(self) -> str:
+        """Author nickname.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['author']['nickname']
 
     @property
     def author_id(self) -> str:
+        """Unique id of author.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['author']['memberId']
 
     @property
     def created_at(self) -> float:
+        """Epoch timestamp about created time.
+        The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
         return v_timestamp_parser(self._data_cache['createdAt'])
 
     @property
     def board_id(self) -> int:
+        """Unique id of parent board
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['boardId']
 
     @property
     def channel_name(self) -> str:
+        """The name of the channel that contains the post
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['channel']['channelName']
 
     @property
     def channel_code(self) -> str:
+        """The code of the channel that contains the post
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['channelCode']
 
     @property
     def comment_count(self) -> int:
+        """Count of its comment
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['commentCount']
 
     @property
     def content_type(self) -> str:
+        """Type of post.
+
+        Returns:
+            "POST" if the post is normal Post.
+            "VIDEO" if the post is OfficialVideoPost
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['contentType']
 
     @property
     def emotion_count(self) -> int:
+        """Count of received emotion.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['emotionCount']
 
     @property
     def is_comment_enabled(self) -> bool:
+        """Boolean value for comment-enabled.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['isCommentEnabled']
 
     @property
     def is_hidden_from_star(self) -> bool:
+        """Boolean value for hidden-from-star.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['isHiddenFromStar']
 
     @property
     def is_viewer_bookmarked(self) -> bool:
+        """Boolean value for viewer-bookmarked.
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['isViewerBookmarked']
 
     @property
     def post_id(self) -> str:
+        """Unique id of the post.
+
+        :rtype: :class:`str`
+        """
         return self._target_id
 
     @property
     def title(self) -> str:
+        """Title of the post.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['title']
 
     def getPostCommentsIter(self) -> Generator[Comment, None, None]:
+        """Get Its comments as iterable
+
+        :rtype: :class:`Generator[Comment, None, None]`
+
+        Yields:
+            :class:`Comment`
+        """
         return getPostCommentsIter(self.post_id, session=self.session)
 
     def getPostStarCommentsIter(self) -> Generator[Comment, None, None]:
+        """Get Its star-comments as iterable
+
+        :rtype: :class:`Generator[Comment, None, None]`
+
+        Yields:
+            :class:`Comment`
+        """
         return getPostStarCommentsIter(self.post_id, session=self.session)
 
 
