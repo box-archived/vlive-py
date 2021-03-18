@@ -27,9 +27,9 @@ parseVideoSeqFromPostInfo()
 ---------------------------
 .. autofunction:: vlivepy.parser.parseVideoSeqFromPostInfo()
 
-parseVodIdFromOffcialVideoPost()
+parseVodIdFromOfficialVideoPost()
 --------------------------------
-.. autofunction:: vlivepy.parser.parseVodIdFromOffcialVideoPost()
+.. autofunction:: vlivepy.parser.parseVodIdFromOfficialVideoPost()
 
 response_json_stripper()
 ------------------------

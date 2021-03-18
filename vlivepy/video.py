@@ -3,7 +3,7 @@
 from . import variables as gv
 from .controllers import sessionUserCheck
 from .exception import auto_raise, APINetworkError, APIJSONParesError, APIServerResponseError
-from .parser import parseVodIdFromOffcialVideoPost, response_json_stripper
+from .parser import parseVodIdFromOfficialVideoPost, response_json_stripper
 from .router import rew_get
 
 
@@ -94,7 +94,7 @@ def getLiveStatus(videoSeq, silent=False):
 def getVodId(videoSeq, silent=False):
     data = getOfficialVideoPost(videoSeq, silent=silent)
     if data is not None:
-        return parseVodIdFromOffcialVideoPost(data, silent=silent)
+        return parseVodIdFromOfficialVideoPost(data, silent=silent)
 
     return None
 
