@@ -1190,7 +1190,63 @@ class Schedule(DataModel):
 
     @property
     def author_id(self) -> str:
-        return self._data_cache['author']
+        return self._data_cache['author']['memberId']
+    
+    @property
+    def channel_code(self) -> str:
+        return self._data_cache['channel']['channelCode']
+    
+    @property
+    def channel_name(self) -> str:
+        return self._data_cache['channel']['channelName']
+    
+    @property
+    def comment_count(self) -> int:
+        return self._data_cache['commentCount']
+
+    @property
+    def emotion_count(self) -> int:
+        return self._data_cache['emotionCount']
+
+    @property
+    def official_video_type(self) -> str:
+        """Type of video.
+
+        Returns:
+            "LIVE" if the video is upcoming/on air live. "VOD" if the video is VOD.
+
+        :rtype: :class:`str`
+        """
+        return self._data_cache['officialVideo']['type']
+
+    @property
+    def video_seq(self) -> str:
+        """Unique id of OfficialVideoPost. (video_seq type)
+
+        :rtype: :class:`str`
+        """
+        return self._data_cache["videoSeq"]
+
+    @property
+    def post_id(self) -> str:
+        return self._data_cache['postId']
+
+    @property
+    def title(self):
+        return self._data_cache['title']
+
+    def official_video(self) -> Union[OfficialVideoVOD, OfficialVideoLive]:
+        """Generate :class:`OfficialVideoLive` or :class:`OfficialVideoVOD` object that paired to official video posts
+
+        :return: :class:`OfficialVideoVOD`, if the video is VOD.
+        :return: :class:`OfficialVideoLive`, if the video is Live.
+        """
+        if self.official_video_type == "LIVE":
+            return OfficialVideoLive(self.video_seq, session=self.session)
+        elif self.official_video_type == "VOD":
+            return OfficialVideoVOD(self.video_seq, session=self.session)
+        else:
+            raise ModelInitError("Unknown official video type. please report issue with self.raw")
 
 
 class Upcoming(object):
