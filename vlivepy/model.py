@@ -1311,6 +1311,9 @@ class Upcoming(object):
     This use refresh rate to caching result.
     Set :obj:`refresh_rate` to 0 to disable caching
 
+    See Also:
+        This object mainly returns list of :class:`vlivepy.parser.UpcomingVideo`. Check docs!
+
     Arguments:
         refresh_rate (:class:`float`, optional) : Unique id of post to load.
             Also, the object can be initialized by video_seq.
@@ -1394,7 +1397,7 @@ class Upcoming(object):
             silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
 
         Returns:
-            :class:`List[UpcomingVideo]`
+            List of :class:`vlivepy.parser.UpcomingVideo`
         """
         if show_live is None:
             show_live = self.show_live
@@ -1445,7 +1448,7 @@ class Upcoming(object):
                 defaults to :obj:`self.show_live`
 
         Returns:
-            :class:`List[UpcomingVideo]`
+            List of :class:`vlivepy.parser.UpcomingVideo`
         """
         self.refresh(force=force)
         if show_live is None:
