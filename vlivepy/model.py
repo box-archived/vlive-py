@@ -1550,86 +1550,174 @@ class Channel(DataModel):
 
     @property
     def channel_code(self) -> str:
+        """Unique id of channel.
+
+        :rtype: :class:`str`
+        """
         return self._target_id
 
     @property
     def channel_name(self) -> str:
+        """Name of the channel.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['channelName']
 
     @property
     def representative_color(self) -> str:
+        """Representative color(hex) of the channel.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['representativeColor']
 
     @property
     def background_color(self) -> str:
+        """Background color(hex) of the channel.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['backgroundColor']
 
     @property
     def channel_profile_image(self) -> str:
+        """Profile image url of the channel.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['channelProfileImage']
 
     @property
     def channel_cover_image(self) -> str:
+        """Cover image url of the channel.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['channelCoverImage']
 
     @property
     def channel_description(self) -> str:
+        """Description of the channel.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['channelDescription']
 
     @property
     def prohibited_word_like_list(self) -> list:
+        """Prohibited word (LIKE) in the channel.
+
+        :rtype: :class:`str`
+        """
         return deepcopy(self._data_cache['prohibitedWordLikeList'])
 
     @property
     def prohibited_word_exact_list(self) -> list:
+        """Prohibited word (EXACT) in the channel.
+
+        :rtype: :class:`str`
+        """
         return deepcopy(self._data_cache['prohibitedWordExactList'])
 
     @property
     def sns_share_img(self) -> str:
+        """SNS Share image url of the channel.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['snsShareImg']
 
     @property
     def qr_code(self) -> str:
+        """QR code image url of the channel.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['qrCode']
 
     @property
     def open_at(self) -> int:
+        """Epoch timestamp about channel opened(created) time.
+
+        :return:
+        """
         return self._data_cache['openAt'] // 1000
 
     @property
     def show_upcoming(self) -> bool:
+        """Boolean value for using upcoming in the channel
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['showUpcoming']
 
     @property
     def use_member_level(self) -> bool:
+        """Boolean value for using member level in the channel
+
+        :rtype: :class:`bool`
+        """
         return self._data_cache['useMemberLevel']
 
     @property
     def member_count(self) -> int:
+        """Count of members in channel.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['memberCount']
 
     @property
     def post_count(self) -> int:
+        """Count of post in channel.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['postCountOfStar']
 
     @property
     def video_count(self) -> int:
+        """Count of video in channel.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['videoCountOfStar']
 
     @property
     def video_play_count(self) -> int:
+        """Count of video play times in channel.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['videoPlayCountOfStar']
 
     @property
     def video_like_count(self) -> int:
+        """Count of like in channel.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['videoLikeCountOfStar']
 
     @property
     def video_comment_count(self) -> int:
+        """Count of video comment in channel.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['videoCommentCountOfStar']
 
     def decode_channel_code(self) -> int:
+        """Decode channel code to unique channel seq
+
+        :rtype: :class:`int`
+        """
         return decode_channel_code(self.channel_code)
 
     def groupedBoards(self) -> GroupedBoards:
+        """Load grouped board list of the channel
+
+        :rtype: :class:`GroupedBoards`
+        """
         return GroupedBoards(self.channel_code, self.session)
