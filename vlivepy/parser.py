@@ -4,14 +4,37 @@ from collections import namedtuple
 from datetime import datetime
 import json
 from warnings import warn
+from typing import NamedTuple
 
 from bs4 import BeautifulSoup
 
 from .exception import auto_raise, APIJSONParesError, APIServerResponseWarning, APIServerResponseError
 
-UpcomingVideo = namedtuple("UpcomingVideo", "seq time cseq cname ctype name type product")
-CommentItem = namedtuple("CommentItem", 'commentId author body sticker createdAt '
-                                        'commentCount emotionCount isRestricted parent root')
+
+# UpcomingVideo = namedtuple("UpcomingVideo", "seq time cseq cname ctype name type product")
+
+
+class UpcomingVideo(NamedTuple):
+    """This is the named-tuple item of parsed upcoming list
+
+    Parameters:
+        seq (:class:`str`) : VideoSeq of item.
+        time (:class:`str`) : String start time of item.
+        cseq (:class:`str`) : Origin channel seq id of item.
+        cname (:class:`str`) : Origin channel name of item.
+        ctype (:class:`str`) : Origin channel type of item. "BASIC" if the channel type is normal. "PREMIUM" if the channel type is membership.
+        name (:class:`str`) : Title of item.
+        type (:class:`str`) : Type of item. Returns "VOD", "UPCOMING_VOD", "UPCOMING_LIVE", "LIVE"
+        product (:class:`str`) : Product type of item. "NONE" if the item is normal live. "PAID" if the item is VLIVE+ product.
+    """
+    seq: str
+    time: str
+    cseq: str
+    cname: str
+    ctype: str
+    name: str
+    type: str
+    product: str
 
 
 def parseUpcomingFromPage(html):
