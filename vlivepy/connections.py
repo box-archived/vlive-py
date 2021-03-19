@@ -7,10 +7,13 @@ from typing import (
 import reqWrapper
 from . import variables as gv
 from .exception import (
-    auto_raise, APINetworkError, APISignInFailedError
+    auto_raise,
+    APINetworkError,
+    APISignInFailedError,
+    APIJSONParesError,
 )
 from .parser import (
-    parseVideoSeqFromPostInfo, response_json_stripper,
+    response_json_stripper,
 )
 from .router import rew_get
 
@@ -69,7 +72,7 @@ def getUserSession(email, pwd, silent=False):
 def postIdToVideoSeq(
         post_id: str,
         silent=False
-) -> str:
+) -> Optional[str]:
     """Convert post id to videoSeq id
 
     Arguments:
@@ -80,15 +83,21 @@ def postIdToVideoSeq(
         :class:`str`. Paired videoSeq id of the post.
     """
 
-    postInfo = getPostInfo(post_id, silent=True)
+    post = getPostInfo(post_id, silent=silent)
 
-    return parseVideoSeqFromPostInfo(postInfo, silent=silent)
+    if post:
+        if 'officialVideo' in post:
+            return post['officialVideo']['videoSeq']
+        else:
+            auto_raise(APIJSONParesError("Post-%s is not official video post" % post_id), silent)
+
+    return None
 
 
 def videoSeqToPostId(
         videoSeq: Union[str, int],
         silent=False
-) -> str:
+) -> Optional[str]:
     from .video import getOfficialVideoPost
     """Convert videoSeq id to post id
     
@@ -102,7 +111,10 @@ def videoSeqToPostId(
 
     post = getOfficialVideoPost(videoSeq, silent=silent)
 
-    return post['postId']
+    if post:
+        return post['postId']
+    else:
+        return None
 
 
 def postTypeDetector(post_id, silent=False):
