@@ -3,9 +3,10 @@
 from typing import Generator, Union
 from . import variables as gv
 from .exception import APINetworkError, auto_raise
-from .model import OfficialVideoPost, Post, UserSession
+from .model import OfficialVideoPost, Post
 from .parser import response_json_stripper, next_page_checker
 from .router import rew_get
+from .session import UserSession
 
 
 class BoardPostItem(object):

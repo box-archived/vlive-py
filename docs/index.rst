@@ -58,9 +58,9 @@ Functions
     function/channel
     function/comment
     function/connections
-    function/controllers
     function/parser
     function/post
     function/schedule
+    function/session
     function/upcoming
     function/video

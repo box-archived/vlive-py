@@ -10,10 +10,6 @@ decode_channel_code()
 ---------------------
 This function has alias of :func:`vlivepy.decode_channel_code`
 
-getUserSession()
-----------------
-Will be refactored
-
 postIdToVideoSeq()
 ------------------
 This function has alias of :func:`vlivepy.postIdToVideoSeq`

@@ -4,12 +4,10 @@ from typing import (
     Optional,
     Union
 )
-import reqWrapper
 from . import variables as gv
 from .exception import (
     auto_raise,
     APINetworkError,
-    APISignInFailedError,
     APIJSONParesError,
 )
 from .parser import (
@@ -33,36 +31,6 @@ def getPostInfo(post, session=None, silent=False):
 
     if sr.success:
         return response_json_stripper(sr.response.json(), silent=silent)
-    else:
-        auto_raise(APINetworkError, silent)
-
-    return None
-
-
-def getUserSession(email, pwd, silent=False):
-    r""" Get user session
-
-    :param email: VLIVE email
-    :param pwd: VLIVE password
-    :param silent: Return `None` instead of Exception
-    :return: :class 'requests.Session` Session Object
-    :rtype: reqWrapper.requests.Session
-    """
-
-    # Make request
-    sr = reqWrapper.post(**gv.endpoint_auth(email, pwd),
-                         wait=0.5, status=[200])
-
-    if sr.success:
-        # Case <Sign-in Failed (Exception)>
-        if 'auth/email' in sr.response.url:
-            auto_raise(APISignInFailedError("Sign-in Failed"), silent)
-
-        # Case <Sign-in>
-        else:
-            return sr.session
-
-    # Case <Connection failed (Exception)>
     else:
         auto_raise(APINetworkError, silent)
 

@@ -17,7 +17,6 @@ from bs4 import (
     BeautifulSoup,
     element,
 )
-from requests import Session
 
 from .channel import (
     getChannelInfo,
@@ -31,7 +30,6 @@ from .comment import (
 )
 from .connections import (
     getPostInfo,
-    getUserSession,
     videoSeqToPostId,
     decode_channel_code,
 )
@@ -51,6 +49,7 @@ from .parser import (
 )
 from .post import getFVideoPlayInfo
 from .schedule import getScheduleData
+from .session import UserSession
 from .upcoming import getUpcomingList
 from .video import (
     getInkeyData,
@@ -59,52 +58,6 @@ from .video import (
     getOfficialVideoData,
     getVodPlayInfo
 )
-
-
-class UserSession(object):
-    """This is the object for using vlivepy with user permission.
-    You need to use UserSession when you load user-only content (e.g VLIVE+, Membership, etc..)
-
-    Email-account info(email, pwd) should be used as login info. This is not working with social login info.
-
-    Caution:
-        Too frequent login-try will be banned from VLIVE.
-
-        Use :func:`vlivepy.dumpSession` and :func:`vlivepy.loadSession` to saving UserSession
-
-    Arguments:
-        email (:class:`str`) : Sign-in email
-        pwd (:class:`str`) : Sign-in password
-
-    """
-    __slots__ = ["__email", "__pwd", "__session"]
-
-    def __init__(
-            self,
-            email: str,
-            pwd: str
-    ):
-        self.__email = email
-        self.__pwd = pwd
-        self.__session = None
-        self.__session: Session
-
-        self.refresh()
-
-    def __repr__(self):
-        return "<VLIVE UserSession [%s]>" % self.__email
-
-    def refresh(self) -> None:
-        """Reload login data"""
-        self.__session = getUserSession(email=self.__email, pwd=self.__pwd)
-
-    @property
-    def session(self) -> Session:
-        """Get logged-in Session
-
-        :rtype: :class:`requests.Session`
-        """
-        return self.__session
 
 
 class DataModel(object):
