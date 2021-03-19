@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from collections import namedtuple
 from datetime import datetime
 import json
 from warnings import warn
-from typing import NamedTuple
 
 from bs4 import BeautifulSoup
 
@@ -14,27 +12,112 @@ from .exception import auto_raise, APIJSONParesError, APIServerResponseWarning, 
 # UpcomingVideo = namedtuple("UpcomingVideo", "seq time cseq cname ctype name type product")
 
 
-class UpcomingVideo(NamedTuple):
-    """This is the named-tuple item of parsed upcoming list
+class UpcomingVideo(object):
+    """This is the named-tuple item of parsed upcoming list"""
 
-    Parameters:
-        seq (:class:`str`) : VideoSeq of item.
-        time (:class:`str`) : String start time of item.
-        cseq (:class:`str`) : Origin channel seq id of item.
-        cname (:class:`str`) : Origin channel name of item.
-        ctype (:class:`str`) : Origin channel type of item. "BASIC" if the channel type is normal. "PREMIUM" if the channel type is membership.
-        name (:class:`str`) : Title of item.
-        type (:class:`str`) : Type of item. Returns "VOD", "UPCOMING_VOD", "UPCOMING_LIVE", "LIVE"
-        product (:class:`str`) : Product type of item. "NONE" if the item is normal live. "PAID" if the item is VLIVE+ product.
-    """
-    seq: str
-    time: str
-    cseq: str
-    cname: str
-    ctype: str
-    name: str
-    type: str
-    product: str
+    __slots__ = ['_seq', '_time', '_cseq', '_cname', '_ctype', '_name', '_type', '_product']
+
+    def __init__(self, seq, time, cseq, cname, ctype, name, type, product):
+        self._seq = seq
+        self._time = time
+        self._cseq = cseq
+        self._cname = cname
+        self._ctype = ctype
+        self._name = name
+        self._type = type
+        self._product = product
+
+    def __eq__(self, other):
+        if type(self) == type(other):
+            if self.seq == other.seq:
+                return True
+        return False
+
+    def __repr__(self):
+        repr_string = "UpcomingVideo("
+        start = False
+        for item in self.__slots__:
+            if start:
+                repr_string += ", "
+            repr_string += "%s=%s" % (item, self.__getattribute__(item))
+            start = True
+
+        repr_string += ")"
+
+        return repr_string
+
+    @property
+    def seq(self) -> str:
+        """VideoSeq of item.
+
+        :rtype: :class:`str`
+        """
+        return self._seq
+
+    @property
+    def time(self) -> str:
+        """String start time of item.
+
+        :rtype: :class:`str`
+        """
+        return self._time
+
+    @property
+    def cseq(self) -> str:
+        """Origin channel seq id of item.
+
+        :rtype: :class:`str`
+        """
+        return self._seq
+
+    @property
+    def cname(self) -> str:
+        """Origin channel name of item.
+
+        :rtype: :class:`str`
+        """
+        return self._cname
+
+    @property
+    def ctype(self) -> str:
+        """Origin channel type of item.
+
+        Returns:
+            "BASIC" if the channel type is normal. "PREMIUM" if the channel type is membership.
+
+        :rtype: :class:`str`
+        """
+        return self._ctype
+
+    @property
+    def name(self) -> str:
+        """Title of item.
+
+        :rtype: :class:`str`
+        """
+        return self._name
+
+    @property
+    def type(self) -> str:
+        """Type of item.
+
+        Returns:
+             "VOD", "UPCOMING_VOD", "UPCOMING_LIVE", "LIVE"
+
+        :rtype: :class:`str`
+        """
+        return self._type
+
+    @property
+    def product(self) -> str:
+        """ Product type of item.
+
+        Returns:
+            "NONE" if the item is normal live. "PAID" if the item is VLIVE+ product.
+
+        :rtype: :class:`str`
+        """
+        return self._product
 
 
 def parseUpcomingFromPage(html):
