@@ -15,7 +15,3 @@ getBoardPosts()
 getBoardPostsIter()
 -------------------
 .. autofunction:: vlivepy.board.getBoardPostsIter
-
-post_list_parser()
-------------------
-.. autofunction:: vlivepy.board.post_list_parser
