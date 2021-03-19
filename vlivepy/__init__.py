@@ -6,9 +6,10 @@ from .connections import (
     postTypeDetector,
     decode_channel_code,
 )
-from .controllers import (
+from .session import (
     dumpSession,
     loadSession,
+    UserSession,
 )
 from .model import (
     Channel,
@@ -18,7 +19,6 @@ from .model import (
     Post,
     Schedule,
     Upcoming,
-    UserSession,
     OfficialVideoLive,
     OfficialVideoVOD,
 )
