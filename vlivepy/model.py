@@ -1473,6 +1473,15 @@ class Upcoming(object):
 
 
 class GroupedBoards(DataModel):
+    """This is the object represents board list of channel.
+
+    Arguments:
+        channel_code (:class:`str`) : Unique id of channel.
+        session (:class:`UserSession`, optional) : Session for loading data with permission, defaults to None.
+
+    Attributes:
+        session (:class:`UserSession`) : Optional. Session for loading data with permission.
+    """
     def __init__(
             self,
             channel_code: str,
@@ -1483,14 +1492,22 @@ class GroupedBoards(DataModel):
     def __repr__(self):
         return "<VLIVE GroupedBoards in [%s]>" % self.target_id
 
-    def groups(self) -> list:
+    def groups(self) -> List[str]:
+        """Get name of board-groups
+
+        :rtype: :class:`list`
+        """
         group_names = []
         for item in self._data_cache:
             group_names.append(item['groupTitle'])
 
         return group_names
 
-    def boards(self) -> list:
+    def boards(self) -> List[dict]:
+        """Get detailed info of boards
+
+        :rtype: :class:`List[dict]`
+        """
         board_list = []
         for item in self._data_cache:
             for board in item['boards']:
@@ -1498,7 +1515,11 @@ class GroupedBoards(DataModel):
 
         return deepcopy(board_list)
 
-    def board_names(self) -> list:
+    def board_names(self) -> List[str]:
+        """Get name of the boards
+
+        :rtype: :class:`list`
+        """
         name_list = []
         for item in self.boards():
             name_list.append(item['title'])
