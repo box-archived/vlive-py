@@ -2,6 +2,10 @@ parser
 ======
 This page describes **parser** module which can be imported as :code:`vlivepy.parser`
 
+UpcomingVideo
+-------------
+.. autoclass:: vlivepy.parser.UpcomingVideo
+    :show-inheritance:
 
 channel_info_from_channel_page()
 --------------------------------
