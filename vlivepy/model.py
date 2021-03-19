@@ -988,7 +988,7 @@ class Post(PostModel):
 
     @property
     def body(self) -> str:
-        """Contents of post with <v:attachment> tag
+        """Contents of post with ``<v:attachment>`` tag
 
         :rtype: :class:`str`
         """
