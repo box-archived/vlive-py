@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from typing import (
+    Optional,
+    Union
+)
 import reqWrapper
 from . import variables as gv
 from .exception import (
@@ -62,28 +66,38 @@ def getUserSession(email, pwd, silent=False):
     return None
 
 
-def postIdToVideoSeq(post, silent=False):
-    r""" postId to videoSeq
+def postIdToVideoSeq(
+        post_id: str,
+        silent=False
+) -> str:
+    """Convert post id to videoSeq id
 
-    :param post: postId from VLIVE (like #-########)
-    :param silent: Return `None` instead of Exception
-    :return: str `videoSeq`
-    :rtype: str
+    Arguments:
+        post_id (:class:`str`) : Post id to convert to videoSeq id.
+        silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+    Returns:
+        :class:`str`. Paired videoSeq id of the post.
     """
 
-    postInfo = getPostInfo(post, silent=True)
+    postInfo = getPostInfo(post_id, silent=True)
 
     return parseVideoSeqFromPostInfo(postInfo, silent=silent)
 
 
-def videoSeqToPostId(videoSeq, silent=False):
+def videoSeqToPostId(
+        videoSeq: Union[str, int],
+        silent=False
+) -> str:
     from .video import getOfficialVideoPost
-    r""" postId to videoSeq
-
-    :param post: postId from VLIVE (like #-########)
-    :param silent: Return `None` instead of Exception
-    :return: str `videoSeq`
-    :rtype: str
+    """Convert videoSeq id to post id
+    
+    Arguments:
+        videoSeq (:class:`str`, optional) : VideoSeq to convert to post id.
+        silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+    
+    Returns:
+        :class:`str`. Paired post id of the videoSeq.
     """
 
     post = getOfficialVideoPost(videoSeq, silent=silent)
@@ -91,22 +105,38 @@ def videoSeqToPostId(videoSeq, silent=False):
     return post['postId']
 
 
-def postTypeDetector(post, silent=False):
-    r""" Check given postId is Post or Video
+def postTypeDetector(post_id, silent=False):
+    """Check type of the post
 
-    :param post: postId from VLIVE (like #-########)
-    :param silent: Return `None` instead of Exception
-    :return: str "POST" or "VIDEO"
-    :rtype: str
+    Arguments:
+        post_id (:class:`str`, optional) : Unique id of the post to check.
+        silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+    Returns:
+        :class:`str`. “POST” if the post is normal Post. “VIDEO” if the post is OfficialVideoPost
     """
-    data = getPostInfo(post, silent=silent)
+
+    data = getPostInfo(post_id, silent=silent)
     if data is not None:
         return data['contentType']
 
     return None
 
 
-def decode_channel_code(channel_code, silent=False):
+def decode_channel_code(
+        channel_code: str,
+        silent: bool = False
+) -> Optional[int]:
+    """Decode channel code to unique channel seq
+
+    Arguments:
+        channel_code (:class:`str`, optional) : Unique id of the post to check.
+        silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+    Returns:
+        :class:`int`. Decoded channel code as channel seq.
+    """
+
     sr = rew_get(**gv.endpoint_decode_channel_code(channel_code),
                  wait=0.5, status=[200])
 

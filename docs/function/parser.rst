@@ -35,10 +35,6 @@ response_json_stripper()
 ------------------------
 .. autofunction:: vlivepy.parser.response_json_stripper()
 
-sessionUserCheck()
-------------------
-.. autofunction:: vlivepy.parser.sessionUserCheck()
-
 v_timestamp_parser()
 --------------------
 .. autofunction:: vlivepy.parser.v_timestamp_parser()

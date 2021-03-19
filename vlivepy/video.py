@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from . import variables as gv
-from .controllers import sessionUserCheck
 from .exception import auto_raise, APINetworkError, APIJSONParesError, APIServerResponseError
 from .parser import parseVodIdFromOfficialVideoPost, response_json_stripper
 from .router import rew_get
@@ -41,8 +40,7 @@ def getLivePlayInfo(videoSeq, session=None, vpdid2=None, silent=False):
 
     # Get vpdid2, if session is valid
     if session is not None and vpdid2 is None:
-        if sessionUserCheck(session):
-            vpdid2 = getVpdid2(session, silent=silent)
+        vpdid2 = getVpdid2(session, silent=silent)
 
     # Make request
     sr = rew_get(**gv.endpoint_live_play_info(videoSeq, vpdid2),
