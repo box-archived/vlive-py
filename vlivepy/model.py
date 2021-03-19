@@ -210,7 +210,7 @@ class Comment(DataModel):
 
     @property
     def author(self) -> dict:
-        """Author information as dict.
+        """Detailed author info of post.
 
         :rtype: :class:`dict`
         """
@@ -1171,6 +1171,16 @@ class OfficialVideoPost(PostModel):
 
 
 class Schedule(DataModel):
+    """This is the object represents a post of VLIVE.
+
+   Arguments:
+       schedule_id (:class:`Union[str, int]`) : Unique id of schedule to load.
+       session (:class:`UserSession`) : Session for loading data with permission.
+
+   Attributes:
+       session (:class:`UserSession`) : Session for loading data with permission.
+   """
+
     def __init__(
             self,
             schedule_id: str,
@@ -1183,34 +1193,66 @@ class Schedule(DataModel):
 
     @property
     def schedule_id(self) -> str:
+        """Unique id of schedule.
+
+        :rtype: :class:`str`
+        """
         return self._target_id
 
     @property
     def author(self) -> dict:
+        """Detailed author info of post.
+
+        :rtype: :class:`dict`
+        """
         return deepcopy(self._data_cache['author'])
 
     @property
     def author_nickname(self) -> str:
+        """Author nickname.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['author']['nickname']
 
     @property
     def author_id(self) -> str:
+        """Unique id of author.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['author']['memberId']
     
     @property
     def channel_code(self) -> str:
+        """The code of the channel that contains the schedule.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['channel']['channelCode']
     
     @property
     def channel_name(self) -> str:
+        """The name of the channel that contains the post.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['channel']['channelName']
     
     @property
     def comment_count(self) -> int:
+        """Count of comment in video.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['commentCount']
 
     @property
     def emotion_count(self) -> int:
+        """Count of received emotion in video.
+
+        :rtype: :class:`int`
+        """
         return self._data_cache['emotionCount']
 
     @property
@@ -1226,7 +1268,7 @@ class Schedule(DataModel):
 
     @property
     def video_seq(self) -> str:
-        """Unique id of OfficialVideoPost. (video_seq type)
+        """videoSeq id that paired with the schedule.
 
         :rtype: :class:`str`
         """
@@ -1234,14 +1276,22 @@ class Schedule(DataModel):
 
     @property
     def post_id(self) -> str:
+        """Post id that paired with the schedule.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['postId']
 
     @property
-    def title(self):
+    def title(self) -> str:
+        """Title of the schedule.
+
+        :rtype: :class:`str`
+        """
         return self._data_cache['title']
 
     def official_video(self) -> Union[OfficialVideoVOD, OfficialVideoLive]:
-        """Generate :class:`OfficialVideoLive` or :class:`OfficialVideoVOD` object that paired to official video posts
+        """Generate :class:`OfficialVideoLive` or :class:`OfficialVideoVOD` object that paired to schedule
 
         :return: :class:`OfficialVideoVOD`, if the video is VOD.
         :return: :class:`OfficialVideoLive`, if the video is Live.
