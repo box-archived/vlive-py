@@ -5,7 +5,7 @@ This page describes **parser** module which can be imported as :code:`vlivepy.pa
 UpcomingVideo
 -------------
 .. autoclass:: vlivepy.parser.UpcomingVideo
-    :show-inheritance:
+    :members:
 
 channel_info_from_channel_page()
 --------------------------------
