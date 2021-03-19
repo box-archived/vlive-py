@@ -1323,6 +1323,9 @@ class Upcoming(object):
     ) -> Optional[List[UpcomingVideo]]:
         """Get upcoming list data with specific date
 
+        Note:
+            Use :func:`upcoming` instead of using this function to load current upcoming.
+
         Arguments:
             date (:class:`bool`) : Specify date to load upcoming.
             show_vod (:class:`bool`, optional) : Add VOD to upcoming list,
@@ -1372,7 +1375,7 @@ class Upcoming(object):
             show_upcoming_vod: Optional[bool] = None, 
             show_upcoming_live: Optional[bool] = None, 
             show_live: Optional[bool] = None
-    ):
+    ) -> List[UpcomingVideo]:
         """Upcoming list with cache life check
 
         Arguments:
