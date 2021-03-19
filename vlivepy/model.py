@@ -67,6 +67,11 @@ class UserSession(object):
 
     Email-account info(email, pwd) should be used as login info. This is not working with social login info.
 
+    Caution:
+        Too frequent login-try will be banned from VLIVE.
+
+        Use :func:`vlivepy.dumpSession` and :func:`vlivepy.loadSession` to saving UserSession
+
     Arguments:
         email (:class:`str`) : Sign-in email
         pwd (:class:`str`) : Sign-in password
