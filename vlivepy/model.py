@@ -1194,6 +1194,31 @@ class Schedule(DataModel):
 
 
 class Upcoming(object):
+    """This is the object represents a upcoming list of VLIVE.
+
+    This object doesn't use endpoint API but use parsing upcoming webpage.
+    This use refresh rate to caching result.
+    Set :obj:`refresh_rate` to 0 to disable caching
+
+    Arguments:
+        refresh_rate (:class:`float`, optional) : Unique id of post to load.
+            Also, the object can be initialized by video_seq.
+            Defaults to 5
+        show_vod (:class:`bool`, optional) : Add VOD to upcoming list, defaults to True.
+        show_upcoming_vod (:class:`bool`, optional) : Add reserved VOD to upcoming list, defaults to True.
+        show_upcoming_live (:class:`bool`, optional) : Add reserved Live to upcoming list, defaults to True.
+        show_live (:class:`bool`, optional) : Add on air live to upcoming list, defaults to True.
+
+    Attributes:
+        refresh_rate (:class:`float`) : Optional. Unique id of post to load.
+            Also, the object can be initialized by video_seq.
+            Defaults to 5
+        show_vod (:class:`bool`) : Optional. Add VOD to upcoming list, defaults to True.
+        show_upcoming_vod (:class:`bool`) : Optional. Add reserved VOD to upcoming list, defaults to True.
+        show_upcoming_live (:class:`bool`) : Optional. Add reserved Live to upcoming list, defaults to True.
+        show_live (:class:`bool`) : Optional. Add on air live to upcoming list, defaults to True.
+    """
+
     def __init__(
             self,
             refresh_rate: float = 5,
@@ -1216,7 +1241,12 @@ class Upcoming(object):
     def refresh(
             self,
             force: bool = False
-    ):
+    ) -> None:
+        """Refresh self data
+
+        Arguments:
+            force (:class:`bool`, optional) : Force refresh with ignoring refresh rate, defaults to False.
+        """
         distance = time() - self.__cached_time
         if distance >= self.refresh_rate or force:
             new_data = self.load(date=None, silent=True,
@@ -1225,8 +1255,6 @@ class Upcoming(object):
             if new_data is not None:
                 self.__cached_data = new_data
                 self.__cached_time = int(time())
-                return True
-        return False
 
     def load(
             self,
@@ -1236,7 +1264,24 @@ class Upcoming(object):
             show_upcoming_live: Optional[bool] = None,
             show_live: Optional[bool] = None,
             silent: Optional[bool] = False
-    ):
+    ) -> Optional[List[UpcomingVideo]]:
+        """Get upcoming list data with specific date
+
+        Arguments:
+            date (:class:`bool`) : Specify date to load upcoming.
+            show_vod (:class:`bool`, optional) : Add VOD to upcoming list,
+                defaults to :obj:`self.show_vod`
+            show_upcoming_vod (:class:`bool`, optional) : Add reserved VOD to upcoming list,
+                defaults to :obj:`self.show_upcoming_vod`
+            show_upcoming_live (:class:`bool`, optional) : Add reserved Live to upcoming list,
+                defaults to :obj:`self.show_upcoming_live`
+            show_live (:class:`bool`, optional) : Add on air live to upcoming list,
+                defaults to :obj:`self.show_live`
+            silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+        Returns:
+            :class:`List[UpcomingVideo]`
+        """
         if show_live is None:
             show_live = self.show_live
         if show_vod is None:
@@ -1272,10 +1317,21 @@ class Upcoming(object):
             show_upcoming_live: Optional[bool] = None, 
             show_live: Optional[bool] = None
     ):
-        r""" get upcoming list, auto refresh
+        """Upcoming list with cache life check
 
-        :return: Upcoming list
-        :rtype: list[parser.upcomingVideo]
+        Arguments:
+            force (:class:`bool`, optional) : Force refresh with ignoring refresh rate, defaults to False.
+            show_vod (:class:`bool`, optional) : Add VOD to upcoming list,
+                defaults to :obj:`self.show_vod`
+            show_upcoming_vod (:class:`bool`, optional) : Add reserved VOD to upcoming list,
+                defaults to :obj:`self.show_upcoming_vod`
+            show_upcoming_live (:class:`bool`, optional) : Add reserved Live to upcoming list,
+                defaults to :obj:`self.show_upcoming_live`
+            show_live (:class:`bool`, optional) : Add on air live to upcoming list,
+                defaults to :obj:`self.show_live`
+
+        Returns:
+            :class:`List[UpcomingVideo]`
         """
         self.refresh(force=force)
         if show_live is None:
