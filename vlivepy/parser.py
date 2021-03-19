@@ -85,20 +85,6 @@ def parseUpcomingFromPage(html):
     return upcoming
 
 
-def sessionUserCheck(session):
-    r"""
-
-    :param session: session to evaluate
-    :type session: reqWrapper.requests.Session
-    :return: bool `isUser`
-    :rtype: bool
-    """
-    if 'NEO_SES' in session.cookies.keys():
-        return True
-    else:
-        return False
-
-
 def parseVodIdFromOfficialVideoPost(post, silent=False):
     r"""
 

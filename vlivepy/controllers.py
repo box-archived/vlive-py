@@ -1,29 +1,36 @@
 # -*- coding: utf-8 -*-
 
+from .model import UserSession
 import pickle
-from .parser import sessionUserCheck
 
 
-def dumpSession(session, fp):
-    r""" Dump `UserSession`
+def dumpSession(
+        session: UserSession,
+        fp
+) -> None:
+    """Dump UserSession
 
-    :param session: valid User Session to dump
-    :type session: vlivepy.UserSession
-    :param fp: file to dump
-    :return: Nothing
+    Danger:
+        Dumped UserSession file is unencrypted plain binary. Do not upload/commit dumped file to public place.
+
+    Arguments:
+        session (:class:`UserSession`) : UserSession object to dump
+        fp (Any) : BufferedWriter to write file
     """
-    if sessionUserCheck(session.session):
-        pickle.dump(session, fp)
-    else:
-        raise ValueError("Can't find user data from session")
+
+    pickle.dump(session, fp)
 
 
-def loadSession(fp):
-    r""" load `UserSession`
+def loadSession(
+        fp
+):
+    """Load UserSession
 
-    :param fp: file to load
-    :return: Loaded Session
-    :rtype: vlivepy.UserSession
+    Arguments:
+        fp (Any) : BufferedReader to read file
+
+    Returns:
+        :class:`UserSession`
     """
 
     session = pickle.load(fp)
