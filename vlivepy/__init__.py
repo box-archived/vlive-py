@@ -13,6 +13,7 @@ from .controllers import (
 from .model import (
     Channel,
     Comment,
+    GroupedBoards,
     OfficialVideoPost,
     Post,
     Schedule,

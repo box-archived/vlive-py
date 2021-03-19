@@ -36,6 +36,7 @@ Objects
 
     model/channel
     model/comment
+    model/groupedboards
     model/post
     model/officialvideopost
     model/officialvideolive
