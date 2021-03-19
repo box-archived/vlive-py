@@ -3,15 +3,30 @@
 from typing import Generator, Union
 from . import variables as gv
 from .exception import APINetworkError, auto_raise
-from .model import OfficialVideoPost, Post
+from .model import OfficialVideoPost, Post, UserSession
 from .parser import response_json_stripper, next_page_checker
 from .router import rew_get
 
 
 class BoardPostItem(object):
+    """This is the object for board post list.
+
+   Arguments:
+       post_id (:class:`str`) : Unique id of post.
+       official_video (:class:`bool`) : Session for loading data with permission.
+       session (:class:`UserSession`, optional) : Session for loading data with permission.
+
+   Attributes:
+       session (:class:`UserSession`) : Optional. Session for loading data with permission.
+   """
     __slots__ = ['__post_id', '__official_video', 'session']
 
-    def __init__(self, post_id, official_video, session):
+    def __init__(
+            self,
+            post_id: str,
+            official_video: bool,
+            session: UserSession
+    ):
         self.__post_id = post_id
         self.__official_video = official_video
         self.session = session
@@ -21,6 +36,10 @@ class BoardPostItem(object):
 
     @property
     def post_id(self) -> str:
+        """Unique id of post.
+
+        :rtype: :class:`str`
+        """
         return self.__post_id
 
     @property
