@@ -15,17 +15,17 @@ from .exception import auto_raise, APIJSONParesError, APIServerResponseWarning, 
 class UpcomingVideo(object):
     """This is the named-tuple item of parsed upcoming list"""
 
-    __slots__ = ['_seq', '_time', '_cseq', '_cname', '_ctype', '_name', '_type', '_product']
+    __slots__ = ['__seq', '__time', '__cseq', '__cname', '__ctype', '__name', '__type', '__product']
 
     def __init__(self, seq, time, cseq, cname, ctype, name, type, product):
-        self._seq = seq
-        self._time = time
-        self._cseq = cseq
-        self._cname = cname
-        self._ctype = ctype
-        self._name = name
-        self._type = type
-        self._product = product
+        self.__seq = seq
+        self.__time = time
+        self.__cseq = cseq
+        self.__cname = cname
+        self.__ctype = ctype
+        self.__name = name
+        self.__type = type
+        self.__product = product
 
     def __eq__(self, other):
         if type(self) == type(other):
@@ -52,7 +52,7 @@ class UpcomingVideo(object):
 
         :rtype: :class:`str`
         """
-        return self._seq
+        return self.__seq
 
     @property
     def time(self) -> str:
@@ -60,7 +60,7 @@ class UpcomingVideo(object):
 
         :rtype: :class:`str`
         """
-        return self._time
+        return self.__time
 
     @property
     def cseq(self) -> str:
@@ -68,7 +68,7 @@ class UpcomingVideo(object):
 
         :rtype: :class:`str`
         """
-        return self._seq
+        return self.__seq
 
     @property
     def cname(self) -> str:
@@ -76,7 +76,7 @@ class UpcomingVideo(object):
 
         :rtype: :class:`str`
         """
-        return self._cname
+        return self.__cname
 
     @property
     def ctype(self) -> str:
@@ -87,7 +87,7 @@ class UpcomingVideo(object):
 
         :rtype: :class:`str`
         """
-        return self._ctype
+        return self.__ctype
 
     @property
     def name(self) -> str:
@@ -95,7 +95,7 @@ class UpcomingVideo(object):
 
         :rtype: :class:`str`
         """
-        return self._name
+        return self.__name
 
     @property
     def type(self) -> str:
@@ -106,7 +106,7 @@ class UpcomingVideo(object):
 
         :rtype: :class:`str`
         """
-        return self._type
+        return self.__type
 
     @property
     def product(self) -> str:
@@ -117,7 +117,7 @@ class UpcomingVideo(object):
 
         :rtype: :class:`str`
         """
-        return self._product
+        return self.__product
 
 
 def parseUpcomingFromPage(html):
