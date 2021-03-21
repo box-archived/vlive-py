@@ -1,34 +1,58 @@
 # -*- coding: utf-8 -*-
 
-from typing import Generator
+from typing import (
+    Generator,
+    Optional,
+)
 from . import variables as gv
 from .exception import APINetworkError, auto_raise
 from .parser import response_json_stripper, next_page_checker
 from .router import rew_get
+from .session import UserSession
 
 
-def comment_parser(comment_list: list, session=None):
+def comment_parser(
+        comment_list: list,
+        session=None
+) -> list:
+    """Parse each comment json data to :class:`vlivepy.Comment` object.
+
+    Arguments:
+        comment_list (:class:`list`) : Comment list to parse.
+        session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
+
+    Returns:
+        List of :class:`vlivepy.Comment`
+    """
+
     from .model import Comment
     n_list = []
-    for comment in comment_list:
-        n_list.append(Comment(comment['commentId'], session=session, init_data=comment))
+    for comment_item in comment_list:
+        n_list.append(Comment(comment_item['commentId'], session=session, init_data=comment_item))
 
     return n_list
 
 
-def getPostComments(post, session=None, after=None, silent=False):
-    r""" Get post's comments
+def getPostComments(
+        post_id: str,
+        session: UserSession = None,
+        after: str = None,
+        silent: bool = False
+) -> Optional[dict]:
+    """Get comments of the post.
 
-    :param post: postId from VLIVE (like #-########)
-    :param after: load page after #comment-Id
-    :param session: use specific session
-    :param silent: Return `None` instead of Exception
-    :return: comments
-    :rtype: dict
+    Arguments:
+        post_id (:class:`str`) : Unique id of the post to load comment.
+        session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
+        after (:class:`str`, optional) : After parameter to load another page, defaults to None.
+        silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+    Returns:
+        :class:`dict`. Parsed json data.
     """
 
     # Make request
-    sr = rew_get(**gv.endpoint_post_comments(post, after),
+    sr = rew_get(**gv.endpoint_post_comments(post_id, after),
                  wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
@@ -42,40 +66,54 @@ def getPostComments(post, session=None, after=None, silent=False):
     return None
 
 
-def getPostCommentsIter(post, session=None):
-    r""" Get post's comments
+def getPostCommentsIter(
+        post_id,
+        session=None
+):
+    """Get comments of post as iterable (generator).
 
-    :param post: postId from VLIVE (like #-########)
-    :param session: use specific session
-    :return: comments generator
-    :rtype: Generator[Comment, None, None]
+    Arguments:
+        post_id (:class:`str`) : Unique id of the post to load comment.
+        session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
+
+    :rtype: Generator[vlivepy.Comment, None, None]
+
+    Yields:
+        :class:`vlivepy.Comment`
     """
 
-    data = getPostComments(post, session=session)
+    data = getPostComments(post_id, session=session)
     after = next_page_checker(data)
     for item in data['data']:
         yield item
 
     while after:
-        data = getPostComments(post, session=session, after=after)
+        data = getPostComments(post_id, session=session, after=after)
         after = next_page_checker(data)
         for item in data['data']:
             yield item
 
 
-def getPostStarComments(post, session=None, after=None, silent=False):
-    r""" Get post's star comments
+def getPostStarComments(
+        post_id: str,
+        session: UserSession = None,
+        after: str = None,
+        silent: bool = False
+) -> Optional[dict]:
+    """Get star comments of the post.
 
-    :param post: postId from VLIVE (like #-########)
-    :param after: load page after #comment-Id
-    :param session: use specific session
-    :param silent: Return `None` instead of Exception
-    :return: comments
-    :rtype: dict
+    Arguments:
+        post_id (:class:`str`) : Unique id of the post to load star comment.
+        session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
+        after (:class:`str`, optional) : After parameter to load another page, defaults to None.
+        silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+    Returns:
+        :class:`dict`. Parsed json data.
     """
 
     # Make request
-    sr = rew_get(**gv.endpoint_post_star_comments(post, after),
+    sr = rew_get(**gv.endpoint_post_star_comments(post_id, after),
                  wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
@@ -89,39 +127,52 @@ def getPostStarComments(post, session=None, after=None, silent=False):
     return None
 
 
-def getPostStarCommentsIter(post, session=None):
-    r""" Get post's star comments as Iterable
+def getPostStarCommentsIter(
+        post_id: str,
+        session: UserSession = None
+):
+    """Get star comments of post as iterable (generator).
 
-    :param post: postId from VLIVE (like #-########)
-    :param session: use specific session
-    :return: comments generator
-    :rtype: Generator[Comment, None, None]
+    Arguments:
+        post_id (:class:`str`) : Unique id of the post to load star comment.
+        session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
+
+    :rtype: Generator[vlivepy.Comment, None, None]
+
+    Yields:
+        :class:`vlivepy.Comment`
     """
 
-    data = getPostStarComments(post, session=session)
+    data = getPostStarComments(post_id, session=session)
     after = next_page_checker(data)
     for item in data['data']:
         yield item
 
     while after:
-        data = getPostStarComments(post, session=session, after=after)
+        data = getPostStarComments(post_id, session=session, after=after)
         after = next_page_checker(data)
         for item in data['data']:
             yield item
 
 
-def getCommentData(commentId, session=None, silent=False):
-    r""" Get post's star comments
+def getCommentData(
+        comment_id: str,
+        session: UserSession = None,
+        silent: bool = False
+) -> Optional[dict]:
+    """Get detailed comment data.
 
-    :param commentId: comment ID from VLIVE (like #-########)
-    :param session: use specific session
-    :param silent: Return `None` instead of Exception
-    :return: comment
-    :rtype: dict
+    Arguments:
+        comment_id (:class:`str`) : Unique id of the comment to load data.
+        session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
+        silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+    Returns:
+        :class:`dict`. Parsed json data
     """
 
     # Make request
-    sr = rew_get(**gv.endpoint_comment_data(commentId),
+    sr = rew_get(**gv.endpoint_comment_data(comment_id),
                  wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
@@ -132,9 +183,26 @@ def getCommentData(commentId, session=None, silent=False):
     return None
 
 
-def getNestedComments(commentId, session=None, after=None, silent=False):
+def getNestedComments(
+        comment_id: str,
+        session: UserSession = None,
+        after: str = None,
+        silent: bool = False
+) -> Optional[dict]:
+    """Get nested comments of the comment.
+
+    Arguments:
+        comment_id (:class:`str`) : Unique id of the comment to load nested comment.
+        session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
+        after (:class:`str`, optional) : After parameter to load another page, defaults to None.
+        silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+    Returns:
+        :class:`dict`. Parsed json data.
+    """
+
     # Make request
-    sr = rew_get(**gv.endpoint_comment_nested(commentId, after),
+    sr = rew_get(**gv.endpoint_comment_nested(comment_id, after),
                  wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
@@ -148,22 +216,29 @@ def getNestedComments(commentId, session=None, after=None, silent=False):
     return None
 
 
-def getNestedCommentsIter(commentId, session=None):
-    r""" Get post's comments
+def getNestedCommentsIter(
+        comment_id: str,
+        session: UserSession = None
+):
+    """Get nested comments of the comment as iterable (generator).
 
-    :param commentId: commentId from VLIVE (like #-########)
-    :param session: use specific session
-    :return: comments generator
-    :rtype: Generator[Comment, None, None]
+    Arguments:
+        comment_id (:class:`str`) : Unique id of the comment to load nested comment.
+        session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
+
+    :rtype: Generator[vlivepy.Comment, None, None]
+
+    Yields:
+        :class:`vlivepy.Comment`
     """
 
-    data = getNestedComments(commentId, session=session)
+    data = getNestedComments(comment_id, session=session)
     after = next_page_checker(data)
     for item in data['data']:
         yield item
 
     while after:
-        data = getNestedComments(commentId, session=session, after=after)
+        data = getNestedComments(comment_id, session=session, after=after)
         after = next_page_checker(data)
         for item in data['data']:
             yield item
