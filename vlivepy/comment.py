@@ -13,7 +13,7 @@ from .session import UserSession
 
 def comment_parser(
         comment_list: list,
-        session=None
+        session: UserSession = None
 ) -> list:
     """Parse each comment json data to :class:`vlivepy.Comment` object.
 
@@ -67,8 +67,8 @@ def getPostComments(
 
 
 def getPostCommentsIter(
-        post_id,
-        session=None
+        post_id: str,
+        session: UserSession = None
 ):
     """Get comments of post as iterable (generator).
 
