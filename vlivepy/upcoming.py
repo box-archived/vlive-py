@@ -35,17 +35,7 @@ class UpcomingVideo(object):
         return False
 
     def __repr__(self):
-        repr_string = "UpcomingVideo("
-        start = False
-        for item in self.__slots__:
-            if start:
-                repr_string += ", "
-            repr_string += "%s=%s" % (item, self.__getattribute__(item))
-            start = True
-
-        repr_string += ")"
-
-        return repr_string
+        return "<UpcomingVideo [%s:%s]>" % (self.__seq, self.__type)
 
     @property
     def seq(self) -> str:
