@@ -2,11 +2,6 @@ parser
 ======
 This page describes **parser** module which can be imported as :code:`vlivepy.parser`
 
-UpcomingVideo
--------------
-.. autoclass:: vlivepy.parser.UpcomingVideo
-    :members:
-
 channel_info_from_channel_page()
 --------------------------------
 .. autofunction:: vlivepy.parser.channel_info_from_channel_page()
@@ -22,10 +17,6 @@ max_res_from_play_info()
 next_page_checker()
 -------------------
 .. autofunction:: vlivepy.parser.next_page_checker()
-
-parseUpcomingFromPage()
------------------------
-.. autofunction:: vlivepy.parser.parseUpcomingFromPage()
 
 parseVodIdFromOfficialVideoPost()
 ---------------------------------
