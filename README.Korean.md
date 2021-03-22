@@ -14,3 +14,10 @@ vlivepy는 파이썬 기반의 비공식 [VLIVE](https://www.vlive.tv/) API입�
 ```console
 $ python -m pip install vlivepy
 ```
+
+## 문서
+vlivepy에 대한 문서는 [https://vlivepy.readthedocs.io/](https://vlivepy.readthedocs.io/) 에서 찾을 수 있습니다.
+
+## 사용 중 문제가 있나요?
+[issue](https://github.com/box-archived/vlive-py/issues) 페이지에서 관련된 문제를 찾거나 이슈를 작성하세요.
+[discussion](https://github.com/box-archived/vlive-py/discussions) 페이지에서 사용에 대한 도움을 얻을 수 있습니다.
