@@ -2,10 +2,12 @@
 > [English](README.md) Korean
 
 # vlivepy
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/box-archived/vlive-py)](https://github.com/box-archived/vlive-py/releases/latest)
-[![PyPI](https://img.shields.io/pypi/v/vlivepy)](https://pypi.org/project/vlivepy/)
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/box-archived/vlive-py?include_prereleases&label=dev)](https://github.com/box-archived/vlive-py/releases/)
 [![GitHub](https://img.shields.io/github/license/box-archived/vlive-py)](LICENSE)
+[![Documentation Status](https://readthedocs.org/projects/vlivepy/badge/?version=latest)](https://vlivepy.readthedocs.io/en/latest/?badge=latest)
+
+[![PyPI](https://img.shields.io/pypi/v/vlivepy)](https://pypi.org/project/vlivepy/)
+[![Downloads](https://pepy.tech/badge/vlivepy)](https://pepy.tech/project/vlivepy)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/box-archived/vlive-py?include_prereleases&label=dev)](https://github.com/box-archived/vlive-py/releases/)
 
 vlivepy는 파이썬 기반의 비공식 [VLIVE](https://www.vlive.tv/) API입니다.
 
