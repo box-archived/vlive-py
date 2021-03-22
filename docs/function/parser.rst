@@ -18,10 +18,6 @@ next_page_checker()
 -------------------
 .. autofunction:: vlivepy.parser.next_page_checker()
 
-parseVodIdFromOfficialVideoPost()
----------------------------------
-.. autofunction:: vlivepy.parser.parseVodIdFromOfficialVideoPost()
-
 response_json_stripper()
 ------------------------
 .. autofunction:: vlivepy.parser.response_json_stripper()
