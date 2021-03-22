@@ -14,19 +14,26 @@ from .parser import (
     response_json_stripper,
 )
 from .router import rew_get
+from .session import UserSession
 
 
-def getPostInfo(post, session=None, silent=False):
-    r""" get post info
+def getPostInfo(
+        post_id: str,
+        session: UserSession = None,
+        silent: bool = False
+) -> Optional[dict]:
+    """Get detailed post data.
 
-    :param post: postId from VLIVE (like #-########)
-    :param session: use specific session
-    :param silent: Return `None` instead of Exception
-    :return: videoInfo
-    :rtype: dict
+    Arguments:
+        post_id (:class:`str`) : Unique id of the post to load data.
+        session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
+        silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+    Returns:
+        :class:`dict`. Parsed json data
     """
 
-    sr = rew_get(**gv.endpoint_post(post),
+    sr = rew_get(**gv.endpoint_post(post_id),
                  wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
@@ -63,7 +70,7 @@ def postIdToVideoSeq(
 
 
 def videoSeqToPostId(
-        videoSeq: Union[str, int],
+        video_seq: Union[str, int],
         silent=False
 ) -> Optional[str]:
     from .video import getOfficialVideoPost
@@ -77,7 +84,7 @@ def videoSeqToPostId(
         :class:`str`. Paired post id of the videoSeq.
     """
 
-    post = getOfficialVideoPost(videoSeq, silent=silent)
+    post = getOfficialVideoPost(video_seq, silent=silent)
 
     if post:
         return post['postId']
