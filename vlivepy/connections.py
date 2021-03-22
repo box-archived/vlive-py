@@ -73,16 +73,17 @@ def videoSeqToPostId(
         video_seq: Union[str, int],
         silent=False
 ) -> Optional[str]:
-    from .video import getOfficialVideoPost
     """Convert videoSeq id to post id
     
     Arguments:
-        videoSeq (:class:`str`, optional) : VideoSeq to convert to post id.
+        video_seq (:class:`str`, optional) : VideoSeq to convert to post id.
         silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
     
     Returns:
         :class:`str`. Paired post id of the videoSeq.
     """
+
+    from .video import getOfficialVideoPost
 
     post = getOfficialVideoPost(video_seq, silent=silent)
 
