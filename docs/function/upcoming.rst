@@ -9,4 +9,4 @@ UpcomingVideo
 
 getUpcomingList()
 -----------------
-.. autofunction:: vlivepy.upcoming.getUpcomingList()
+.. autofunction:: vlivepy.upcoming.getUpcomingList
