@@ -1035,8 +1035,8 @@ class Post(PostModel):
             elif at_type == "video":
 
                 play_info = getFVideoPlayInfo(
-                    videoSeqId=at_data['videoId'],
-                    videoVodId=at_data['uploadInfo']['videoId'],
+                    f_video_id=at_data['videoId'],
+                    f_vod_id=at_data['uploadInfo']['videoId'],
                     session=self.session
                 )
                 video = max_res_from_play_info(play_info)
