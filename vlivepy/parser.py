@@ -12,7 +12,7 @@ def response_json_stripper(parsed_json_dict: dict, silent=False):
         if "result" in parsed_json_dict:
             parsed_json_dict = parsed_json_dict['result']
         else:
-            parsed_json_dict = None
+            parsed_json_dict = {}
     elif 'errorCode' in parsed_json_dict:
         err_tuple = (parsed_json_dict['errorCode'], parsed_json_dict['message'].replace("\n", " "))
         if 'data' in parsed_json_dict:
@@ -20,6 +20,7 @@ def response_json_stripper(parsed_json_dict: dict, silent=False):
             parsed_json_dict = parsed_json_dict['data']
         else:
             auto_raise(APIServerResponseError('[%s] %s' % err_tuple), silent=silent)
+            return None
 
     # if data has data field (Fanship)
     if "data" in parsed_json_dict and len(parsed_json_dict) == 1:
