@@ -6,6 +6,10 @@ vlivepy.postIdToVideoSeq()
 --------------------------
 .. autofunction:: vlivepy.postIdToVideoSeq
 
+vlivepy.videoSeqToPostId()
+--------------------------
+.. autofunction:: vlivepy.videoSeqToPostId
+
 vlivepy.postTypeDetector()
 --------------------------
 .. autofunction:: vlivepy.postTypeDetector
