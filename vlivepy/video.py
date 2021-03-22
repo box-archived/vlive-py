@@ -161,10 +161,13 @@ def getInkeyData(
 
     # Make request
     sr = rew_get(**gv.endpoint_vod_inkey(video_seq),
-                 wait=0.5, session=session, status=[200])
+                 wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
-        return response_json_stripper(sr.response.json(), silent=silent)
+        if sr.status_code == 403:
+            auto_raise(APIServerResponseError("Video %s is not VOD" % video_seq), silent)
+        else:
+            return response_json_stripper(sr.response.json(), silent=silent)
     else:
         auto_raise(APINetworkError, silent)
 
