@@ -22,4 +22,3 @@ from .model import (
     OfficialVideoLive,
     OfficialVideoVOD,
 )
-from .parser import UpcomingVideo
