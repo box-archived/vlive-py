@@ -44,13 +44,15 @@ from .html_template import (
 from .parser import (
     format_epoch,
     max_res_from_play_info,
-    UpcomingVideo,
     v_timestamp_parser,
 )
 from .post import getFVideoPlayInfo
 from .schedule import getScheduleData
 from .session import UserSession
-from .upcoming import getUpcomingList
+from .upcoming import (
+    getUpcomingList,
+    UpcomingVideo
+)
 from .video import (
     getInkeyData,
     getLivePlayInfo,
