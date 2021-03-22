@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import json
 from typing import (
     Optional
 )
+
+from bs4 import BeautifulSoup
 
 from . import variables as gv
 from .exception import (
     auto_raise,
     APINetworkError,
+    APIJSONParesError
 )
-from .parser import channel_info_from_channel_page
 from .router import rew_get
 from .session import UserSession
 
@@ -35,7 +38,13 @@ def getChannelInfo(
                  wait=0.5, session=session, status=[200])
 
     if sr.success:
-        return channel_info_from_channel_page(sr.response.text)
+        soup = BeautifulSoup(sr.response.text, "html.parser")
+        for item in soup.find_all("script"):
+            if "__PRELOADED_STATE__" in str(item):
+                script: str = item.contents[0].split("function")[0]
+                return json.loads(script[script.find("{"): -1])['channel']['channel']
+        else:
+            auto_raise(APIJSONParesError("Cannot find channel data from page"), silent)
     else:
         auto_raise(APINetworkError, silent)
 

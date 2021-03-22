@@ -2,10 +2,6 @@ parser
 ======
 This page describes **parser** module which can be imported as :code:`vlivepy.parser`
 
-channel_info_from_channel_page()
---------------------------------
-.. autofunction:: vlivepy.parser.channel_info_from_channel_page()
-
 format_epoch()
 --------------
 .. autofunction:: vlivepy.parser.format_epoch()
