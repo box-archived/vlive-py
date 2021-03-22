@@ -1,3 +1,4 @@
+import vlivepy
 from setuptools import setup
 
 with open("README.md", "r", encoding="utf8") as fh:
@@ -5,7 +6,7 @@ with open("README.md", "r", encoding="utf8") as fh:
 
 setup(
     name='vlivepy',
-    version='0.3.4',
+    version=vlivepy.__version__,
     packages=['vlivepy'],
     url='https://github.com/box-archived/vlive-py',
     license='MIT License',

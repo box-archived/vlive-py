@@ -15,7 +15,7 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 
 # import sphinx_rtd_theme
-# import vlivepy
+import vlivepy
 
 # -- Project information -----------------------------------------------------
 
@@ -24,7 +24,7 @@ copyright = '2021, box-archived'
 author = 'box-archived'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
+release = vlivepy.__version__
 
 
 # -- General configuration ---------------------------------------------------
