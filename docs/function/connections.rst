@@ -16,7 +16,7 @@ This function has alias of :func:`vlivepy.postIdToVideoSeq`
 
 videoSeqToPostId()
 ------------------
-Will be refactored
+This function has alias of :func:`vlivepy.videoSeqToPostId`
 
 postTypeDetector()
 ------------------
