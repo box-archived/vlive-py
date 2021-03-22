@@ -37,6 +37,16 @@ class UpcomingVideo(object):
     def __repr__(self):
         return "<UpcomingVideo [%s:%s]>" % (self.__seq, self.__type)
 
+    def __iter__(self):
+        yield "seq", self.__seq
+        yield "time", self.__time
+        yield "cseq", self.__cseq
+        yield "cname", self.__cname
+        yield "ctype", self.__ctype
+        yield "name", self.__name
+        yield "type", self.__type
+        yield "product", self.__product
+
     @property
     def seq(self) -> str:
         """VideoSeq of item.
@@ -59,7 +69,7 @@ class UpcomingVideo(object):
 
         :rtype: :class:`str`
         """
-        return self.__seq
+        return self.__cseq
 
     @property
     def cname(self) -> str:
