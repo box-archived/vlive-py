@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import pickle
+from typing import (
+    Optional
+)
 
 import reqWrapper
 
@@ -12,14 +15,20 @@ from .exception import (
 from . import variables as gv
 
 
-def getUserSession(email, pwd, silent=False):
-    r""" Get user session
+def getUserSession(
+        email: str,
+        pwd: str,
+        silent: bool = False
+) -> Optional[reqWrapper.Session]:
+    """Get logged in :class:`reqWrapper.Session` session
 
-    :param email: VLIVE email
-    :param pwd: VLIVE password
-    :param silent: Return `None` instead of Exception
-    :return: :class 'requests.Session` Session Object
-    :rtype: reqWrapper.requests.Session
+    Arguments:
+        email (:class:`str`) : Email of the account to sign-in.
+        pwd (:class:`vlivepy.UserSession`, optional) : Password of the account to sign-in.
+        silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+
+    Returns:
+        :class:`reqWrapper.Session`. Logged in session.
     """
 
     # Make request
@@ -107,7 +116,7 @@ def dumpSession(
 
 def loadSession(
         fp
-):
+) -> UserSession:
     """Load UserSession
 
     Arguments:
