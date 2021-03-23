@@ -24,3 +24,4 @@ from .model import (
     OfficialVideoLive,
     OfficialVideoVOD,
 )
+from . import exception
