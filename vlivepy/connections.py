@@ -58,7 +58,7 @@ def postIdToVideoSeq(
         :class:`str`. Paired videoSeq id of the post.
     """
 
-    post = getPostInfo(post_id, silent=silent)
+    post = getPostInfo(post_id, silent=True)
 
     if post:
         if 'officialVideo' in post:
@@ -85,7 +85,7 @@ def videoSeqToPostId(
 
     from .video import getOfficialVideoPost
 
-    post = getOfficialVideoPost(video_seq, silent=silent)
+    post = getOfficialVideoPost(video_seq, silent=True)
 
     if post:
         return post['postId']
@@ -104,7 +104,7 @@ def postTypeDetector(post_id, silent=False):
         :class:`str`. “POST” if the post is normal Post. “VIDEO” if the post is OfficialVideoPost
     """
 
-    data = getPostInfo(post_id, silent=silent)
+    data = getPostInfo(post_id, silent=True)
     if data is not None:
         return data['contentType']
 
