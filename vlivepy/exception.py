@@ -41,3 +41,7 @@ class APIServerResponseWarning(Warning):
 
 class ModelRefreshWarning(Warning):
     """ Model refresh failed """
+
+
+class ModelInitWarning(Warning):
+    """ Warning with init object """

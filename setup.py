@@ -16,8 +16,8 @@ setup(
     long_description_content_type="text/markdown",
     description='VLIVE(vlive.tv) parser for python',
     install_requires=[
-        'requests>=2.*',
-        'reqWrapper>=0.2.*',
-        'beautifulsoup4>=4.*'
+        'requests>=2.22',
+        'reqWrapper>=0.2.1',
+        'beautifulsoup4>=4.9.3'
     ]
 )

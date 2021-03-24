@@ -36,6 +36,7 @@ from .connections import (
 from .exception import (
     ModelRefreshWarning,
     ModelInitError,
+    ModelInitWarning,
 )
 from .html_template import (
     formatted_body_template,
@@ -976,6 +977,8 @@ class Post(PostModel):
             session: Optional[UserSession] = None
     ):
         super().__init__(post_id, session)
+        if self.content_type != "POST":
+            warn(ModelInitWarning("Post-%s may be a OfficialVideoPost, not a Post." % self.target_id))
 
     def __repr__(self):
         return "<VLIVE Post [%s]>" % self.post_id
@@ -1088,6 +1091,9 @@ class OfficialVideoPost(PostModel):
         if "-" not in init_id:
             init_id = videoSeqToPostId(init_id)
         super().__init__(init_id, session)
+
+        if self.content_type != "VIDEO":
+            warn(ModelInitWarning("Post-%s may be a Post, not a OfficialVideoPost." % self.target_id))
 
     def __repr__(self):
         return "<VLIVE OfficialVideoPost [%s]>" % self.video_seq

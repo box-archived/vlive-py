@@ -96,6 +96,15 @@ class UserSession(object):
         """
         return self.__session
 
+    @property
+    def email(self) -> str:
+        """Get logged-in email info.
+
+        :rtype: :class:`str`
+        """
+
+        return self.__email
+
 
 def dumpSession(
         session: UserSession,
