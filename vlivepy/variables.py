@@ -303,12 +303,12 @@ def endpoint_channel_grouped_boards(channel_code):
     return {"url": url, "headers": headers, "params": params}
 
 
-def endpoint_board_posts(board, channel_code, after=None, latest=False):
+def endpoint_board_posts(channel_code, board, after=None, latest=False):
     url = "https://www.vlive.tv/globalv-web/vam-web/post/v1.0/board-%s/posts" % board
     params = {
         **AppId,
         **LocaleParam,
-        "fields": "postId,officialVideo",
+        "fields": "postId,title,author{nickname},createdAt,contentType",
         "limit": 20,
     }
     headers = {
