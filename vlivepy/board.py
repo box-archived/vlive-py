@@ -8,7 +8,7 @@ from typing import (
 from . import variables as gv
 from .exception import APINetworkError, auto_raise
 from .model import OfficialVideoPost, Post
-from .parser import response_json_stripper, next_page_checker
+from .parser import response_json_stripper, next_page_checker, v_timestamp_parser
 from .router import rew_get
 from .session import UserSession
 
@@ -17,23 +17,31 @@ class BoardPostItem(object):
     """This is the object for board post list.
 
    Arguments:
-       post_id (:class:`str`) : Unique id of post.
-       official_video (:class:`bool`) : Session for loading data with permission, defaults to None.
+       post_item (:class:`bool`) : Post item dict from :func:`getBoardPost`.
        session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission.
 
    Attributes:
        session (:class:`vlivepy.UserSession`) : Optional. Session for loading data with permission.
    """
-    __slots__ = ['__post_id', '__official_video', 'session']
+    __slots__ = [
+        '__post_id',
+        '__title',
+        '__author_nickname',
+        '__created_at',
+        '__content_type',
+        'session',
+    ]
 
     def __init__(
             self,
-            post_id: str,
-            official_video: bool,
-            session: UserSession
+            post_item: dict,
+            session: UserSession,
     ):
-        self.__post_id = post_id
-        self.__official_video = official_video
+        self.__post_id = post_item['postId']
+        self.__author_nickname = post_item['author']['nickname']
+        self.__created_at = post_item['createdAt']
+        self.__content_type = post_item['contentType']
+        self.__title = post_item['title']
         self.session = session
 
     def __repr__(self):
@@ -53,7 +61,46 @@ class BoardPostItem(object):
 
         :rtype: :class:`bool`
         """
-        return self.__official_video
+        if self.__content_type == "VIDEO":
+            return True
+        else:
+            return False
+
+    @property
+    def title(self) -> str:
+        """Title of the post
+
+        :rtype: :class:`str`
+        """
+        return self.__title
+
+    @property
+    def created_at(self) -> float:
+        """Epoch timestamp about created time. The nanosecond units are displayed below the decimal point.
+
+        :rtype: :class:`float`
+        """
+        return v_timestamp_parser(self.__created_at)
+
+    @property
+    def author_nickname(self) -> str:
+        """Nickname of author.
+
+        :rtype: :class:`str`
+        """
+        return self.__author_nickname
+
+    @property
+    def content_type(self) -> str:
+        """Type of post.
+
+        Returns:
+            "POST" if the post is normal Post.
+            "VIDEO" if the post is OfficialVideoPost
+
+        :rtype: :class:`str`
+        """
+        return self.__content_type
 
     def to_object(self) -> Union[Post, OfficialVideoPost]:
         """Initialize matched object from post_id
@@ -62,7 +109,7 @@ class BoardPostItem(object):
             :class:`vlivepy.Post`, if the post is normal post.
             :class:`vlivepy.OfficialVideoPost`, if the post is official video
         """
-        if self.__official_video:
+        if self.__content_type == "VIDEO":
             return OfficialVideoPost(self.post_id, session=self.session)
         else:
             return Post(self.post_id, session=self.session)
@@ -99,11 +146,7 @@ def getBoardPosts(
         if 'data' in stripped_data:
             parsed_data = []
             for item in stripped_data['data']:
-                parsed_data.append(BoardPostItem(
-                    item['postId'],
-                    "officialVideo" in item,
-                    session
-                ))
+                parsed_data.append(BoardPostItem(item, session))
             stripped_data['data'] = parsed_data
         return stripped_data
     else:

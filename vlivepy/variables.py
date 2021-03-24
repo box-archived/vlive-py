@@ -308,7 +308,7 @@ def endpoint_board_posts(channel_code, board, after=None, latest=False):
     params = {
         **AppId,
         **LocaleParam,
-        "fields": "postId,officialVideo",
+        "fields": "postId,title,author{nickname},createdAt,contentType",
         "limit": 20,
     }
     headers = {
