@@ -69,8 +69,8 @@ class BoardPostItem(object):
 
 
 def getBoardPosts(
-        board_id: Union[str, int],
         channel_code: str,
+        board_id: Union[str, int],
         session: UserSession = None,
         after: str = None,
         latest: bool = False,
@@ -79,8 +79,8 @@ def getBoardPosts(
     """Get board post from page
 
     Arguments:
-        board_id (:class:`str`) : Unique id of the board to load.
         channel_code (:class:`str`) : Unique id of the channel which contains board.
+        board_id (:class:`str`) : Unique id of the board to load.
         session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
         after (:class:`str`, optional) : After parameter to load another page, defaults to None.
         latest (:class:`bool`, optional) : Load latest post first, defaults to False.
@@ -91,7 +91,7 @@ def getBoardPosts(
     """
 
     # Make request
-    sr = rew_get(**gv.endpoint_board_posts(board_id, channel_code, after=after, latest=latest),
+    sr = rew_get(**gv.endpoint_board_posts(channel_code, board_id, after=after, latest=latest),
                  wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
@@ -113,16 +113,16 @@ def getBoardPosts(
 
 
 def getBoardPostsIter(
-        board_id: Union[str, int],
         channel_code: str,
+        board_id: Union[str, int],
         session: UserSession = None,
         latest: bool = False
 ) -> Generator[BoardPostItem, None, None]:
     """Get board post as iterable (generator).
 
     Arguments:
-        board_id (:class:`str`) : Unique id of the board to load.
         channel_code (:class:`str`) : Unique id of the channel which contains board.
+        board_id (:class:`str`) : Unique id of the board to load.
         session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
         latest (:class:`str`, optional) : Load latest post first.
 
@@ -130,13 +130,13 @@ def getBoardPostsIter(
         :class:`BoardPostItem`
     """
 
-    data = getBoardPosts(board_id, channel_code, session=session, latest=latest)
+    data = getBoardPosts(channel_code, board_id, session=session, latest=latest)
     after = next_page_checker(data)
     for item in data['data']:
         yield item
 
     while after:
-        data = getBoardPosts(board_id, channel_code, session=session, after=after, latest=latest)
+        data = getBoardPosts(channel_code, board_id, session=session, after=after, latest=latest)
         after = next_page_checker(data)
         for item in data['data']:
             yield item
