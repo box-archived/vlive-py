@@ -696,11 +696,16 @@ class OfficialVideoVOD(OfficialVideoModel):
         """Status of DRM protection
 
         Returns:
-            "READY" if the DRM is ready but not applied to video. "COMPLETE" if the DRM is applied to video.
+            "NONE" if the DRM is unavailable.
+            "READY" if the DRM is ready but not applied to video.
+            "COMPLETE" if the DRM is applied to video.
 
         :rtype: :class:`str`
         """
-        return self._data_cache['vodSecureStatus']
+        if 'vodSecureStatus' in self._data_cache:
+            return self._data_cache['vodSecureStatus']
+        else:
+            return "NONE"
 
     @property
     def dimension_type(self) -> str:
