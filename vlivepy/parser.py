@@ -12,7 +12,8 @@ from .exception import auto_raise, APIServerResponseWarning, APIServerResponseEr
 
 def response_json_stripper(
         parsed_json_dict: dict,
-        silent: bool = False
+        silent: bool = False,
+        raise_message = False
 ) -> Optional[dict]:
     """General parser for normalize response data format of json.
     This parses result and deletes response code. Also strip "data" field when dealing with membership response.
@@ -20,6 +21,7 @@ def response_json_stripper(
     Arguments:
         parsed_json_dict (:class:`dict`) : Loaded json data to normalize.
         silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+        raise_message (:class:`bool`, optional) : Raise exception instead of warning, defaults to False.
 
     Returns:
         :class:`dict`. Parsed json data
@@ -37,7 +39,10 @@ def response_json_stripper(
         err_tuple = (parsed_json_dict['errorCode'], parsed_json_dict['message'].replace("\n", " "))
         if 'data' in parsed_json_dict:
             if not silent:
-                warn("Response has error [%s] %s" % err_tuple, APIServerResponseWarning)
+                if raise_message:
+                    raise APIServerResponseError('[%s] %s' % err_tuple)
+                else:
+                    warn("Response has error [%s] %s" % err_tuple, APIServerResponseWarning)
             parsed_json_dict = parsed_json_dict['data']
         else:
             auto_raise(APIServerResponseError('[%s] %s' % err_tuple), silent=silent)

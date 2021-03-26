@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from warnings import catch_warnings
 from typing import (
     Generator,
     Union,
@@ -121,7 +122,8 @@ def getBoardPosts(
         session: UserSession = None,
         after: str = None,
         latest: bool = False,
-        silent: bool = False
+        silent: bool = False,
+        raise_message: bool = False,
 ) -> Optional[dict]:
     """Get board post from page
 
@@ -132,6 +134,7 @@ def getBoardPosts(
         after (:class:`str`, optional) : After parameter to load another page, defaults to None.
         latest (:class:`bool`, optional) : Load latest post first, defaults to False.
         silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+        raise_message (:class:`bool`, optional) : Raise exception instead of parser warning, defaults to False.
 
     Returns:
         :class:`dict`. Parsed json data.
@@ -142,7 +145,7 @@ def getBoardPosts(
                  wait=0.5, session=session, status=[200, 403])
 
     if sr.success:
-        stripped_data = response_json_stripper(sr.response.json(), silent=silent)
+        stripped_data = response_json_stripper(sr.response.json(), silent=silent, raise_message=raise_message)
         if 'data' in stripped_data:
             parsed_data = []
             for item in stripped_data['data']:
@@ -173,13 +176,13 @@ def getBoardPostsIter(
         :class:`BoardPostItem`
     """
 
-    data = getBoardPosts(channel_code, board_id, session=session, latest=latest)
+    data = getBoardPosts(channel_code, board_id, session=session, latest=latest, raise_message=True)
     after = next_page_checker(data)
     for item in data['data']:
         yield item
 
     while after:
-        data = getBoardPosts(channel_code, board_id, session=session, after=after, latest=latest)
+        data = getBoardPosts(channel_code, board_id, session=session, after=after, latest=latest, raise_message=True)
         after = next_page_checker(data)
         for item in data['data']:
             yield item

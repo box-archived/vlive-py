@@ -37,7 +37,8 @@ def getPostComments(
         post_id: str,
         session: UserSession = None,
         after: str = None,
-        silent: bool = False
+        silent: bool = False,
+        raise_message: bool = False,
 ) -> Optional[dict]:
     """Get comments of the post.
 
@@ -46,6 +47,7 @@ def getPostComments(
         session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
         after (:class:`str`, optional) : After parameter to load another page, defaults to None.
         silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+        raise_message (:class:`bool`, optional) : Raise exception instead of warning, defaults to False.
 
     Returns:
         :class:`dict`. Parsed json data.
@@ -82,13 +84,13 @@ def getPostCommentsIter(
         :class:`vlivepy.Comment`
     """
 
-    data = getPostComments(post_id, session=session)
+    data = getPostComments(post_id, session=session, raise_message=True)
     after = next_page_checker(data)
     for item in data['data']:
         yield item
 
     while after:
-        data = getPostComments(post_id, session=session, after=after)
+        data = getPostComments(post_id, session=session, after=after, raise_message=True)
         after = next_page_checker(data)
         for item in data['data']:
             yield item
@@ -98,7 +100,8 @@ def getPostStarComments(
         post_id: str,
         session: UserSession = None,
         after: str = None,
-        silent: bool = False
+        silent: bool = False,
+        raise_message: bool = False,
 ) -> Optional[dict]:
     """Get star comments of the post.
 
@@ -107,6 +110,7 @@ def getPostStarComments(
         session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
         after (:class:`str`, optional) : After parameter to load another page, defaults to None.
         silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+        raise_message (:class:`bool`, optional) : Raise exception instead of warning, defaults to False.
 
     Returns:
         :class:`dict`. Parsed json data.
@@ -136,6 +140,7 @@ def getPostStarCommentsIter(
     Arguments:
         post_id (:class:`str`) : Unique id of the post to load star comment.
         session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
+        raise_message (:class:`bool`, optional) : Raise exception instead of warning, defaults to False.
 
     :rtype: Generator[vlivepy.Comment, None, None]
 
@@ -143,13 +148,13 @@ def getPostStarCommentsIter(
         :class:`vlivepy.Comment`
     """
 
-    data = getPostStarComments(post_id, session=session)
+    data = getPostStarComments(post_id, session=session, raise_message=True)
     after = next_page_checker(data)
     for item in data['data']:
         yield item
 
     while after:
-        data = getPostStarComments(post_id, session=session, after=after)
+        data = getPostStarComments(post_id, session=session, after=after, raise_message=True)
         after = next_page_checker(data)
         for item in data['data']:
             yield item
@@ -187,7 +192,8 @@ def getNestedComments(
         comment_id: str,
         session: UserSession = None,
         after: str = None,
-        silent: bool = False
+        silent: bool = False,
+        raise_message: bool = False,
 ) -> Optional[dict]:
     """Get nested comments of the comment.
 
@@ -196,6 +202,7 @@ def getNestedComments(
         session (:class:`vlivepy.UserSession`, optional) : Session for loading data with permission, defaults to None.
         after (:class:`str`, optional) : After parameter to load another page, defaults to None.
         silent (:class:`bool`, optional) : Return None instead of raising exception, defaults to False.
+        raise_message (:class:`bool`, optional) : Raise exception instead of warning, defaults to False.
 
     Returns:
         :class:`dict`. Parsed json data.
@@ -232,13 +239,13 @@ def getNestedCommentsIter(
         :class:`vlivepy.Comment`
     """
 
-    data = getNestedComments(comment_id, session=session)
+    data = getNestedComments(comment_id, session=session, raise_message=True)
     after = next_page_checker(data)
     for item in data['data']:
         yield item
 
     while after:
-        data = getNestedComments(comment_id, session=session, after=after)
+        data = getNestedComments(comment_id, session=session, after=after, raise_message=True)
         after = next_page_checker(data)
         for item in data['data']:
             yield item
